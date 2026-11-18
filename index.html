@@ -1,0 +1,2449 @@
+<!DOCTYPE html>
+<html lang="zh-TW" class="dark">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+  <title>神卡神算｜個人專屬信用卡回饋與每月1號登錄管家</title>
+  <!-- PWA 支援設定 -->
+  <meta name="apple-mobile-web-app-capable" content="yes" />
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
+  <meta name="theme-color" content="#0B132B" />
+  <link rel="manifest" id="pwa-manifest" />
+  <!-- Tailwind CSS & Google Fonts -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Noto+Sans+TC:wght@400;500;700;900&display=swap" rel="stylesheet" />
+  <script>
+    tailwind.config = {
+      darkMode: 'class',
+      theme: {
+        extend: {
+          fontFamily: {
+            sans: ['"Noto Sans TC"', 'Inter', 'system-ui', 'sans-serif'],
+          },
+          colors: {
+            navy: {
+              950: '#060B19',
+              900: '#0B132B',
+              800: '#1C2541',
+              700: '#2A3759',
+            },
+            gold: {
+              300: '#FDE68A',
+              400: '#FBBF24',
+              500: '#D97706',
+              600: '#B45309',
+            }
+          }
+        }
+      }
+    };
+  </script>
+  <style>
+    /* 自訂捲軸與卡片高質感漸層 */
+    ::-webkit-scrollbar { width: 6px; height: 6px; }
+    ::-webkit-scrollbar-track { background: transparent; }
+    ::-webkit-scrollbar-thumb { background: rgba(148, 163, 184, 0.3); border-radius: 9999px; }
+    .gold-gradient {
+      background: linear-gradient(135deg, #F59E0B 0%, #D97706 50%, #B45309 100%);
+    }
+    .gold-text-gradient {
+      background: linear-gradient(135deg, #FDE68A 0%, #F59E0B 100%);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+    }
+    .card-shine {
+      position: relative;
+      overflow: hidden;
+    }
+    .card-shine::after {
+      content: "";
+      position: absolute;
+      top: -50%;
+      left: -50%;
+      width: 200%;
+      height: 200%;
+      background: radial-gradient(circle, rgba(251, 191, 36, 0.08) 0%, transparent 60%);
+      pointer-events: none;
+    }
+    /* 隱藏横向捲軸但保持可滑動 */
+    .no-scrollbar::-webkit-scrollbar { display: none; }
+    .no-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
+  </style>
+</head>
+<body class="bg-slate-100 text-slate-900 dark:bg-navy-950 dark:text-slate-100 min-h-screen transition-colors duration-200 pb-24 md:pb-12">
+
+  <!-- 頂部導覽列 -->
+  <header class="sticky top-0 z-40 backdrop-blur-md bg-white/90 dark:bg-navy-900/90 border-b border-slate-200 dark:border-slate-800 shadow-sm">
+    <div class="max-w-5xl mx-auto px-4 py-3 flex items-center justify-between">
+      <div class="flex items-center gap-3">
+        <div class="w-10 h-10 rounded-xl gold-gradient flex items-center justify-center shadow-lg shadow-amber-500/20 text-white font-black text-lg">
+          💳
+        </div>
+        <div>
+          <h1 class="text-base sm:text-lg font-extrabold tracking-tight flex items-center gap-2">
+            <span>神卡神算</span>
+            <span class="text-[11px] font-bold px-2 py-0.5 rounded-full bg-amber-500/15 text-amber-600 dark:text-amber-400 border border-amber-500/30">2026 權益版</span>
+          </h1>
+          <p class="text-xs text-slate-500 dark:text-slate-400 hidden sm:block">16張主力卡智能選卡 × 每月1號登錄提醒管家</p>
+        </div>
+      </div>
+
+          <button onclick="switchTab('advisor')" id="nav-advisor" class="tab-btn px-3.5 py-1.5 rounded-lg text-sm font-bold transition-all bg-white dark:bg-navy-700 text-amber-600 dark:text-amber-400 shadow-sm">
+            🔍 情境選卡
+          </button>
+          <button onclick="switchTab('taxrefund')" id="nav-taxrefund" class="tab-btn px-3.5 py-1.5 rounded-lg text-sm font-bold transition-all text-slate-600 dark:text-slate-300 hover:text-slate-900 dark:hover:text-white">
+            🇯🇵 日本退稅/海外試算
+          </button>
+          <button onclick="switchTab('reminders')" id="nav-reminders" class="tab-btn px-3.5 py-1.5 rounded-lg text-sm font-bold transition-all text-slate-600 dark:text-slate-300 hover:text-slate-900 dark:hover:text-white flex items-center gap-1.5">
+            <span>🔔 每月1號登錄</span>
+            <span id="badge-pending-count" class="px-1.5 py-0.2 text-[11px] rounded-full bg-rose-500 text-white font-bold">0</span>
+          </button>
+          <button onclick="switchTab('wallet')" id="nav-wallet" class="tab-btn px-3.5 py-1.5 rounded-lg text-sm font-bold transition-all text-slate-600 dark:text-slate-300 hover:text-slate-900 dark:hover:text-white">
+            🗂️ 卡片庫 (<span id="header-card-count">16</span>)
+          </button>
+        </nav>
+
+        <!-- 深色/淺色模式切換 -->
+        <button onclick="toggleTheme()" title="切換深色/淺色外觀" class="p-2.5 rounded-xl bg-slate-200/70 dark:bg-navy-800 hover:bg-slate-300/70 dark:hover:bg-navy-700 text-slate-700 dark:text-amber-300 transition">
+          <span id="theme-icon">☀️</span>
+        </button>
+      </div>
+    </div>
+  </header>
+
+  <!-- 全域提示訊息 Toast -->
+  <div id="toast-container" class="fixed top-16 right-4 left-4 sm:left-auto sm:w-96 z-50 pointer-events-none flex flex-col gap-2"></div>
+
+  <!-- 主內容容器 -->
+  <main class="max-w-5xl mx-auto px-4 pt-5">
+
+    <!-- ==================== 分頁 1：智慧情境選卡 ==================== -->
+    <section id="tab-advisor" class="space-y-5">
+      <!-- 搜尋與金額試算面板 -->
+      <div class="bg-white dark:bg-navy-900 rounded-2xl p-4 sm:p-6 border border-slate-200 dark:border-slate-800 shadow-xl card-shine">
+        <div class="flex flex-col sm:flex-row gap-3">
+          <!-- 情境輸入框 -->
+          <div class="flex-1 relative">
+            <label for="search-input" class="block text-xs font-bold text-slate-500 dark:text-amber-400/90 mb-1.5">
+              📍 輸入消費地點、商店名稱、支付方式或情境
+            </label>
+            <div class="relative flex items-center">
+              <span class="absolute left-3.5 text-slate-400 text-lg">🔎</span>
+              <input
+                type="text"
+                id="search-input"
+                oninput="handleSearch()"
+                placeholder="例如：日本藥妝、好市多、LINE Pay、超商、高鐵、診所..."
+                class="w-full pl-10 pr-10 py-3 rounded-xl bg-slate-100 dark:bg-navy-800 border border-slate-300 dark:border-slate-700 focus:border-amber-500 focus:ring-2 focus:ring-amber-500/20 outline-none text-sm sm:text-base font-medium transition"
+              />
+              <button
+                id="clear-search-btn"
+                onclick="clearSearch()"
+                class="hidden absolute right-3 text-slate-400 hover:text-slate-600 dark:hover:text-white p-1"
+                title="清除搜尋"
+              >✕</button>
+            </div>
+          </div>
+
+          <!-- 預計消費金額（選填） -->
+          <div class="sm:w-48">
+            <label for="amount-input" class="block text-xs font-bold text-slate-500 dark:text-slate-400 mb-1.5">
+              💰 預計金額 (NT$ 選填)
+            </label>
+            <div class="relative flex items-center">
+              <span class="absolute left-3.5 text-slate-400 font-bold text-sm">$</span>
+              <input
+                type="number"
+                id="amount-input"
+                min="0"
+                step="100"
+                oninput="handleSearch()"
+                placeholder="例：3000"
+                class="w-full pl-8 pr-3 py-3 rounded-xl bg-slate-100 dark:bg-navy-800 border border-slate-300 dark:border-slate-700 focus:border-amber-500 focus:ring-2 focus:ring-amber-500/20 outline-none text-sm sm:text-base font-medium transition"
+              />
+            </div>
+          </div>
+        </div>
+
+        <!-- 高頻情境分類快選區 -->
+        <div class="mt-4 pt-4 border-t border-slate-200/80 dark:border-slate-800">
+          <div class="flex items-center justify-between mb-2">
+            <span class="text-xs font-bold text-slate-500 dark:text-slate-400">⚡ 高頻情境一鍵快選：</span>
+            <div class="flex gap-1.5 overflow-x-auto no-scrollbar" id="category-tabs">
+              <!-- 由 JS 動態渲染分類標籤 -->
+            </div>
+          </div>
+          <div id="quick-tags-container" class="flex flex-wrap gap-2 mt-2">
+            <!-- 由 JS 動態渲染情境標籤 -->
+          </div>
+        </div>
+      </div>
+
+      <!-- 搜尋結果統計列 -->
+      <div class="flex flex-wrap items-center justify-between gap-2 px-1">
+        <div class="flex items-center gap-2">
+          <h2 id="result-heading" class="text-base sm:text-lg font-extrabold">
+            🏆 全部卡片通用/主力推薦排行
+          </h2>
+          <span id="result-count-badge" class="text-xs font-bold px-2.5 py-0.5 rounded-full bg-slate-200 dark:bg-navy-800 text-slate-700 dark:text-slate-300">
+            16 張啟用中
+          </span>
+        </div>
+        <div class="flex items-center gap-2 text-xs text-slate-500 dark:text-slate-400">
+          <label class="inline-flex items-center gap-1.5 cursor-pointer select-none">
+            <input type="checkbox" id="filter-no-reg" onchange="handleSearch()" class="rounded text-amber-500 focus:ring-amber-500" />
+            <span>僅顯示免登錄/免切方案</span>
+          </label>
+        </div>
+      </div>
+
+      <!-- 動態情境攻略面板（例如：日本退稅新制刷A退B攻略、可免費取消訂房警告） -->
+      <div id="scenario-strategy-banner" class="hidden"></div>
+
+      <!-- 推薦結果卡片列表 -->
+      <div id="results-list" class="space-y-4">
+        <!-- 由 JS 動態產生 -->
+      </div>
+    </section>
+
+    <!-- ==================== 分頁 1.5：日本退稅新制與海外刷退試算 ==================== -->
+    <section id="tab-taxrefund" class="hidden space-y-5">
+      <!-- 攻略說明與雙卡計算機 -->
+      <div class="bg-white dark:bg-navy-900 rounded-2xl p-5 sm:p-6 border border-amber-500/40 shadow-xl space-y-5">
+        <div class="flex flex-col md:flex-row md:items-center justify-between gap-3 border-b border-slate-200 dark:border-slate-800 pb-4">
+          <div>
+            <div class="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full bg-rose-500/15 text-rose-600 dark:text-rose-400 border border-rose-500/30 text-xs font-bold mb-1">
+              <span>🔥 2026/11 日本免稅新制實戰</span>
+            </div>
+            <h2 class="text-xl sm:text-2xl font-black">日本退稅「刷 A 卡、退 B 卡」雙卡對決計算機</h2>
+            <p class="text-xs sm:text-sm text-slate-500 dark:text-slate-400 mt-1">
+              新制採「先付含稅價、出境確認後退稅至指定信用卡」。利用銀行<strong>「退稅倒扣原卡回饋率，但退還 1.5% 海外手續費」</strong>的規則差，賺取額外倒扣差額！
+            </p>
+          </div>
+          <div class="shrink-0 bg-amber-500/10 border border-amber-500/30 rounded-xl p-3 text-xs space-y-1">
+            <div class="font-extrabold text-amber-600 dark:text-amber-400">💡 你的 16 張卡黃金組合</div>
+            <div>• <strong>結帳 A 卡</strong>：玉山熊本熊 (8.5%) / 富邦J卡 (6%)</div>
+            <div>• <strong>收款 B 卡</strong>：<strong>永豐三井聯名卡 (JCB)</strong>（退1.5%+僅扣1%+避開Global Blue DCC）</div>
+          </div>
+        </div>
+
+        <!-- 輸入參數區 -->
+        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+          <div>
+            <label class="block text-xs font-bold text-slate-500 dark:text-slate-400 mb-1">💴 含稅購物總金額 (JPY)</label>
+            <input type="number" id="tr-jpy" value="55000" min="5500" step="1000" oninput="calculateTaxRefund()" class="w-full px-3.5 py-2.5 rounded-xl bg-slate-100 dark:bg-navy-800 border border-slate-300 dark:border-slate-700 font-bold text-base" />
+          </div>
+          <div>
+            <label class="block text-xs font-bold text-slate-500 dark:text-slate-400 mb-1">💱 日圓匯率 (JPY → TWD)</label>
+            <input type="number" id="tr-fx" value="0.215" step="0.001" oninput="calculateTaxRefund()" class="w-full px-3.5 py-2.5 rounded-xl bg-slate-100 dark:bg-navy-800 border border-slate-300 dark:border-slate-700 font-bold text-base" />
+          </div>
+          <div class="sm:col-span-2">
+            <label class="block text-xs font-bold text-slate-500 dark:text-slate-400 mb-1">🏬 消費商店 / 退稅系統平台</label>
+            <select id="tr-platform" onchange="calculateTaxRefund()" class="w-full px-3.5 py-2.5 rounded-xl bg-slate-100 dark:bg-navy-800 border border-slate-300 dark:border-slate-700 font-bold text-sm">
+              <option value="jtax_0">唐吉訶德 / Bic Camera (J-TaxRefund：0% 平台手續費，全退10%稅)</option>
+              <option value="gb_23">日本百貨公司如阪急/大丸/LUMINE (Global Blue：收未稅價 2.3%，且 VISA/MC 強制 DCC！)</option>
+              <option value="pie_15">三井 Outlet / LaLaport (PIE VAT：收未稅價 1.5%)</option>
+              <option value="drug_15">日本藥妝店 / 一般零售 (TaxFree Online：收未稅價 1.5%)</option>
+            </select>
+          </div>
+        </div>
+
+        <!-- A卡與B卡選擇器 -->
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-4 pt-1">
+          <div class="p-3.5 rounded-xl bg-slate-50 dark:bg-navy-800/80 border border-slate-200 dark:border-slate-700 space-y-2">
+            <div class="flex items-center justify-between">
+              <label class="text-xs font-extrabold text-amber-600 dark:text-amber-400">💳 結帳付款 A 卡（選日本高回饋）</label>
+              <span id="tr-cardA-badge" class="text-[11px] font-bold px-2 py-0.5 rounded bg-amber-500/20 text-amber-500"></span>
+            </div>
+            <select id="tr-cardA" onchange="calculateTaxRefund()" class="w-full px-3 py-2 rounded-lg bg-white dark:bg-navy-900 border border-slate-300 dark:border-slate-700 text-sm font-bold"></select>
+            <div class="flex items-center justify-between text-xs text-slate-500 dark:text-slate-400">
+              <span>本次適用回饋率 (%)：</span>
+              <input type="number" id="tr-rateA" step="0.1" value="8.5" oninput="calculateTaxRefund(true)" class="w-20 px-2 py-1 rounded bg-white dark:bg-navy-900 border border-slate-300 dark:border-slate-700 text-right font-bold" />
+            </div>
+          </div>
+
+          <div class="p-3.5 rounded-xl bg-slate-50 dark:bg-navy-800/80 border border-slate-200 dark:border-slate-700 space-y-2">
+            <div class="flex items-center justify-between">
+              <label class="text-xs font-extrabold text-emerald-600 dark:text-emerald-400">📥 退稅收款 B 卡（選會退1.5%+低回饋）</label>
+              <span id="tr-cardB-badge" class="text-[11px] font-bold px-2 py-0.5 rounded bg-emerald-500/20 text-emerald-500"></span>
+            </div>
+            <select id="tr-cardB" onchange="calculateTaxRefund()" class="w-full px-3 py-2 rounded-lg bg-white dark:bg-navy-900 border border-slate-300 dark:border-slate-700 text-sm font-bold"></select>
+            <div class="flex items-center justify-between text-xs text-slate-500 dark:text-slate-400">
+              <span>退稅入帳倒扣回饋率 (%)：</span>
+              <input type="number" id="tr-rateB" step="0.1" value="1.0" oninput="calculateTaxRefund(true)" class="w-20 px-2 py-1 rounded bg-white dark:bg-navy-900 border border-slate-300 dark:border-slate-700 text-right font-bold" />
+            </div>
+          </div>
+        </div>
+
+        <!-- 動態警示區塊（DCC 或 不退1.5%警告） -->
+        <div id="tr-warnings" class="space-y-2"></div>
+
+        <!-- 三方案結果對比 -->
+        <div id="tr-comparison-cards" class="grid grid-cols-1 md:grid-cols-3 gap-4 pt-2"></div>
+      </div>
+
+      <!-- 16 張卡片「海外刷退 1.5% 手續費政策」總覽表 -->
+      <div class="bg-white dark:bg-navy-900 rounded-2xl p-5 border border-slate-200 dark:border-slate-800 shadow-sm space-y-3">
+        <div class="flex flex-wrap items-center justify-between gap-2">
+          <div>
+            <h3 class="text-base sm:text-lg font-extrabold">📋 你的 16 張信用卡「海外刷退／退稅 1.5% 手續費」全檢表</h3>
+            <p class="text-xs text-slate-500 dark:text-slate-400">訂購「可免費取消」的海外飯店／機票，或綁定日本退稅收款卡前必看！</p>
+          </div>
+          <span class="text-xs font-bold px-2.5 py-1 rounded-lg bg-emerald-500/15 text-emerald-600 dark:text-emerald-400">
+            ✅ 綠標：刷退退還 1.5%（共 7 張）
+          </span>
+        </div>
+        <div class="overflow-x-auto">
+          <table class="w-full text-left border-collapse text-xs sm:text-sm">
+            <thead>
+              <tr class="border-b border-slate-200 dark:border-slate-800 text-slate-500 dark:text-slate-400">
+                <th class="py-2.5 px-2">銀行 / 卡片</th>
+                <th class="py-2.5 px-2">卡組織</th>
+                <th class="py-2.5 px-2">海外一般</th>
+                <th class="py-2.5 px-2">刷退退 1.5%？</th>
+                <th class="py-2.5 px-2">退稅 B 卡 / 訂房建議</th>
+              </tr>
+            </thead>
+            <tbody id="refund-policy-tbody" class="divide-y divide-slate-100 dark:divide-slate-800">
+              <!-- 由 JS 動態產生 -->
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </section>
+
+    <!-- ==================== 分頁 2：每月 1 號與重要登錄日中心 ==================== -->
+    <section id="tab-reminders" class="hidden space-y-5">
+      <!-- 頂部行動呼籲橫幅 + 匯出 .ics -->
+      <div class="bg-gradient-to-br from-navy-900 via-navy-800 to-slate-900 text-white rounded-2xl p-5 sm:p-6 border border-amber-500/30 shadow-xl">
+        <div class="flex flex-col md:flex-row md:items-center justify-between gap-4">
+          <div class="space-y-1.5">
+            <div class="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full bg-amber-500/20 text-amber-300 text-xs font-bold border border-amber-400/30">
+              <span>⏰ 自動化防漏刷機制</span>
+            </div>
+            <h2 class="text-xl sm:text-2xl font-black tracking-tight">每月 1 號＆指定日登錄提醒中心</h2>
+            <p class="text-xs sm:text-sm text-slate-300 leading-relaxed max-w-2xl">
+              匯出標準 <code class="bg-white/10 px-1.5 py-0.5 rounded text-amber-300">.ics</code> 行事曆檔並匯入 Google 日曆或 Apple iPhone 行事曆，即可設定<strong>每月 1 號 08:50</strong>（及富邦 J 卡每月 18/20 日）永久循環推播提醒！
+            </p>
+          </div>
+          <div class="flex flex-col sm:flex-row md:flex-col gap-2 shrink-0">
+            <button onclick="downloadICS('monthly1')" class="px-4 py-3 rounded-xl gold-gradient hover:opacity-95 text-white font-bold text-sm shadow-lg shadow-amber-500/25 flex items-center justify-center gap-2 transition active:scale-95">
+              <span>📅 下載每月 1 號總提醒 (.ics)</span>
+            </button>
+            <button onclick="downloadICS('all')" class="px-4 py-2.5 rounded-xl bg-white/10 hover:bg-white/20 text-amber-200 font-bold text-xs border border-white/15 flex items-center justify-center gap-1.5 transition active:scale-95">
+              <span>📆 下載完整循環提醒 (含1日/18日/20日)</span>
+            </button>
+          </div>
+        </div>
+
+        <!-- 本月檢核進度條 -->
+        <div class="mt-5 pt-4 border-t border-white/10">
+          <div class="flex items-center justify-between text-xs font-bold mb-1.5">
+            <span id="checklist-month-label" class="text-amber-300">2026年11月 任務檢核進度</span>
+            <span id="checklist-progress-text" class="text-slate-200">0 / 0 已完成</span>
+          </div>
+          <div class="w-full h-2.5 bg-navy-950 rounded-full overflow-hidden">
+            <div id="checklist-progress-bar" class="h-full gold-gradient transition-all duration-300" style="width: 0%"></div>
+          </div>
+        </div>
+      </div>
+
+      <!-- 分類提醒清單 -->
+      <div class="grid grid-cols-1 lg:grid-cols-2 gap-4" id="reminders-grid">
+        <!-- 由 JS 動態產生每月1號登錄、App領券/切方案、指定日搶登錄卡片 -->
+      </div>
+    </section>
+
+    <!-- ==================== 分頁 3：卡片庫管理 (CRUD + JSON) ==================== -->
+    <section id="tab-wallet" class="hidden space-y-5">
+      <!-- 頂部工具列 -->
+      <div class="bg-white dark:bg-navy-900 rounded-2xl p-4 sm:p-5 border border-slate-200 dark:border-slate-800 shadow-md flex flex-col sm:flex-row sm:items-center justify-between gap-3">
+        <div>
+          <h2 class="text-lg font-extrabold">🗂️ 我的信用卡庫管理</h2>
+          <p class="text-xs text-slate-500 dark:text-slate-400">可開關卡片啟用狀態、新增或修改回饋規則，所有變更自動儲存於本機瀏覽器。</p>
+        </div>
+        <div class="flex flex-wrap gap-2">
+          <button onclick="openCardModal()" class="px-3.5 py-2 rounded-xl gold-gradient text-white text-xs sm:text-sm font-bold shadow hover:opacity-95 transition">
+            ➕ 新增卡片/規則
+          </button>
+          <button onclick="exportJSON()" class="px-3 py-2 rounded-xl bg-slate-200 dark:bg-navy-800 hover:bg-slate-300 dark:hover:bg-navy-700 text-xs sm:text-sm font-bold transition">
+            📤 匯出 JSON
+          </button>
+          <label class="px-3 py-2 rounded-xl bg-slate-200 dark:bg-navy-800 hover:bg-slate-300 dark:hover:bg-navy-700 text-xs sm:text-sm font-bold transition cursor-pointer">
+            📥 匯入 JSON
+            <input type="file" accept=".json" onchange="importJSON(event)" class="hidden" />
+          </label>
+          <button onclick="openResetConfirm()" class="px-3 py-2 rounded-xl bg-rose-500/10 text-rose-600 dark:text-rose-400 border border-rose-500/30 hover:bg-rose-500/20 text-xs sm:text-sm font-bold transition">
+            🔄 重置 2026 預設
+          </button>
+        </div>
+      </div>
+
+      <!-- 卡片列表 -->
+      <div id="wallet-list" class="grid grid-cols-1 md:grid-cols-2 gap-4">
+        <!-- 由 JS 動態產生 -->
+      </div>
+    </section>
+
+  </main>
+
+  <!-- 手機版底部固定導覽列 -->
+  <nav class="md:hidden fixed bottom-0 left-0 right-0 z-40 bg-white/95 dark:bg-navy-900/95 backdrop-blur-md border-t border-slate-200 dark:border-slate-800 px-1 py-1.5 flex justify-around items-center shadow-2xl">
+    <button onclick="switchTab('advisor')" id="m-nav-advisor" class="flex-1 py-1.5 rounded-xl flex flex-col items-center gap-0.5 text-amber-600 dark:text-amber-400 font-bold text-[11px]">
+      <span class="text-base">🔍</span>
+      <span>情境選卡</span>
+    </button>
+    <button onclick="switchTab('taxrefund')" id="m-nav-taxrefund" class="flex-1 py-1.5 rounded-xl flex flex-col items-center gap-0.5 text-slate-500 dark:text-slate-400 font-bold text-[11px]">
+      <span class="text-base">🇯🇵</span>
+      <span>退稅試算</span>
+    </button>
+    <button onclick="switchTab('reminders')" id="m-nav-reminders" class="flex-1 py-1.5 rounded-xl flex flex-col items-center gap-0.5 text-slate-500 dark:text-slate-400 font-bold text-[11px] relative">
+      <span class="text-base">🔔</span>
+      <span>1號登錄</span>
+      <span id="m-badge-pending" class="absolute top-1 right-4 px-1.5 text-[10px] rounded-full bg-rose-500 text-white font-bold">0</span>
+    </button>
+    <button onclick="switchTab('wallet')" id="m-nav-wallet" class="flex-1 py-1.5 rounded-xl flex flex-col items-center gap-0.5 text-slate-500 dark:text-slate-400 font-bold text-[11px]">
+      <span class="text-base">🗂️</span>
+      <span>卡片庫</span>
+    </button>
+  </nav>
+
+  <!-- ==================== 彈窗：新增 / 編輯信用卡 ==================== -->
+  <div id="card-modal" class="hidden fixed inset-0 z-50 bg-black/70 backdrop-blur-sm flex items-center justify-center p-4 overflow-y-auto">
+    <div class="bg-white dark:bg-navy-900 w-full max-w-2xl rounded-2xl border border-slate-200 dark:border-slate-700 shadow-2xl overflow-hidden my-8">
+      <div class="px-5 py-4 border-b border-slate-200 dark:border-slate-800 flex items-center justify-between">
+        <h3 id="modal-title" class="text-lg font-extrabold">➕ 新增信用卡與回饋規則</h3>
+        <button onclick="closeCardModal()" class="p-1.5 rounded-lg hover:bg-slate-200 dark:hover:bg-navy-800 text-slate-500">✕</button>
+      </div>
+      <form id="card-form" onsubmit="saveCardForm(event)" class="p-5 space-y-4 max-h-[75vh] overflow-y-auto">
+        <input type="hidden" id="edit-card-id" />
+        <div class="grid grid-cols-1 sm:grid-cols-3 gap-3">
+          <div>
+            <label class="block text-xs font-bold mb-1">發卡銀行 *</label>
+            <input type="text" id="f-bank" required placeholder="例：玉山銀行" class="w-full px-3 py-2 rounded-xl bg-slate-100 dark:bg-navy-800 border border-slate-300 dark:border-slate-700 text-sm" />
+          </div>
+          <div>
+            <label class="block text-xs font-bold mb-1">信用卡名稱 *</label>
+            <input type="text" id="f-name" required placeholder="例：熊本熊卡" class="w-full px-3 py-2 rounded-xl bg-slate-100 dark:bg-navy-800 border border-slate-300 dark:border-slate-700 text-sm" />
+          </div>
+          <div>
+            <label class="block text-xs font-bold mb-1">國際組織</label>
+            <select id="f-network" class="w-full px-3 py-2 rounded-xl bg-slate-100 dark:bg-navy-800 border border-slate-300 dark:border-slate-700 text-sm">
+              <option value="VISA">VISA</option>
+              <option value="MASTERCARD">MASTERCARD</option>
+              <option value="JCB">JCB</option>
+            </select>
+          </div>
+        </div>
+
+        <div class="grid grid-cols-1 sm:grid-cols-3 gap-3">
+          <div>
+            <label class="block text-xs font-bold mb-1">國內基本回饋 (%)</label>
+            <input type="number" step="0.1" id="f-baseDomestic" value="1" required class="w-full px-3 py-2 rounded-xl bg-slate-100 dark:bg-navy-800 border border-slate-300 dark:border-slate-700 text-sm" />
+          </div>
+          <div>
+            <label class="block text-xs font-bold mb-1">海外基本回饋 (%)</label>
+            <input type="number" step="0.1" id="f-baseOverseas" value="1" required class="w-full px-3 py-2 rounded-xl bg-slate-100 dark:bg-navy-800 border border-slate-300 dark:border-slate-700 text-sm" />
+          </div>
+          <div>
+            <label class="block text-xs font-bold mb-1">海外刷退 1.5% 手續費</label>
+            <select id="f-refundFeeReturned" class="w-full px-3 py-2 rounded-xl bg-slate-100 dark:bg-navy-800 border border-slate-300 dark:border-slate-700 text-sm">
+              <option value="true">✅ 會退還 1.5% 手續費</option>
+              <option value="false">❌ 不退 1.5% 手續費</option>
+              <option value="partial">⚠️ 部分退（歐韓退稅不退）</option>
+            </select>
+          </div>
+        </div>
+
+        <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
+          <div>
+            <label class="block text-xs font-bold mb-1">回饋類型</label>
+            <input type="text" id="f-rewardType" value="刷卡金/現金回饋" required class="w-full px-3 py-2 rounded-xl bg-slate-100 dark:bg-navy-800 border border-slate-300 dark:border-slate-700 text-sm" />
+          </div>
+          <div>
+            <label class="block text-xs font-bold mb-1">刷退與一般消費備註</label>
+            <input type="text" id="f-baseNote" placeholder="例：刷退會退1.5%手續費" class="w-full px-3 py-2 rounded-xl bg-slate-100 dark:bg-navy-800 border border-slate-300 dark:border-slate-700 text-sm" />
+          </div>
+        </div>
+
+        <div>
+          <label class="block text-xs font-bold mb-1">一般消費條件備註</label>
+          <input type="text" id="f-baseNote" placeholder="例：無上限（需電子帳單+自扣）" class="w-full px-3 py-2 rounded-xl bg-slate-100 dark:bg-navy-800 border border-slate-300 dark:border-slate-700 text-sm" />
+        </div>
+
+        <!-- 指定通路加成規則列表 -->
+        <div class="pt-2 border-t border-slate-200 dark:border-slate-800">
+          <div class="flex items-center justify-between mb-2">
+            <label class="text-xs font-extrabold text-amber-600 dark:text-amber-400">🎯 指定通路／場景加碼規則</label>
+            <button type="button" onclick="addRuleRow()" class="text-xs px-2.5 py-1 rounded-lg bg-amber-500/15 text-amber-600 dark:text-amber-400 font-bold hover:bg-amber-500/25">
+              + 新增一條加碼規則
+            </button>
+          </div>
+          <div id="rules-editor-list" class="space-y-3">
+            <!-- 動態產生規則欄位 -->
+          </div>
+        </div>
+
+        <div class="pt-3 border-t border-slate-200 dark:border-slate-800 flex justify-end gap-2">
+          <button type="button" onclick="closeCardModal()" class="px-4 py-2 rounded-xl bg-slate-200 dark:bg-navy-800 text-sm font-bold">取消</button>
+          <button type="submit" class="px-5 py-2 rounded-xl gold-gradient text-white text-sm font-bold shadow">儲存卡片</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- ==================== 彈窗：自訂確認對話框（取代 confirm） ==================== -->
+  <div id="confirm-modal" class="hidden fixed inset-0 z-50 bg-black/70 backdrop-blur-sm flex items-center justify-center p-4">
+    <div class="bg-white dark:bg-navy-900 w-full max-w-md rounded-2xl border border-slate-200 dark:border-slate-700 p-5 shadow-2xl space-y-4">
+      <h3 id="confirm-title" class="text-lg font-extrabold text-rose-500">確認操作</h3>
+      <p id="confirm-desc" class="text-sm text-slate-600 dark:text-slate-300 leading-relaxed"></p>
+      <div class="flex justify-end gap-2 pt-2">
+        <button onclick="closeConfirmModal()" class="px-4 py-2 rounded-xl bg-slate-200 dark:bg-navy-800 text-sm font-bold">取消</button>
+        <button id="confirm-ok-btn" class="px-4 py-2 rounded-xl bg-rose-600 hover:bg-rose-700 text-white text-sm font-bold">確定執行</button>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    // =========================================================================
+    // 1. 2026年最新權益：16張個人專屬信用卡完整資料庫（含海外刷退 1.5% 政策）
+    // =========================================================================
+    const DEFAULT_CARDS_2026 = [
+      {
+        id: "esun-kumamoto",
+        bank: "玉山銀行",
+        name: "熊本熊卡",
+        network: "JCB",
+        enabled: true,
+        baseDomestic: 0.5,
+        baseOverseas: 2.5,
+        refundFeeReturned: "true",
+        refundNote: "刷退會退 1.5%（但日本回饋2.5%會被倒扣，建議當結帳A卡、勿當退稅B卡）",
+        rewardType: "現金回饋",
+        baseNote: "國內0.5%無上限(電子帳單+自扣)；日本一般2.5%無上限；刷退【會退 1.5%】",
+        rules: [
+          {
+            title: "日本指定通路最高 8.5%（日本退稅結帳 A 卡首選）",
+            rate: 8.5,
+            capAmount: 500,
+            capRateDiff: 6.0,
+            capNote: "含日本2.5%無上限 + 指定加碼6%(上限500元/月，刷8,333元封頂)；結帳刷此卡、退稅App改綁永豐三井JCB",
+            keywords: ["日本", "日本退稅", "退稅", "先付後退", "Global Blue", "PayPay", "玉山Wallet", "Suica", "PASMO", "ICOCA", "西瓜卡", "交通卡", "BicCamera", "Yodobashi", "唐吉訶德", "松本清", "大國藥妝", "SUNDRUG", "藥妝", "日本航空", "JAL", "JR", "TOYOTA Rent a Car", "租車", "電器"],
+            actionType: "register_monthly1",
+            actionLabel: "⚠️ 需每月登錄活動（日本2.5%+加碼6%）",
+            registerDay: "每月1日登錄",
+            registerUrl: "https://www.esunbank.com/zh-tw/personal/credit-card/discount/shopinfo?sno=6382"
+          },
+          {
+            title: "日本一般消費 2.5% 無上限",
+            rate: 2.5,
+            capAmount: null,
+            capRateDiff: 0,
+            capNote: "日本實體/線上一般消費2.5%無上限；刷退會退還1.5%手續費",
+            keywords: ["日本", "日幣", "東京", "大阪", "京都", "北海道", "沖繩", "福岡", "海外", "海外實體消費"],
+            actionType: "none",
+            actionLabel: "免登錄無上限",
+            registerDay: "",
+            registerUrl: ""
+          }
+        ]
+      },
+      {
+        id: "esun-unicard",
+        bank: "玉山銀行",
+        name: "Unicard",
+        network: "VISA",
+        enabled: true,
+        baseDomestic: 1.0,
+        baseOverseas: 1.0,
+        refundFeeReturned: "false",
+        refundNote: "刷退【不退 1.5%】(VISA不退)，請勿當日本退稅收款B卡或訂可取消飯店",
+        rewardType: "e point",
+        baseNote: "國內外一般1% e point無上限（需帳單e化+玉山自扣）；刷退【不退 1.5%】",
+        rules: [
+          {
+            title: "百大指定通路最高 4.5% (UP選)",
+            rate: 4.5,
+            capAmount: 2000,
+            capRateDiff: 3.5,
+            capNote: "簡單選3% / 任意選(自選8家)3.5% / UP選4.5%（加碼上限1,000~5,000點/月）；VISA刷退不退1.5%",
+            keywords: ["LINE Pay", "全支付", "街口支付", "行動支付", "momo", "蝦皮", "酷澎", "Coupang", "網購", "新光三越", "遠東SOGO", "SOGO", "遠百", "百貨", "三井OUTLET", "屈臣氏", "康是美", "藥妝", "UNIQLO", "Uber Eats", "foodpanda", "外送", "中油", "加油", "台鐵", "高鐵", "中華航空", "長榮航空", "機票", "日本", "韓國", "泰國", "海外", "海外實體消費"],
+            actionType: "switch_app",
+            actionLabel: "🔄 需於玉山Wallet切換方案（簡單選/任意選/UP選）",
+            registerDay: "每月App確認方案",
+            registerUrl: "https://www.esunbank.com/zh-tw/personal/credit-card/intro/bank-card/unicard"
+          }
+        ]
+      },
+      {
+        id: "fubon-j",
+        bank: "台北富邦",
+        name: "富邦J卡",
+        network: "JCB",
+        enabled: true,
+        baseDomestic: 1.0,
+        baseOverseas: 1.0,
+        refundFeeReturned: "true",
+        refundNote: "刷退【會退 1.5%】(JCB)，但日本當地消費會被扣3%回饋，日本退稅優先用永豐三井JCB",
+        rewardType: "刷卡金/LINE POINTS",
+        baseNote: "國內1%、日韓泰3%無上限、非日韓泰海外1%；刷退【會退 1.5%】",
+        rules: [
+          {
+            title: "日本交通卡 Apple Pay 加值最高 10%",
+            rate: 10.0,
+            capAmount: 200,
+            capRateDiff: 7.0,
+            capNote: "Suica/PASMO/ICOCA單筆滿NT$2,000享10%（加碼7%每季上限200元，刷2,857元封頂）",
+            keywords: ["Suica", "PASMO", "ICOCA", "西瓜卡", "日本交通卡", "日本交通卡儲值", "Apple Pay", "日本"],
+            actionType: "register_special",
+            actionLabel: "🔥 每月18日 16:00 開放搶登錄",
+            registerDay: "每月18日 16:00 登錄",
+            registerUrl: "https://www.fubon.com/banking/personal/credit_card/all_card/jcard/jcard.htm"
+          },
+          {
+            title: "日韓泰當地實體消費最高 6%（結帳 A 卡主力）",
+            rate: 6.0,
+            capAmount: 1000,
+            capRateDiff: 3.0,
+            capNote: "單筆滿NT$1,000享6%（含3%無上限 + 加碼3%每季上限1,000元，每季刷33,333元封頂）",
+            keywords: ["日本", "日本退稅", "退稅", "韓國", "泰國", "日韓泰", "東京", "大阪", "首爾", "釜山", "曼谷", "海外", "海外實體消費", "藥妝", "百貨"],
+            actionType: "register_special",
+            actionLabel: "🔥 每月20日 16:00 開放搶登錄",
+            registerDay: "每月20日 16:00 登錄",
+            registerUrl: "https://www.fubon.com/banking/personal/credit_card/all_card/jcard/jcard.htm"
+          },
+          {
+            title: "日韓泰一般消費 3% 無上限",
+            rate: 3.0,
+            capAmount: null,
+            capRateDiff: 0,
+            capNote: "日韓泰不限金額 3% 無上限（需電子帳單或富邦自扣）",
+            keywords: ["日本", "韓國", "泰國", "海外"],
+            actionType: "none",
+            actionLabel: "免登錄無上限",
+            registerDay: "",
+            registerUrl: ""
+          }
+        ]
+      },
+      {
+        id: "fubon-costco",
+        bank: "台北富邦",
+        name: "好市多聯名卡",
+        network: "MASTERCARD",
+        enabled: true,
+        baseDomestic: 1.0,
+        baseOverseas: 1.0,
+        refundFeeReturned: "true",
+        refundNote: "刷退【會退 1.5%】+ 海外僅1%回饋，適合作為非Global Blue通路之退稅B卡（淨賺+0.5%）",
+        rewardType: "好多金",
+        baseNote: "店外1%、好市多賣場2%、線上3%無上限；刷退【會退 1.5%】",
+        rules: [
+          {
+            title: "高鐵 / 台鐵購票最高 8% 好多金",
+            rate: 8.0,
+            capAmount: 300,
+            capRateDiff: 7.0,
+            capNote: "需前月店外消費達門檻且每月登錄，最高 8% 好多金",
+            keywords: ["高鐵", "台鐵", "火車", "交通"],
+            actionType: "register_monthly1",
+            actionLabel: "⚠️ 需每月登錄 + 前月店外消費達檻",
+            registerDay: "每月登錄",
+            registerUrl: "https://www.fubon.com/banking/personal/credit_card/all_card/costco/costco.htm"
+          },
+          {
+            title: "精選海外旅遊實體最高 5% 好多金",
+            rate: 5.0,
+            capAmount: 600,
+            capRateDiff: 4.0,
+            capNote: "國外實體商店5%、指定航空/旅行社/訂房網/免稅店3%（加碼上限600元/月，刷15,000元封頂）",
+            keywords: ["海外", "海外實體消費", "日本", "韓國", "歐洲", "美國", "航空", "機票", "旅行社", "訂房", "Agoda", "Booking", "免稅店"],
+            actionType: "register_monthly1",
+            actionLabel: "⏰ 每月1日 00:00 開放登錄",
+            registerDay: "每月1日 00:00 登錄",
+            registerUrl: "https://www.fubon.com/banking/personal/credit_card/all_card/costco/costco.htm"
+          },
+          {
+            title: "Costco 好市多線上購物 3% 無上限",
+            rate: 3.0,
+            capAmount: null,
+            capRateDiff: 0,
+            capNote: "好市多線上購物 3% 好多金無上限",
+            keywords: ["好市多", "Costco", "好市多線上", "網購"],
+            actionType: "none",
+            actionLabel: "免登錄無上限",
+            registerDay: "",
+            registerUrl: ""
+          },
+          {
+            title: "Costco 自助加油站最高 3%",
+            rate: 3.0,
+            capAmount: 200,
+            capRateDiff: 1.0,
+            capNote: "含2% + 加碼1%（每期上限200元，加油20,000元封頂）",
+            keywords: ["好市多加油", "Costco加油", "加油", "汽油"],
+            actionType: "none",
+            actionLabel: "免登錄",
+            registerDay: "",
+            registerUrl: ""
+          },
+          {
+            title: "Costco 好市多賣場內消費 2% 無上限",
+            rate: 2.0,
+            capAmount: null,
+            capRateDiff: 0,
+            capNote: "好市多全台賣場實體刷卡 2% 好多金無上限",
+            keywords: ["好市多", "Costco", "賣場", "量販", "超市"],
+            actionType: "none",
+            actionLabel: "免登錄無上限",
+            registerDay: "",
+            registerUrl: ""
+          }
+        ]
+      },
+      {
+        id: "ctbc-cht",
+        bank: "中國信託",
+        name: "中華電信聯名卡",
+        network: "VISA",
+        enabled: true,
+        baseDomestic: 1.0,
+        baseOverseas: 1.0,
+        refundFeeReturned: "false",
+        refundNote: "刷退【不退 1.5%】，請勿用於日本退稅收款或可免費取消訂房",
+        rewardType: "Hami Point",
+        baseNote: "國內外一般消費 1% Hami Point 無上限；刷退【不退 1.5%】",
+        rules: [
+          {
+            title: "中華電信門市/神腦 & Hami Pay掃碼(含超商)最高 3%",
+            rate: 3.0,
+            capAmount: 300,
+            capRateDiff: 2.0,
+            capNote: "含7-11/全家/萊爾富/OK超商 Hami Pay 掃碼、中華電信門市/神腦（加碼上限300點/月，刷15,000元封頂）",
+            keywords: ["中華電信", "神腦", "Hami Pay", "超商", "7-11", "全家", "萊爾富", "OK超商", "行動支付"],
+            actionType: "none",
+            actionLabel: "限時加碼免登錄（注意上限300點）",
+            registerDay: "",
+            registerUrl: ""
+          },
+          {
+            title: "定期代扣繳中華電信資費 2%",
+            rate: 2.0,
+            capAmount: 300,
+            capRateDiff: 1.0,
+            capNote: "中華電信手機/市話/光世代代扣繳 2% Hami Point（與七大通路合併上限300點/月）",
+            keywords: ["中華電信", "電信費", "手機費", "網路費", "光世代", "代扣繳", "繳費"],
+            actionType: "none",
+            actionLabel: "免登錄（需設定定期代扣）",
+            registerDay: "",
+            registerUrl: ""
+          }
+        ]
+      },
+      {
+        id: "cathay-cube",
+        bank: "國泰世華",
+        name: "CUBE卡",
+        network: "VISA",
+        enabled: true,
+        baseDomestic: 0.3,
+        baseOverseas: 0.3,
+        refundFeeReturned: "partial",
+        refundNote: "刷退【一般會退 1.5%，但歐洲/韓國退稅不退】，且為VISA若走Global Blue會被DCC",
+        rewardType: "小樹點(信用卡)",
+        baseNote: "趣旅行海外/訂房/機票 3%~3.3%無上限；刷退【一般會退 1.5%，歐洲/韓國退稅不退】",
+        rules: [
+          {
+            title: "五大權益切換指定通路最高 3% ~ 3.3% 無上限（可取消訂房/機票首選）",
+            rate: 3.3,
+            capAmount: null,
+            capRateDiff: 0,
+            capNote: "Level 2享3% / Level 3享3.3%無上限（涵蓋海外實體/機票訂房/餐飲/百貨/蝦皮momo/全聯）；一般取消訂房會退1.5%",
+            keywords: ["訂房", "機票", "國外訂房", "可能取消", "Agoda", "Booking", "Klook", "KKday", "蝦皮", "momo", "網購", "餐飲", "餐廳", "吃飯", "火鍋", "燒肉", "百貨", "新光三越", "SOGO", "遠百", "日本", "韓國", "海外", "海外實體消費", "全聯", "Uber Eats", "foodpanda", "外送", "中油"],
+            actionType: "switch_app",
+            actionLabel: "🔄 需於國泰優惠App每日切換對應權益（玩數位/樂饗購/趣旅行/集精選）",
+            registerDay: "消費當日於App確認權益",
+            registerUrl: "https://www.cathaybk.com.tw/cathaybk/personal/product/credit-card/cards/cube/"
+          },
+          {
+            title: "LINE Pay / 四大超商 / 中油直營 2% 無上限",
+            rate: 2.0,
+            capAmount: null,
+            capRateDiff: 0,
+            capNote: "LINE Pay(玩數位) 2%、7-11/全家/中油直營(集精選) 2% 小樹點無上限",
+            keywords: ["LINE Pay", "超商", "7-11", "全家", "中油", "加油", "行動支付"],
+            actionType: "switch_app",
+            actionLabel: "🔄 需切換至「玩數位(LINE Pay)」或「集精選(超商/中油)」",
+            registerDay: "消費當日切換權益",
+            registerUrl: "https://www.cathaybk.com.tw/cathaybk/personal/product/credit-card/cards/cube/"
+          }
+        ]
+      },
+      {
+        id: "rakuten-tiger",
+        bank: "台灣樂天",
+        name: "樂虎卡",
+        network: "JCB",
+        enabled: true,
+        baseDomestic: 0.5,
+        baseOverseas: 1.0,
+        refundFeeReturned: "false",
+        refundNote: "刷退【不退 1.5%】，請勿用於日本退稅收款或可免費取消訂房",
+        rewardType: "刷卡金 / tigerpoints",
+        baseNote: "國內0.5%、日本/韓國實體2%無上限；刷退【不退 1.5%】",
+        rules: [
+          {
+            title: "台灣虎航購票最高 8% 折扣/回饋 & LINE Pay 最高 3%",
+            rate: 8.0,
+            capAmount: 500,
+            capRateDiff: 2.5,
+            capNote: "虎航專屬網頁購票最高85折+2%回饋；LINE Pay/街口支付最高3%（tigerpoints每期上限500點）",
+            keywords: ["台灣虎航", "虎航", "機票", "航空", "LINE Pay", "街口支付", "行動支付"],
+            actionType: "none",
+            actionLabel: "免登錄（tigerpoints每期上限500點）",
+            registerDay: "",
+            registerUrl: ""
+          },
+          {
+            title: "日本 / 韓國實體消費 2% 無上限",
+            rate: 2.0,
+            capAmount: null,
+            capRateDiff: 0,
+            capNote: "日本、韓國實體刷卡 2% 刷卡金無上限；刷退不退1.5%",
+            keywords: ["日本", "韓國", "海外", "海外實體消費"],
+            actionType: "none",
+            actionLabel: "免登錄無上限",
+            registerDay: "",
+            registerUrl: ""
+          }
+        ]
+      },
+      {
+        id: "ubot-green",
+        bank: "聯邦銀行",
+        name: "聯邦綠卡",
+        network: "VISA",
+        enabled: true,
+        baseDomestic: 1.0,
+        baseOverseas: 2.0,
+        refundFeeReturned: "false",
+        refundNote: "刷退【不退 1.5%】，請勿用於日本退稅收款或可免費取消訂房",
+        rewardType: "刷卡金",
+        baseNote: "國內1%、海外2%無上限（需電子帳單+聯邦自扣）；刷退【不退 1.5%】",
+        rules: [
+          {
+            title: "綠色指定通路（高鐵/台鐵/Gogoro/充電/共享機車）最高 6%~12%",
+            rate: 6.0,
+            capAmount: 300,
+            capRateDiff: 5.0,
+            capNote: "Gogoro電池/Tesla充電/YouBike/GoShare/WeMo/台鐵/高鐵/台灣大車隊/里仁/聖德科斯/一卡通自動加值（上限300元/月）",
+            keywords: ["Gogoro", "Tesla", "充電", "綠色", "YouBike", "GoShare", "WeMo", "共享機車", "台鐵", "高鐵", "火車", "計程車", "台灣大車隊", "里仁", "聖德科斯", "主婦聯盟", "棉花田", "一卡通", "交通"],
+            actionType: "register_monthly1",
+            actionLabel: "⚠️ 需每月登錄活動 + 電子帳單自扣",
+            registerDay: "每月登錄",
+            registerUrl: "https://card.ubot.com.tw/"
+          },
+          {
+            title: "生活代扣繳（水電瓦斯/電信費/路邊停車）1%",
+            rate: 1.0,
+            capAmount: 100,
+            capRateDiff: 1.0,
+            capNote: "水費、電費、瓦斯費、中華電信等電信費、路邊停車費自動扣繳 1%（上限100元/月，繳10,000元封頂）",
+            keywords: ["水費", "電費", "瓦斯費", "水電費", "中華電信", "電信費", "停車費", "路邊停車", "繳費", "代扣繳"],
+            actionType: "none",
+            actionLabel: "免登錄（需設定聯邦自動代扣繳）",
+            registerDay: "",
+            registerUrl: ""
+          }
+        ]
+      },
+      {
+        id: "dbs-eco",
+        bank: "星展銀行",
+        name: "星展ECO永續卡",
+        network: "MASTERCARD",
+        enabled: true,
+        baseDomestic: 1.0,
+        baseOverseas: 1.0,
+        refundFeeReturned: "false",
+        refundNote: "刷退【不退 1.5%】(2025/11/24起已取消退還)，切勿用來訂可免費取消飯店或當退稅B卡！",
+        rewardType: "現金積點",
+        baseNote: "日韓泰新歐美實體5%(上限600/期)；刷退【不退 1.5%】(2025/11/24起取消退還)",
+        rules: [
+          {
+            title: "期間限定海外／國內餐飲加碼最高 10% ~ 15%",
+            rate: 12.0,
+            capAmount: 1000,
+            capRateDiff: 11.0,
+            capNote: "指定餐廳登錄最高 10%~15%（需每月登錄搶名額）；刷退不退1.5%",
+            keywords: ["海外餐飲", "餐廳", "餐飲", "吃飯", "聚餐", "燒肉", "火鍋", "飯店餐廳"],
+            actionType: "register_monthly1",
+            actionLabel: "🔥 需每月登錄搶名額（星展Card+ App）",
+            registerDay: "每月登錄搶名額",
+            registerUrl: "https://www.dbs.com.tw/personal-zh/cards/offers/index.html"
+          },
+          {
+            title: "指定綠色消費（Tesla充電/Gogoro資費/捷安特）最高 10%",
+            rate: 10.0,
+            capAmount: 1000,
+            capRateDiff: 9.0,
+            capNote: "Tesla充電、Gogoro電池資費、捷安特、歐萊德等最高10%（加碼上限1,000點/月，刷11,111元封頂）",
+            keywords: ["Tesla", "充電", "綠色", "Gogoro", "捷安特", "歐萊德", "電動車", "交通"],
+            actionType: "none",
+            actionLabel: "免登錄（上限1,000點/月）",
+            registerDay: "",
+            registerUrl: ""
+          },
+          {
+            title: "日韓泰新歐美實體消費最高 5%（結帳 A 卡主力，但勿當退稅 B 卡）",
+            rate: 5.0,
+            capAmount: 600,
+            capRateDiff: 4.0,
+            capNote: "日韓泰新美歐實體消費5%（加碼4%上限600點/期，刷15,000元封頂）；注意2025/11/24起刷退不退1.5%",
+            keywords: ["日本", "日本退稅", "退稅", "韓國", "泰國", "新加坡", "歐洲", "美國", "美洲", "海外", "海外實體消費"],
+            actionType: "switch_app",
+            actionLabel: "⚠️ 需完成星展指定任務（上限600點/期；刷退不退1.5%）",
+            registerDay: "每月確認任務達標",
+            registerUrl: "https://www.dbs.com.tw/personal-zh/cards/dbs-credit-cards/eco-card.html"
+          }
+        ]
+      },
+      {
+        id: "first-ileo",
+        bank: "第一銀行",
+        name: "iLEO卡",
+        network: "MASTERCARD",
+        enabled: true,
+        baseDomestic: 0.5,
+        baseOverseas: 2.0,
+        refundFeeReturned: "true",
+        refundNote: "刷退【會退 1.5%】，海外一般2%無上限，適合訂購「可免費取消」的海外飯店/機票",
+        rewardType: "現金回饋",
+        baseNote: "海外一般2%無上限；刷退【會退 1.5%】（訂可取消海外飯店/機票安全牌）",
+        rules: [
+          {
+            title: "每月領券加碼：指定數位訂閱 7% / 指定網購旅遊 5%",
+            rate: 7.0,
+            capAmount: 200,
+            capRateDiff: 5.0,
+            capNote: "當月刷3筆滿千可於iLEO App領券：Netflix/Disney+最高7%，或 momo/蝦皮/酷澎/Klook/KKday加碼3%(合計5%)",
+            keywords: ["Netflix", "Disney+", "訂閱", "串流", "momo", "蝦皮", "酷澎", "Klook", "KKday", "網購"],
+            actionType: "switch_app",
+            actionLabel: "🎟️ 需於 iLEO App 領券（當月刷3筆滿千）",
+            registerDay: "每月於 iLEO App 領券",
+            registerUrl: "https://card.firstbank.com.tw/"
+          },
+          {
+            title: "指定行動支付單筆滿千最高 3%（未滿千 2%）",
+            rate: 3.0,
+            capAmount: 200,
+            capRateDiff: 1.0,
+            capNote: "LINE Pay、街口、台灣Pay單筆滿千舊戶自扣最高3%（加碼1%上限200元/月）；未滿千2%（上限500元/月）",
+            keywords: ["LINE Pay", "街口支付", "台灣Pay", "行動支付", "PChome", "屈臣氏", "康是美", "寶雅", "Uber Eats", "foodpanda", "中華電信"],
+            actionType: "none",
+            actionLabel: "需一銀帳戶自扣+電子帳單",
+            registerDay: "",
+            registerUrl: ""
+          },
+          {
+            title: "海外一般消費（實體/訂房/機票）2% 無上限 ＋ 刷退退 1.5%",
+            rate: 2.0,
+            capAmount: null,
+            capRateDiff: 0,
+            capNote: "舊戶自扣+電子帳單享海外2%無上限，且取消訂房/退貨會退還1.5%手續費",
+            keywords: ["海外", "海外實體消費", "訂房", "機票", "國外訂房", "可能取消", "日本", "韓國", "歐洲", "美國"],
+            actionType: "none",
+            actionLabel: "免登錄無上限（刷退退1.5%）",
+            registerDay: "",
+            registerUrl: ""
+          }
+        ]
+      },
+      {
+        id: "taishin-richart",
+        bank: "台新銀行",
+        name: "Richart卡",
+        network: "VISA",
+        enabled: true,
+        baseDomestic: 0.3,
+        baseOverseas: 0.3,
+        refundFeeReturned: "false",
+        refundNote: "刷退【不退 1.5%】(2025/10/1起已取消退還)，確定不取消的海外大額可用，會取消的訂房別刷這張！",
+        rewardType: "台新Point",
+        baseNote: "玩旅刷海外實體/航空/訂房3.3%無上限；刷退【不退 1.5%】(2025/10/1起取消退還)",
+        rules: [
+          {
+            title: "Chill 刷方案：指定火鍋 / 燒肉 / 手搖飲最高 10%",
+            rate: 10.0,
+            capAmount: 500,
+            capRateDiff: 9.7,
+            capNote: "指定火鍋、燒肉、手搖飲品牌最高 10% 台新Point",
+            keywords: ["火鍋", "燒肉", "手搖飲", "飲料", "餐廳", "餐飲", "吃飯"],
+            actionType: "switch_app",
+            actionLabel: "🔄 需於 Richart Life App 切換至「Chill 刷」方案",
+            registerDay: "消費前於App切換方案",
+            registerUrl: "https://www.taishinbank.com.tw/"
+          },
+          {
+            title: "LINE Pay 綁定領券最高 3.8%",
+            rate: 3.8,
+            capAmount: 500,
+            capRateDiff: 1.5,
+            capNote: "LINE Pay 綁定並於 Richart Life App 領券最高 3.8%（未領券僅 2.3%）",
+            keywords: ["LINE Pay", "行動支付"],
+            actionType: "switch_app",
+            actionLabel: "🎟️ 務必先於 Richart Life App 領券（未領僅2.3%）",
+            registerDay: "每月1日 App 領券",
+            registerUrl: "https://www.taishinbank.com.tw/"
+          },
+          {
+            title: "玩旅刷／七大權益切換指定通路最高 3.3% 無上限",
+            rate: 3.3,
+            capAmount: null,
+            capRateDiff: 0,
+            capNote: "玩旅刷(海外實體/航空/訂房/旅行社)、天天刷、大筆刷、好饗刷、數趣刷 3.3%無上限；注意2025/10/1起刷退不退1.5%",
+            keywords: ["海外", "海外實體消費", "訂房", "機票", "超商", "7-11", "全家", "全聯", "百貨", "新光三越", "SOGO", "遠百", "餐飲", "餐廳", "吃飯", "Uber Eats", "foodpanda", "外送", "網購", "蝦皮", "momo", "酷澎", "高鐵", "台鐵", "日本", "韓國"],
+            actionType: "switch_app",
+            actionLabel: "🔄 需切換對應權益方案（⚠️ 刷退不退1.5%）",
+            registerDay: "消費當日確認權益方案",
+            registerUrl: "https://www.taishinbank.com.tw/"
+          }
+        ]
+      },
+      {
+        id: "yuanta-diamond",
+        bank: "元大銀行",
+        name: "鑽金卡",
+        network: "JCB",
+        enabled: true,
+        baseDomestic: 1.2,
+        baseOverseas: 2.2,
+        refundFeeReturned: "false",
+        refundNote: "刷退【不退 1.5%】，請勿用於日本退稅收款或可免費取消訂房",
+        rewardType: "現金回饋",
+        baseNote: "國內1.2%無上限、海外2.2%無上限；刷退【不退 1.5%】",
+        rules: [
+          {
+            title: "海外一般消費 2.2% 無上限",
+            rate: 2.2,
+            capAmount: null,
+            capRateDiff: 0,
+            capNote: "海外不限國家、不限金額 2.2% 現金回饋無上限（刷退不退1.5%）",
+            keywords: ["海外", "海外實體消費", "日本", "韓國", "歐洲", "美國", "外幣"],
+            actionType: "none",
+            actionLabel: "免登錄無上限",
+            registerDay: "",
+            registerUrl: ""
+          },
+          {
+            title: "國內一般消費 1.2% 無上限（無腦保底首選）",
+            rate: 1.2,
+            capAmount: null,
+            capRateDiff: 0,
+            capNote: "無通路限制、免登錄、無上限 1.2% 現金回饋",
+            keywords: ["一般消費", "無腦刷", "保費", "醫院", "診所", "繳稅"],
+            actionType: "none",
+            actionLabel: "免登錄無上限",
+            registerDay: "",
+            registerUrl: ""
+          }
+        ]
+      },
+      {
+        id: "hncb-rich",
+        bank: "華南銀行",
+        name: "富家卡 (Rich+)",
+        network: "MASTERCARD",
+        enabled: true,
+        baseDomestic: 1.0,
+        baseOverseas: 2.0,
+        refundFeeReturned: "false",
+        refundNote: "刷退【不退 1.5%】，請勿用於日本退稅收款或可免費取消訂房",
+        rewardType: "現金 + 儲蓄點數",
+        baseNote: "國內1%~4%、海外2%~5%無上限（依理財等級）；刷退【不退 1.5%】",
+        rules: [
+          {
+            title: "醫療與教育消費（醫院/診所/學費）最高 2% ~ 5%",
+            rate: 3.0,
+            capAmount: 300,
+            capRateDiff: 1.0,
+            capNote: "醫院、診所、各級學校學費加碼1%儲蓄點數（上限300點/月，刷30,000元封頂）+ 基本1%~4%",
+            keywords: ["醫院", "診所", "醫療", "看病", "牙醫", "健檢", "學校", "學費", "教育", "補習班"],
+            actionType: "none",
+            actionLabel: "免登錄（醫療/學費神卡，上限300點/月）",
+            registerDay: "",
+            registerUrl: ""
+          },
+          {
+            title: "海外一般消費 2% ~ 5% 無上限",
+            rate: 2.3,
+            capAmount: null,
+            capRateDiff: 0,
+            capNote: "基本2%現金回饋 + 依華南理財等級(小富家/大富家/鉅富家)加碼至2.3%~5%無上限",
+            keywords: ["海外", "海外實體消費", "日本", "韓國", "歐洲", "美國"],
+            actionType: "none",
+            actionLabel: "免登錄無上限",
+            registerDay: "",
+            registerUrl: ""
+          }
+        ]
+      },
+      {
+        id: "sinopac-sport",
+        bank: "永豐銀行",
+        name: "SPORT卡",
+        network: "MASTERCARD",
+        enabled: true,
+        baseDomestic: 2.0,
+        baseOverseas: 1.0,
+        refundFeeReturned: "true",
+        refundNote: "刷退【會退 1.5%】+ 海外基本僅1%，適合當非Global Blue通路之退稅B卡（淨賺+0.5%）",
+        rewardType: "豐點 (1豐點=1元)",
+        baseNote: "Apple Pay/行動支付最高5%~6%、海外一般1%；刷退【會退 1.5%】",
+        rules: [
+          {
+            title: "指定行動支付(Apple Pay/LINE Pay/全支付) & 運動藥妝最高 5%~6%",
+            rate: 5.0,
+            capAmount: 300,
+            capRateDiff: 3.0,
+            capNote: "Apple Pay、Google Pay、LINE Pay、全支付、全聯、健身工廠、World Gym、迪卡儂、寶雅、康是美、屈臣氏（加碼3%上限300元/月，刷10,000元封頂）",
+            keywords: ["Apple Pay", "Google Pay", "Samsung Pay", "LINE Pay", "全支付", "行動支付", "全聯", "超市", "健身工廠", "World Gym", "健身房", "迪卡儂", "運動", "寶雅", "康是美", "屈臣氏", "藥妝"],
+            actionType: "switch_app",
+            actionLabel: "🏃 需下載大咖DACARD App並達成每月運動目標",
+            registerDay: "每月確認大咖App運動達標",
+            registerUrl: "https://bank.sinopac.com/sinopacBT/personal/credit-card/introduction/bankcard/sportcard.html"
+          },
+          {
+            title: "海外一般消費 1% ＋ 刷退退 1.5%（非 Global Blue 退稅 B 卡備選）",
+            rate: 1.0,
+            capAmount: null,
+            capRateDiff: 0,
+            capNote: "海外基本1%且退稅會退1.5%手續費（倒扣1%淨賺+0.5%）；若遇Global Blue請改綁永豐三井JCB",
+            keywords: ["退稅", "日本退稅", "海外"],
+            actionType: "none",
+            actionLabel: "刷退退 1.5%（Mastercard 清算匯率佳）",
+            registerDay: "",
+            registerUrl: ""
+          }
+        ]
+      },
+      {
+        id: "sinopac-daway",
+        bank: "永豐銀行",
+        name: "DAWAY卡",
+        network: "VISA",
+        enabled: true,
+        baseDomestic: 0.5,
+        baseOverseas: 2.5,
+        refundFeeReturned: "true",
+        refundNote: "刷退【會退 1.5%】，海外一般2.5%無上限，非常適合訂購「可免費取消」的海外飯店/機票",
+        rewardType: "LINE POINTS",
+        baseNote: "海外一般2.5% LINE POINTS無上限；刷退【會退 1.5%】（訂可取消海外飯店首選）",
+        rules: [
+          {
+            title: "國外 LINE Pay 綁定消費最高 4% LINE POINTS",
+            rate: 4.0,
+            capAmount: 300,
+            capRateDiff: 1.5,
+            capNote: "海外2.5%無上限 + 國外LINE Pay加碼1.5%（上限300點/月，刷20,000元封頂；需電子帳單+永豐自扣）",
+            keywords: ["國外LINE Pay", "海外LINE Pay", "日本", "韓國", "泰國", "LINE Pay"],
+            actionType: "none",
+            actionLabel: "需電子帳單+永豐帳戶自扣",
+            registerDay: "",
+            registerUrl: ""
+          },
+          {
+            title: "海外一般消費（實體/訂房/機票/海外網購）2.5% 無上限 ＋ 刷退退 1.5%",
+            rate: 2.5,
+            capAmount: null,
+            capRateDiff: 0,
+            capNote: "海外實體與海外網站消費 2.5% LINE POINTS 無上限，取消訂房/退貨會退還1.5%手續費",
+            keywords: ["訂房", "機票", "國外訂房", "可能取消", "Agoda", "Booking", "海外", "海外實體消費", "日本", "韓國", "歐洲", "美國", "海外網購", "Amazon", "iHerb"],
+            actionType: "none",
+            actionLabel: "免登錄無上限（刷退退1.5%）",
+            registerDay: "",
+            registerUrl: ""
+          },
+          {
+            title: "國內 LINE Pay 綁定消費最高 2% ~ 4.5%",
+            rate: 2.0,
+            capAmount: 300,
+            capRateDiff: 1.5,
+            capNote: "舊戶完成DAWAY GO任務(電子帳單+永豐自扣)享國內LINE Pay最高2%（新戶最高4.5%~6%）",
+            keywords: ["LINE Pay", "行動支付"],
+            actionType: "none",
+            actionLabel: "需電子帳單+永豐帳戶自扣",
+            registerDay: "",
+            registerUrl: ""
+          }
+        ]
+      },
+      {
+        id: "sinopac-mitsui",
+        bank: "永豐銀行",
+        name: "三井聯名卡 (MITSUI OUTLET)",
+        network: "JCB",
+        enabled: true,
+        baseDomestic: 0.5,
+        baseOverseas: 1.0,
+        refundFeeReturned: "true",
+        refundNote: "👑 你的16張卡中【日本退稅收款 B 卡完美第一名】：JCB避開Global Blue DCC + 退1.5% + 僅倒扣1%（淨賺+0.5%）！",
+        rewardType: "刷卡金",
+        baseNote: "三井Outlet最高3%~5%+免費停車2hr；海外1%且刷退【會退 1.5%】(JCB退稅B卡神卡)",
+        rules: [
+          {
+            title: "🇯🇵 日本退稅新制「收款 B 卡」完美首選（JCB 避開 DCC + 退 1.5% 淨賺 +0.5%）",
+            rate: 1.5,
+            capAmount: null,
+            capRateDiff: 0,
+            capNote: "退稅入帳時退還 1.5% 手續費、僅倒扣 1% 海外回饋（淨賺 +0.5%），且 JCB 可徹底避開 Global Blue 強制 DCC 爛匯率！",
+            keywords: ["退稅", "日本退稅", "先付後退", "Global Blue", "B卡"],
+            actionType: "none",
+            actionLabel: "👑 綁定日本退稅 App 收款專用（免登錄）",
+            registerDay: "",
+            registerUrl: ""
+          },
+          {
+            title: "館外餐飲 / 全盈+PAY 最高 7% 刷卡金",
+            rate: 7.0,
+            capAmount: 100,
+            capRateDiff: 6.5,
+            capNote: "館外餐飲或全盈+PAY最高7%刷卡金（每期上限100元，刷1,538元封頂）",
+            keywords: ["餐飲", "餐廳", "吃飯", "全盈+PAY", "全盈PAY", "全家", "行動支付"],
+            actionType: "register_monthly1",
+            actionLabel: "⚠️ 需每月登錄 + 電子帳單 + 永豐自扣（每期上限100元）",
+            registerDay: "每月登錄",
+            registerUrl: "https://bank.sinopac.com/sinopacBT/personal/credit-card/introduction/co-brand/mitsui-outlet-park-card.html"
+          },
+          {
+            title: "MITSUI OUTLET PARK / LaLaport 館內消費最高 3%~5% + 免費停車2小時",
+            rate: 3.0,
+            capAmount: null,
+            capRateDiff: 0,
+            capNote: "林口/台中港/台南三井OUTLET與LaLaport館內天天免費停車2小時 + 指定餐廳/專櫃折扣",
+            keywords: ["三井OUTLET", "MITSUI OUTLET", "LaLaport", "台南三井", "林口三井", "台中港三井", "OUTLET", "百貨", "停車"],
+            actionType: "none",
+            actionLabel: "館內實體刷卡享免費停車與折扣",
+            registerDay: "",
+            registerUrl: ""
+          }
+        ]
+      }
+    ];
+
+    // 高頻情境分類與標籤（含日本退稅新制與海外消費情境）
+    const QUICK_SCENARIOS = {
+      "日本退稅/海外": ["日本退稅", "海外實體消費", "國外訂房", "日本", "Suica西瓜卡", "台灣虎航", "海外餐飲"],
+      "日常支付": ["LINE Pay", "Apple Pay", "全支付", "街口支付", "超商", "7-11", "全家", "全聯"],
+      "百貨賣場": ["好市多", "三井OUTLET", "新光三越", "SOGO", "遠百", "屈臣氏", "康是美", "寶雅"],
+      "餐飲交通": ["餐飲", "火鍋", "燒肉", "高鐵", "台鐵", "中油", "Gogoro", "Tesla充電"],
+      "網購醫療": ["蝦皮", "momo", "酷澎", "Netflix", "醫院診所", "學費", "中華電信"]
+    };
+
+    // =========================================================================
+    // 2. 狀態管理與 LocalStorage 讀寫
+    // =========================================================================
+    const STORAGE_KEY_CARDS = "cc_advisor_v2_2026";
+    const STORAGE_KEY_CHECKS = "my_credit_card_checks_v2";
+    const STORAGE_KEY_THEME = "my_credit_card_theme_v1";
+
+    let cards = [];
+    let activeCategory = "日本退稅/海外";
+    let confirmCallback = null;
+
+    function initApp() {
+      // 載入主題
+      const savedTheme = localStorage.getItem(STORAGE_KEY_THEME) || "dark";
+      if (savedTheme === "dark") {
+        document.documentElement.classList.add("dark");
+        document.getElementById("theme-icon").textContent = "☀️";
+      } else {
+        document.documentElement.classList.remove("dark");
+        document.getElementById("theme-icon").textContent = "🌙";
+      }
+
+      // 載入卡片資料
+      const savedCards = localStorage.getItem(STORAGE_KEY_CARDS);
+      if (savedCards) {
+        try {
+          cards = JSON.parse(savedCards);
+        } catch (e) {
+          cards = JSON.parse(JSON.stringify(DEFAULT_CARDS_2026));
+        }
+      } else {
+        cards = JSON.parse(JSON.stringify(DEFAULT_CARDS_2026));
+        saveCardsToStorage();
+      }
+
+      // 產生動態 PWA Manifest 支援加入主畫面
+      setupPWAManifest();
+
+      // 渲染初始畫面
+      renderCategoryTabs();
+      renderQuickTags();
+      handleSearch();
+      initTaxRefundCalculator();
+      renderReminders();
+      renderWalletList();
+      updateHeaderCounts();
+    }
+
+    function saveCardsToStorage() {
+      localStorage.setItem(STORAGE_KEY_CARDS, JSON.stringify(cards));
+      updateHeaderCounts();
+    }
+
+    function updateHeaderCounts() {
+      const enabledCount = cards.filter(c => c.enabled).length;
+      document.getElementById("header-card-count").textContent = cards.length;
+      document.getElementById("result-count-badge").textContent = `${enabledCount} 張啟用中`;
+    }
+
+    // =========================================================================
+    // 3. 智慧情境搜尋與回饋率演算法
+    // =========================================================================
+    function renderCategoryTabs() {
+      const container = document.getElementById("category-tabs");
+      container.innerHTML = Object.keys(QUICK_SCENARIOS).map(cat => {
+        const isActive = cat === activeCategory;
+        return `
+          <button
+            onclick="selectCategory('${cat}')"
+            class="px-2.5 py-1 rounded-lg text-xs font-bold whitespace-nowrap transition ${
+              isActive
+                ? "bg-amber-500 text-white shadow-sm"
+                : "bg-slate-100 dark:bg-navy-800 text-slate-600 dark:text-slate-300 hover:bg-slate-200 dark:hover:bg-navy-700"
+            }"
+          >${cat}</button>
+        `;
+      }).join("");
+    }
+
+    function selectCategory(cat) {
+      activeCategory = cat;
+      renderCategoryTabs();
+      renderQuickTags();
+    }
+
+    function renderQuickTags() {
+      const container = document.getElementById("quick-tags-container");
+      const tags = QUICK_SCENARIOS[activeCategory] || [];
+      container.innerHTML = tags.map(tag => `
+        <button
+          onclick="applyQuickTag('${tag}')"
+          class="px-3 py-1.5 rounded-xl text-xs font-bold bg-slate-100 dark:bg-navy-800 hover:bg-amber-500/20 hover:text-amber-600 dark:hover:text-amber-300 border border-slate-200 dark:border-slate-700 transition active:scale-95"
+        >
+          #${tag}
+        </button>
+      `).join("");
+    }
+
+    function applyQuickTag(tag) {
+      const input = document.getElementById("search-input");
+      input.value = tag;
+      handleSearch();
+    }
+
+    function clearSearch() {
+      const input = document.getElementById("search-input");
+      input.value = "";
+      handleSearch();
+    }
+
+    function handleSearch() {
+      const queryRaw = document.getElementById("search-input").value.trim();
+      const query = queryRaw.toLowerCase();
+      const amount = parseFloat(document.getElementById("amount-input").value) || 0;
+      const onlyNoReg = document.getElementById("filter-no-reg").checked;
+
+      // 顯示/隱藏清除按鈕與動態情境攻略橫幅
+      const clearBtn = document.getElementById("clear-search-btn");
+      if (queryRaw.length > 0) {
+        clearBtn.classList.remove("hidden");
+        document.getElementById("result-heading").innerHTML = `🎯 「<span class="text-amber-500">${escapeHtml(queryRaw)}</span>」最佳刷卡推薦`;
+      } else {
+        clearBtn.classList.add("hidden");
+        document.getElementById("result-heading").textContent = "🏆 全部卡片通用/主力回饋排行";
+      }
+
+      renderScenarioStrategyBanner(query);
+
+      const activeCards = cards.filter(c => c.enabled);
+      let recommendations = [];
+
+      // 同義詞擴展對應表，提升搜尋命中率
+      const synonyms = {
+        "吃飯": ["餐飲", "餐廳", "火鍋", "燒肉"],
+        "藥妝": ["屈臣氏", "康是美", "寶雅", "松本清", "大國藥妝"],
+        "西瓜卡": ["suica", "pasmo", "icoca", "日本交通卡"],
+        "加油": ["中油", "好市多加油"],
+        "看病": ["醫院", "診所", "醫療"],
+        "火車": ["台鐵", "高鐵"],
+        "海外": ["日本", "韓國", "泰國", "歐洲", "美國", "海外"]
+      };
+
+      let searchTerms = [query];
+      Object.keys(synonyms).forEach(key => {
+        if (query.includes(key)) {
+          searchTerms.push(...synonyms[key].map(s => s.toLowerCase()));
+        }
+      });
+
+      activeCards.forEach(card => {
+        let bestMatchRule = null;
+        let matchScore = 0;
+
+        if (!query) {
+          // 無搜尋字時：取該卡最高代表性回饋率（兼顧通用性）
+          const highestRule = [...card.rules].sort((a, b) => b.rate - a.rate)[0];
+          bestMatchRule = highestRule || {
+            title: "一般消費基本回饋",
+            rate: Math.max(card.baseDomestic, card.baseOverseas),
+            capAmount: null,
+            capRateDiff: 0,
+            capNote: card.baseNote,
+            actionType: "none",
+            actionLabel: "一般消費"
+          };
+        } else {
+          // 有搜尋情境時：比對每條規則的關鍵字、標題、銀行/卡名
+          card.rules.forEach(rule => {
+            let currentScore = 0;
+            const ruleKeywords = (rule.keywords || []).map(k => k.toLowerCase());
+            const titleLower = rule.title.toLowerCase();
+
+            searchTerms.forEach(term => {
+              if (!term) return;
+              // 完全吻合關鍵字權重最高
+              if (ruleKeywords.some(k => k === term)) currentScore += 100;
+              else if (ruleKeywords.some(k => k.includes(term) || term.includes(k))) currentScore += 70;
+              if (titleLower.includes(term)) currentScore += 50;
+              if (card.name.toLowerCase().includes(term) || card.bank.toLowerCase().includes(term)) currentScore += 30;
+            });
+
+            if (currentScore > 0) {
+              // 若同時命中多條規則，優先選命中分數高且回饋率高的
+              const effectivePriority = currentScore * 10 + rule.rate;
+              if (effectivePriority > matchScore) {
+                matchScore = effectivePriority;
+                bestMatchRule = rule;
+              }
+            }
+          });
+
+          // 若無指定規則命中，判斷是否為海外情境，套用基本回饋保底
+          if (!bestMatchRule) {
+            const isOverseas = ["海外", "日本", "韓國", "泰國", "歐洲", "美國", "外幣", "出國", "訂房", "機票"].some(k => query.includes(k));
+            const fallbackRate = isOverseas ? card.baseOverseas : card.baseDomestic;
+            bestMatchRule = {
+              title: isOverseas ? "海外一般消費基本回饋" : "國內一般消費基本回饋",
+              rate: fallbackRate,
+              capAmount: null,
+              capRateDiff: 0,
+              capNote: card.baseNote,
+              actionType: "none",
+              actionLabel: "一般消費基本回饋（無加碼）",
+              isFallback: true
+            };
+          }
+        }
+
+        // 篩選「僅顯示免登錄/免切方案」
+        if (onlyNoReg && bestMatchRule.actionType !== "none") {
+          return;
+        }
+
+        recommendations.push({
+          card,
+          rule: bestMatchRule,
+          isFallback: !!bestMatchRule.isFallback
+        });
+      });
+
+      // 排序邏輯：有命中的優先於保底一般回饋 -> 回饋趴數由高到低
+      recommendations.sort((a, b) => {
+        if (query && a.isFallback !== b.isFallback) {
+          return a.isFallback ? 1 : -1;
+        }
+        return b.rule.rate - a.rule.rate;
+      });
+
+      renderResultsList(recommendations, amount, queryRaw);
+    }
+
+    // 動態顯示「日本退稅新制刷A退B攻略」或「可免費取消訂房避雷」橫幅
+    function renderScenarioStrategyBanner(query) {
+      const banner = document.getElementById("scenario-strategy-banner");
+      const isTaxRefund = ["退稅", "日本退稅", "先付後退", "global blue", "b卡"].some(k => query.includes(k));
+      const isCancellableBooking = ["訂房", "國外訂房", "可能取消", "agoda", "booking", "機票"].some(k => query.includes(k));
+
+      if (isTaxRefund) {
+        banner.classList.remove("hidden");
+        banner.innerHTML = `
+          <div class="bg-gradient-to-br from-navy-900 via-navy-800 to-slate-900 text-white rounded-2xl p-4 sm:p-5 border border-amber-400/50 shadow-xl space-y-3">
+            <div class="flex flex-wrap items-center justify-between gap-2">
+              <div class="flex items-center gap-2">
+                <span class="px-2.5 py-0.5 rounded-full gold-gradient text-xs font-black">🇯🇵 2026/11 日本退稅新制攻略</span>
+                <h3 class="text-base sm:text-lg font-black text-amber-300">「結帳刷 A 卡、退稅收款綁 B 卡」雙卡最大化公式</h3>
+              </div>
+              <button onclick="switchTab('taxrefund')" class="px-3 py-1.5 rounded-xl bg-amber-500 hover:bg-amber-400 text-navy-950 text-xs font-black transition">
+                🧮 開啟雙卡試算機 →
+              </button>
+            </div>
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-3 text-xs leading-relaxed">
+              <div class="p-3 rounded-xl bg-white/5 border border-white/10 space-y-1">
+                <div class="font-extrabold text-amber-300 text-sm">1️⃣ 結帳付款 A 卡（衝高回饋 %）</div>
+                <p class="text-slate-300">實體刷含稅價時，用日本高回饋卡：<strong>玉山熊本熊 (8.5%)</strong>、<strong>富邦J卡 (6%)</strong>、<strong>星展ECO (5%)</strong>、<strong>玉山Unicard (4.5%)</strong> 或 <strong>台新Richart/國泰CUBE (3.3%無上限)</strong>。</p>
+              </div>
+              <div class="p-3 rounded-xl bg-white/5 border border-white/10 space-y-1">
+                <div class="font-extrabold text-emerald-300 text-sm">2️⃣ 退稅 App 收款 B 卡（賺退 1.5% 差額）</div>
+                <p class="text-slate-300">銀行收到退稅入帳時會「倒扣原卡回饋率，但部分銀行退 1.5% 手續費」。綁定<strong>【永豐 三井聯名卡 JCB】</strong>（退1.5% - 扣1% = <strong>淨賺 +0.5%</strong>，且 JCB 完美避開 Global Blue 強制 DCC 台幣爛匯率！）。</p>
+              </div>
+            </div>
+            <div class="text-[11px] text-rose-300 bg-rose-500/15 border border-rose-500/30 rounded-xl px-3 py-2">
+              ⚠️ <strong>避雷警告</strong>：星展 ECO (2025/11/24起)、台新 Richart (2025/10/1起)、玉山 Unicard (VISA)、元大鑽金、樂天樂虎、華南富家、聯邦綠卡、中信中華電信卡<strong>「刷退不退 1.5% 手續費」</strong>，千萬別綁定在退稅收款 App！
+            </div>
+          </div>
+        `;
+      } else if (isCancellableBooking) {
+        banner.classList.remove("hidden");
+        banner.innerHTML = `
+          <div class="bg-amber-500/10 dark:bg-navy-900 rounded-2xl p-4 sm:p-5 border border-amber-500/40 space-y-2">
+            <h3 class="text-sm sm:text-base font-black text-amber-600 dark:text-amber-400">🏨 國外訂房 / 機票（若可能免費取消）刷卡避雷指南</h3>
+            <p class="text-xs text-slate-700 dark:text-slate-300 leading-relaxed">
+              • <strong>✅ 推薦刷（高回饋 ＋ 取消會退還 1.5% 國外手續費）</strong>：<strong>國泰 CUBE卡 (趣旅行 3~3.3%)</strong>、<strong>永豐 DAWAY卡 (2.5%)</strong>、<strong>第一銀行 iLEO卡 (2%)</strong>。<br/>
+              • <strong>❌ 避開刷（取消會白白損失 1.5% 手續費）</strong>：<strong>台新 Richart卡</strong>（2025/10/1起取消退還）、<strong>星展 ECO永續卡</strong>（2025/11/24起取消退還）、<strong>玉山 Unicard (VISA)</strong>。若行程 100% 確定不取消再刷高回饋卡！
+            </p>
+          </div>
+        `;
+      } else {
+        banner.classList.add("hidden");
+        banner.innerHTML = "";
+      }
+    }
+
+    function renderResultsList(list, amount, queryRaw) {
+      const container = document.getElementById("results-list");
+      if (list.length === 0) {
+        container.innerHTML = `
+          <div class="bg-white dark:bg-navy-900 rounded-2xl p-8 text-center border border-slate-200 dark:border-slate-800">
+            <p class="text-lg font-bold mb-1">找不到符合篩選條件的卡片</p>
+            <p class="text-xs text-slate-500">請嘗試取消勾選「僅顯示免登錄」，或更換關鍵字搜尋。</p>
+          </div>
+        `;
+        return;
+      }
+
+      container.innerHTML = list.map((item, idx) => {
+        const { card, rule, isFallback } = item;
+        const isTop1 = idx === 0 && !isFallback;
+        const isTop23 = (idx === 1 || idx === 2) && !isFallback;
+
+        // 計算預估回饋金額與上限警告
+        let calcHtml = "";
+        if (amount > 0) {
+          const rawReward = Math.round(amount * (rule.rate / 100));
+          let capWarning = "";
+          let actualReward = rawReward;
+
+          if (rule.capAmount && rule.capRateDiff > 0) {
+            const bonusPart = amount * (rule.capRateDiff / 100);
+            const basePart = amount * ((rule.rate - rule.capRateDiff) / 100);
+            if (bonusPart > rule.capAmount) {
+              actualReward = Math.round(basePart + rule.capAmount);
+              const maxSpend = Math.floor(rule.capAmount / (rule.capRateDiff / 100));
+              capWarning = `<span class="text-rose-500 dark:text-rose-400 font-bold ml-1">⚠️ 已超過加碼上限！(封頂金額約 NT$${maxSpend.toLocaleString()}，實際預估約 ${actualReward.toLocaleString()} 元/點)</span>`;
+            }
+          }
+
+          calcHtml = `
+            <div class="mt-2.5 px-3 py-2 rounded-xl bg-amber-500/10 border border-amber-500/25 text-xs flex flex-wrap items-center justify-between gap-1">
+              <span>💰 刷 <strong>NT$${amount.toLocaleString()}</strong> 預估最高可得：<strong class="text-amber-600 dark:text-amber-300 text-sm">${actualReward.toLocaleString()}</strong> ${card.rewardType}</span>
+              ${capWarning}
+            </div>
+          `;
+        }
+
+        // 行動標籤顏色樣式
+        let actionBadgeClass = "bg-emerald-500/15 text-emerald-600 dark:text-emerald-400 border-emerald-500/30";
+        if (rule.actionType === "register_monthly1" || rule.actionType === "register_special") {
+          actionBadgeClass = "bg-rose-500/15 text-rose-600 dark:text-rose-400 border-rose-500/30";
+        } else if (rule.actionType === "switch_app") {
+          actionBadgeClass = "bg-amber-500/15 text-amber-600 dark:text-amber-400 border-amber-500/30";
+        }
+
+        // 國際組織徽章色
+        const networkColors = {
+          "JCB": "bg-blue-600 text-white",
+          "VISA": "bg-indigo-700 text-white",
+          "MASTERCARD": "bg-orange-600 text-white"
+        };
+
+        // 海外刷退 1.5% 狀態小徽章
+        const refundBadge = card.refundFeeReturned === "true"
+          ? `<span class="text-[10px] font-bold px-2 py-0.5 rounded bg-emerald-500/15 text-emerald-600 dark:text-emerald-400 border border-emerald-500/30">刷退退1.5%</span>`
+          : card.refundFeeReturned === "partial"
+          ? `<span class="text-[10px] font-bold px-2 py-0.5 rounded bg-amber-500/15 text-amber-600 dark:text-amber-400 border border-amber-500/30">刷退部分退1.5%</span>`
+          : `<span class="text-[10px] font-bold px-2 py-0.5 rounded bg-rose-500/15 text-rose-600 dark:text-rose-400 border border-rose-500/30">刷退不退1.5%</span>`;
+
+        return `
+          <div class="bg-white dark:bg-navy-900 rounded-2xl p-4 sm:p-5 border transition-all ${
+            isTop1
+              ? "border-amber-400 dark:border-amber-500 shadow-xl shadow-amber-500/10 ring-1 ring-amber-400/50"
+              : "border-slate-200 dark:border-slate-800 shadow-sm hover:border-slate-300 dark:hover:border-slate-700"
+          }">
+            <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
+              <!-- 左側卡片資訊 -->
+              <div class="space-y-1.5 flex-1">
+                <div class="flex flex-wrap items-center gap-2">
+                  ${isTop1 ? `<span class="px-2.5 py-0.5 rounded-full gold-gradient text-white text-xs font-black shadow-sm">👑 最佳首選</span>` : ""}
+                  ${isTop23 ? `<span class="px-2.5 py-0.5 rounded-full bg-slate-200 dark:bg-navy-700 text-slate-700 dark:text-amber-300 text-xs font-bold">🥈 備選方案</span>` : ""}
+                  <span class="text-xs font-bold text-slate-500 dark:text-slate-400">${escapeHtml(card.bank)}</span>
+                  <span class="text-base sm:text-lg font-black tracking-tight">${escapeHtml(card.name)}</span>
+                  <span class="text-[10px] font-black px-2 py-0.5 rounded ${networkColors[card.network] || 'bg-slate-600 text-white'}">${card.network}</span>
+                  ${refundBadge}
+                </div>
+
+                <!-- 命中規則名稱 -->
+                <div class="text-sm font-bold text-slate-800 dark:text-slate-200">
+                  ${escapeHtml(rule.title)}
+                </div>
+
+                <!-- 登錄/切換方案狀態標籤 -->
+                <div class="flex flex-wrap items-center gap-2 pt-0.5">
+                  <span class="inline-flex items-center px-2.5 py-1 rounded-lg text-xs font-bold border ${actionBadgeClass}">
+                    ${escapeHtml(rule.actionLabel)}
+                  </span>
+                  <span class="text-xs text-slate-500 dark:text-slate-400">
+                    回饋形式：<strong>${escapeHtml(card.rewardType)}</strong>
+                  </span>
+                </div>
+              </div>
+
+              <!-- 右側超大回饋率顯示 -->
+              <div class="flex sm:flex-col items-baseline sm:items-end justify-between sm:justify-center border-t sm:border-t-0 pt-2.5 sm:pt-0 border-slate-100 dark:border-slate-800 shrink-0">
+                <span class="text-xs font-bold text-slate-400 sm:mb-0.5">最高回饋</span>
+                <div class="flex items-baseline gap-0.5">
+                  <span class="text-3xl sm:text-4xl font-black ${isTop1 ? 'text-amber-500 dark:gold-text-gradient' : 'text-slate-800 dark:text-white'}">
+                    ${rule.rate}
+                  </span>
+                  <span class="text-base font-extrabold text-amber-500">%</span>
+                </div>
+              </div>
+            </div>
+
+            <!-- 詳細上限與條件說明 -->
+            <div class="mt-3 pt-2.5 border-t border-slate-100 dark:border-slate-800/80 text-xs text-slate-600 dark:text-slate-400 flex flex-col sm:flex-row sm:items-center justify-between gap-2">
+              <p>📌 ${escapeHtml(rule.capNote)}</p>
+              ${rule.registerUrl ? `
+                <a href="${rule.registerUrl}" target="_blank" rel="noopener noreferrer" class="shrink-0 inline-flex items-center gap-1 text-amber-600 dark:text-amber-400 font-bold hover:underline">
+                  <span>前往銀行活動頁</span>
+                  <span>↗</span>
+                </a>
+              ` : ""}
+            </div>
+
+            ${calcHtml}
+          </div>
+        `;
+      }).join("");
+    }
+
+    // =========================================================================
+    // 3.5 日本退稅新制「刷 A 卡、退 B 卡」雙卡計算機與 16 卡檢表
+    // =========================================================================
+    function initTaxRefundCalculator() {
+      const selA = document.getElementById("tr-cardA");
+      const selB = document.getElementById("tr-cardB");
+      if (!selA || !selB) return;
+
+      const optionsHtml = cards.map(c => {
+        const refTag = c.refundFeeReturned === "true" ? "✅退1.5%" : (c.refundFeeReturned === "partial" ? "⚠️部分退" : "❌不退1.5%");
+        return `<option value="${c.id}">${c.bank} ${c.name} (${c.network}｜海外${c.baseOverseas}%｜${refTag})</option>`;
+      }).join("");
+
+      selA.innerHTML = optionsHtml;
+      selB.innerHTML = optionsHtml;
+
+      // 預設 A 卡選玉山熊本熊、B 卡選永豐三井聯名卡(JCB)
+      if (cards.some(c => c.id === "esun-kumamoto")) selA.value = "esun-kumamoto";
+      if (cards.some(c => c.id === "sinopac-mitsui")) selB.value = "sinopac-mitsui";
+
+      renderRefundPolicyTable();
+      calculateTaxRefund(false);
+    }
+
+    function calculateTaxRefund(manualRateEdit = false) {
+      const jpy = parseFloat(document.getElementById("tr-jpy").value) || 0;
+      const fx = parseFloat(document.getElementById("tr-fx").value) || 0.215;
+      const platform = document.getElementById("tr-platform").value;
+      const cardA = cards.find(c => c.id === document.getElementById("tr-cardA").value) || cards[0];
+      const cardB = cards.find(c => c.id === document.getElementById("tr-cardB").value) || cards[0];
+
+      // 自動帶入合理回饋率（除非使用者手動調整數字）
+      if (!manualRateEdit) {
+        const bestJapanRuleA = [...cardA.rules].filter(r => (r.keywords || []).some(k => ["日本", "海外"].includes(k))).sort((a, b) => b.rate - a.rate)[0];
+        document.getElementById("tr-rateA").value = bestJapanRuleA ? bestJapanRuleA.rate : cardA.baseOverseas;
+        // 退稅入帳通常依海外基本回饋率倒扣（富邦J卡在日本當地則為3%）
+        const clawbackRateB = cardB.id === "fubon-j" ? 3.0 : cardB.baseOverseas;
+        document.getElementById("tr-rateB").value = clawbackRateB;
+      }
+
+      const rateA = parseFloat(document.getElementById("tr-rateA").value) || 0;
+      const rateB = parseFloat(document.getElementById("tr-rateB").value) || 0;
+
+      // 更新徽章
+      document.getElementById("tr-cardA-badge").textContent = `${cardA.network} · ${cardA.refundFeeReturned === 'true' ? '刷退退1.5%' : '刷退不退1.5%'}`;
+      document.getElementById("tr-cardB-badge").textContent = `${cardB.network} · ${cardB.refundFeeReturned === 'true' ? '刷退退1.5%' : '刷退不退1.5%'}`;
+
+      // 計算未稅價、消費稅(10%)與平台手續費
+      const taxFreeJpy = jpy / 1.1;
+      const fullTaxJpy = jpy - taxFreeJpy;
+      let platformFeeRate = 0;
+      if (platform === "gb_23") platformFeeRate = 0.023; // 未稅價 2.3%
+      else if (platform === "pie_15" || platform === "drug_15") platformFeeRate = 0.015; // 未稅價 1.5%
+
+      const platformFeeJpy = taxFreeJpy * platformFeeRate;
+      const actualRefundJpy = Math.max(0, fullTaxJpy - platformFeeJpy);
+
+      const grossTwd = jpy * fx;
+      const refundTwd = actualRefundJpy * fx;
+
+      // Global Blue DCC 匯差損失估算（VISA / MC 被強制轉台幣約多損 3%）
+      const isGlobalBlue = platform === "gb_23";
+      const dccLossB = (isGlobalBlue && cardB.network !== "JCB") ? refundTwd * 0.03 : 0;
+      const dccLossA = (isGlobalBlue && cardA.network !== "JCB") ? refundTwd * 0.03 : 0;
+
+      // 動態警告訊息
+      let warningsHtml = "";
+      if (isGlobalBlue && cardB.network !== "JCB") {
+        warningsHtml += `
+          <div class="p-3 rounded-xl bg-rose-500/15 border border-rose-500/40 text-xs text-rose-600 dark:text-rose-300 font-bold">
+            🚨 <strong>Global Blue DCC 匯率警報</strong>：你選擇的退稅收款 B 卡（${cardB.bank} ${cardB.name}）為 <strong>${cardB.network}</strong>！Global Blue 退稅至 VISA/Mastercard 會強制以極差匯率轉台幣（約損失 3%，約 NT$${Math.round(dccLossB)}），建議改綁 <strong>永豐 三井聯名卡 (JCB)</strong>！
+          </div>
+        `;
+      }
+      if (cardB.refundFeeReturned !== "true") {
+        warningsHtml += `
+          <div class="p-3 rounded-xl bg-rose-500/15 border border-rose-500/40 text-xs text-rose-600 dark:text-rose-300 font-bold">
+            ⚠️ <strong>不退 1.5% 手續費警告</strong>：${cardB.bank} ${cardB.name} 刷退<strong>不會退還 1.5% 海外手續費</strong>，反而會白白被倒扣 ${rateB}% 回饋！請改選「刷退退 1.5%」的卡片（如永豐三井JCB、永豐SPORT、富邦好市多）。
+          </div>
+        `;
+      }
+      document.getElementById("tr-warnings").innerHTML = warningsHtml;
+
+      // 方案 1：刷 A 卡、退 B 卡（雙卡策略）
+      const feeA = grossTwd * 0.015;
+      const rewardA = grossTwd * (rateA / 100);
+      const refundFeeReturnB = cardB.refundFeeReturned === "true" ? refundTwd * 0.015 : 0;
+      const clawbackB = refundTwd * (rateB / 100);
+      const netCostDual = grossTwd + feeA - rewardA - refundTwd - refundFeeReturnB + clawbackB + dccLossB;
+
+      // 方案 2：單卡一刷到底（結帳 A 卡、退稅也退回 A 卡）
+      const refundFeeReturnA = cardA.refundFeeReturned === "true" ? refundTwd * 0.015 : 0;
+      const clawbackA = refundTwd * (rateA / 100);
+      const netCostSingle = grossTwd + feeA - rewardA - refundTwd - refundFeeReturnA + clawbackA + dccLossA;
+
+      // 方案 3：機場現金退稅機台（扣 10% 稅額的 10% = 1% 總稅額手續費，且百圓以下捨去）
+      const cashRefundJpy = Math.floor((actualRefundJpy * 0.9) / 100) * 100;
+      const cashRefundTwd = cashRefundJpy * fx;
+      const netCostCash = grossTwd + feeA - rewardA - cashRefundTwd;
+
+      const savedVsSingle = Math.round(netCostSingle - netCostDual);
+      const savedVsCash = Math.round(netCostCash - netCostDual);
+
+      document.getElementById("tr-comparison-cards").innerHTML = `
+        <!-- 方案 1：雙卡神操作 -->
+        <div class="p-4 rounded-2xl bg-gradient-to-b from-amber-500/15 to-transparent border-2 border-amber-500 space-y-2 relative">
+          <span class="px-2.5 py-0.5 rounded-full gold-gradient text-white text-[11px] font-black">👑 推薦：刷 A 退 B 雙卡策略</span>
+          <div class="text-xs text-slate-500 dark:text-slate-400">結帳 ${cardA.name} ＋ 退稅綁 ${cardB.name}</div>
+          <div class="text-2xl font-black text-amber-600 dark:text-amber-300">實付 NT$${Math.round(netCostDual).toLocaleString()}</div>
+          <ul class="text-[11px] space-y-1 text-slate-600 dark:text-slate-300 border-t border-slate-200 dark:border-slate-700 pt-2">
+            <li>• A卡結帳回饋 (${rateA}%)：<strong>+NT$${Math.round(rewardA).toLocaleString()}</strong></li>
+            <li>• B卡退稅退 1.5% 手續費：<strong>+NT$${Math.round(refundFeeReturnB).toLocaleString()}</strong></li>
+            <li>• B卡退稅倒扣回饋 (${rateB}%)：<strong>-NT$${Math.round(clawbackB).toLocaleString()}</strong></li>
+            ${dccLossB > 0 ? `<li class="text-rose-500 font-bold">• Global Blue DCC 匯損：-NT$${Math.round(dccLossB).toLocaleString()}</li>` : ""}
+          </ul>
+          <div class="text-xs font-extrabold text-emerald-600 dark:text-emerald-400 pt-1">
+            ✨ 比刷退同張卡多省 NT$${savedVsSingle.toLocaleString()}！
+          </div>
+        </div>
+
+        <!-- 方案 2：同張 A 卡退稅 -->
+        <div class="p-4 rounded-2xl bg-slate-50 dark:bg-navy-800/70 border border-slate-200 dark:border-slate-700 space-y-2">
+          <span class="px-2.5 py-0.5 rounded-full bg-slate-200 dark:bg-navy-700 text-xs font-bold">對照組：刷 A 退同張 A 卡</span>
+          <div class="text-xs text-slate-500 dark:text-slate-400">結帳與退稅皆綁 ${cardA.name}</div>
+          <div class="text-2xl font-black">實付 NT$${Math.round(netCostSingle).toLocaleString()}</div>
+          <ul class="text-[11px] space-y-1 text-slate-600 dark:text-slate-300 border-t border-slate-200 dark:border-slate-700 pt-2">
+            <li>• A卡退稅退 1.5% 手續費：+NT$${Math.round(refundFeeReturnA).toLocaleString()}</li>
+            <li class="text-rose-500 font-bold">• A卡退稅遭重扣 ${rateA}% 回饋：-NT$${Math.round(clawbackA).toLocaleString()}</li>
+            ${dccLossA > 0 ? `<li class="text-rose-500 font-bold">• Global Blue DCC 匯損：-NT$${Math.round(dccLossA).toLocaleString()}</li>` : ""}
+          </ul>
+          <div class="text-xs text-slate-500 pt-1">退稅款被原卡高回饋率倒扣，損失較大</div>
+        </div>
+
+        <!-- 方案 3：機場現金退稅機台 -->
+        <div class="p-4 rounded-2xl bg-slate-50 dark:bg-navy-800/70 border border-slate-200 dark:border-slate-700 space-y-2">
+          <span class="px-2.5 py-0.5 rounded-full bg-slate-200 dark:bg-navy-700 text-xs font-bold">對照組：機場現金退稅機台</span>
+          <div class="text-xs text-slate-500 dark:text-slate-400">領日圓現鈔（扣 10% 稅額手續費＋百圓捨去）</div>
+          <div class="text-2xl font-black">實付 NT$${Math.round(netCostCash).toLocaleString()}</div>
+          <ul class="text-[11px] space-y-1 text-slate-600 dark:text-slate-300 border-t border-slate-200 dark:border-slate-700 pt-2">
+            <li>• 機場機台實領日圓：¥${cashRefundJpy.toLocaleString()}</li>
+            <li>• 機台抽成＋尾數捨去損失：-¥${Math.round(actualRefundJpy - cashRefundJpy).toLocaleString()}</li>
+            <li>• 無需信用卡倒扣，但需提早到機場排隊</li>
+          </ul>
+          <div class="text-xs font-bold text-amber-600 dark:text-amber-400 pt-1">
+            雙卡策略比領現金多省 NT$${savedVsCash.toLocaleString()}
+          </div>
+        </div>
+      `;
+    }
+
+    function renderRefundPolicyTable() {
+      const tbody = document.getElementById("refund-policy-tbody");
+      if (!tbody) return;
+      tbody.innerHTML = cards.map(c => {
+        const statusHtml = c.refundFeeReturned === "true"
+          ? `<span class="px-2 py-0.5 rounded-full bg-emerald-500/15 text-emerald-600 dark:text-emerald-400 font-bold">✅ 會退 1.5%</span>`
+          : c.refundFeeReturned === "partial"
+          ? `<span class="px-2 py-0.5 rounded-full bg-amber-500/15 text-amber-600 dark:text-amber-400 font-bold">⚠️ 部分退(歐韓退稅不退)</span>`
+          : `<span class="px-2 py-0.5 rounded-full bg-rose-500/15 text-rose-600 dark:text-rose-400 font-bold">❌ 不退 1.5%</span>`;
+
+        return `
+          <tr class="hover:bg-slate-50 dark:hover:bg-navy-800/50">
+            <td class="py-2.5 px-2 font-bold">${escapeHtml(c.bank)} ${escapeHtml(c.name)}</td>
+            <td class="py-2.5 px-2 font-black text-xs">${c.network}</td>
+            <td class="py-2.5 px-2 font-bold">${c.baseOverseas}%</td>
+            <td class="py-2.5 px-2">${statusHtml}</td>
+            <td class="py-2.5 px-2 text-xs text-slate-600 dark:text-slate-400">${escapeHtml(c.refundNote || c.baseNote)}</td>
+          </tr>
+        `;
+      }).join("");
+    }
+
+    // =========================================================================
+    // 4. 每月 1 號與重要登錄日提醒中心 + .ics 行事曆產生器
+    // =========================================================================
+    function getCurrentMonthKey() {
+      const now = new Date();
+      return `${now.getFullYear()}-${String(now.getMonth() + 1).padStart(2, '0')}`;
+    }
+
+    function getCheckedItems() {
+      const monthKey = getCurrentMonthKey();
+      const raw = localStorage.getItem(STORAGE_KEY_CHECKS);
+      if (!raw) return {};
+      try {
+        const parsed = JSON.parse(raw);
+        // 跨月自動清空舊勾選
+        if (parsed.month !== monthKey) {
+          return {};
+        }
+        return parsed.items || {};
+      } catch (e) {
+        return {};
+      }
+    }
+
+    function toggleCheckItem(itemId) {
+      const monthKey = getCurrentMonthKey();
+      const items = getCheckedItems();
+      items[itemId] = !items[itemId];
+      localStorage.setItem(STORAGE_KEY_CHECKS, JSON.stringify({ month: monthKey, items }));
+      renderReminders();
+    }
+
+    function collectReminderTasks() {
+      const tasks = [];
+      cards.filter(c => c.enabled).forEach(card => {
+        card.rules.forEach((rule, rIdx) => {
+          if (rule.actionType && rule.actionType !== "none") {
+            tasks.push({
+              uid: `${card.id}-r${rIdx}`,
+              bank: card.bank,
+              cardName: card.name,
+              network: card.network,
+              title: rule.title,
+              rate: rule.rate,
+              actionType: rule.actionType,
+              actionLabel: rule.actionLabel,
+              registerDay: rule.registerDay || "每月1日確認",
+              capNote: rule.capNote,
+              registerUrl: rule.registerUrl || ""
+            });
+          }
+        });
+      });
+      return tasks;
+    }
+
+    function renderReminders() {
+      const now = new Date();
+      document.getElementById("checklist-month-label").textContent = `${now.getFullYear()}年${now.getMonth() + 1}月 登錄／領券檢核進度`;
+
+      const tasks = collectReminderTasks();
+      const checkedMap = getCheckedItems();
+      const completedCount = tasks.filter(t => checkedMap[t.uid]).length;
+      const pendingCount = tasks.length - completedCount;
+
+      // 更新徽章與進度條
+      document.getElementById("badge-pending-count").textContent = pendingCount;
+      document.getElementById("m-badge-pending").textContent = pendingCount;
+      document.getElementById("checklist-progress-text").textContent = `${completedCount} / ${tasks.length} 已完成`;
+      const pct = tasks.length > 0 ? Math.round((completedCount / tasks.length) * 100) : 100;
+      document.getElementById("checklist-progress-bar").style.width = `${pct}%`;
+
+      // 分組：1) 每月1號/定期登錄 2) 特定日搶登錄(18/20日) 3) App領券/切換方案
+      const groups = [
+        {
+          id: "g-monthly",
+          title: "📅 每月 1 號／定期活動登錄",
+          subtitle: "建議每月 1 號早上設定鬧鐘統一登錄",
+          items: tasks.filter(t => t.actionType === "register_monthly1")
+        },
+        {
+          id: "g-special",
+          title: "🔥 指定日期搶名額登錄（18日 / 20日）",
+          subtitle: "富邦 J 卡日韓泰與日本交通卡限量登錄",
+          items: tasks.filter(t => t.actionType === "register_special")
+        },
+        {
+          id: "g-app",
+          title: "📲 每月 App 領券 / 權益方案確認",
+          subtitle: "開啟銀行 App 領加碼券或確認權益方案",
+          items: tasks.filter(t => t.actionType === "switch_app")
+        }
+      ];
+
+      const grid = document.getElementById("reminders-grid");
+      grid.innerHTML = groups.map(group => {
+        if (group.items.length === 0) return "";
+        return `
+          <div class="bg-white dark:bg-navy-900 rounded-2xl p-4 sm:p-5 border border-slate-200 dark:border-slate-800 shadow-sm space-y-3">
+            <div>
+              <h3 class="text-base font-extrabold">${group.title}</h3>
+              <p class="text-xs text-slate-500 dark:text-slate-400">${group.subtitle}</p>
+            </div>
+            <div class="space-y-2.5">
+              ${group.items.map(task => {
+                const isChecked = !!checkedMap[task.uid];
+                return `
+                  <div class="p-3 rounded-xl border transition ${
+                    isChecked
+                      ? "bg-slate-100/70 dark:bg-navy-800/40 border-slate-200 dark:border-slate-800 opacity-65"
+                      : "bg-slate-50 dark:bg-navy-800 border-slate-200 dark:border-slate-700"
+                  }">
+                    <div class="flex items-start gap-3">
+                      <input
+                        type="checkbox"
+                        ${isChecked ? "checked" : ""}
+                        onchange="toggleCheckItem('${task.uid}')"
+                        class="mt-1 w-5 h-5 rounded-md text-amber-500 focus:ring-amber-500 cursor-pointer"
+                      />
+                      <div class="flex-1 min-w-0">
+                        <div class="flex flex-wrap items-center justify-between gap-1">
+                          <span class="text-xs font-extrabold text-amber-600 dark:text-amber-400">${escapeHtml(task.bank)} · ${escapeHtml(task.cardName)}</span>
+                          <span class="text-[11px] font-bold px-2 py-0.5 rounded bg-rose-500/15 text-rose-600 dark:text-rose-400">
+                            ${escapeHtml(task.registerDay)}
+                          </span>
+                        </div>
+                        <p class="text-sm font-bold mt-0.5 ${isChecked ? 'line-through text-slate-500' : ''}">
+                          ${escapeHtml(task.title)} (${task.rate}%)
+                        </p>
+                        <p class="text-xs text-slate-500 dark:text-slate-400 mt-1">${escapeHtml(task.capNote)}</p>
+                        ${task.registerUrl ? `
+                          <a href="${task.registerUrl}" target="_blank" rel="noopener noreferrer" class="inline-flex items-center gap-1 mt-2 text-xs font-bold text-amber-600 dark:text-amber-400 hover:underline">
+                            <span>🔗 開啟官方登錄／活動頁面</span>
+                            <span>↗</span>
+                          </a>
+                        ` : ""}
+                      </div>
+                    </div>
+                  </div>
+                `;
+              }).join("")}
+            </div>
+          </div>
+        `;
+      }).join("");
+    }
+
+    // 產生標準 .ics 行事曆檔案
+    function downloadICS(mode) {
+      const tasks = collectReminderTasks();
+      const now = new Date();
+      // 計算下一個 1 號作為起始日
+      let nextFirst = new Date(now.getFullYear(), now.getMonth(), 1, 8, 50, 0);
+      if (now.getDate() > 1) {
+        nextFirst = new Date(now.getFullYear(), now.getMonth() + 1, 1, 8, 50, 0);
+      }
+
+      const formatICSDate = (dateObj) => {
+        const pad = n => String(n).padStart(2, '0');
+        return `${dateObj.getFullYear()}${pad(dateObj.getMonth() + 1)}${pad(dateObj.getDate())}T${pad(dateObj.getHours())}${pad(dateObj.getMinutes())}00`;
+      };
+
+      const escapeICS = (str) => str.replace(/\n/g, "\\n").replace(/,/g, "\\,").replace(/;/g, "\\;");
+
+      const monthlyTasks = tasks.filter(t => t.actionType !== "register_special");
+      const descLines = monthlyTasks.map((t, i) => `${i + 1}. 【${t.bank} ${t.cardName}】${t.title} (${t.rate}%) - ${t.actionLabel} ${t.registerUrl ? '(' + t.registerUrl + ')' : ''}`);
+      const fullDescription = escapeICS("🔔 每月1號信用卡登錄與領券提醒清單：\n\n" + descLines.join("\n"));
+
+      let events = [];
+
+      // 事件 1：每月 1 號 08:50 總提醒（附帶出國退稅雙卡提醒）
+      const dtStart1 = formatICSDate(nextFirst);
+      const dtEnd1 = formatICSDate(new Date(nextFirst.getTime() + 30 * 60000));
+      events.push([
+        "BEGIN:VEVENT",
+        `UID:credit-card-monthly1-${Date.now()}@mycardadvisor`,
+        `DTSTAMP:${formatICSDate(now)}`,
+        `DTSTART;TZID=Asia/Taipei:${dtStart1}`,
+        `DTEND;TZID=Asia/Taipei:${dtEnd1}`,
+        "RRULE:FREQ=MONTHLY;BYMONTHDAY=1",
+        "SUMMARY:💳【每月1號】信用卡活動登錄＆領券/切方案提醒！",
+        `DESCRIPTION:${fullDescription + escapeICS("\n\n🇯🇵【出國旅遊／日本退稅行前備忘】\n• 結帳A卡：玉山熊本熊(8.5%) / 富邦J卡(6%) / 星展ECO(5%)\n• 退稅App收款B卡：務必綁定【永豐 三井聯名卡 JCB】（退1.5%手續費+避開Global Blue DCC！）\n• 可免費取消飯店：刷 國泰CUBE(趣旅行) / 永豐DAWAY / 一銀iLEO（取消會退1.5%）")}`,
+        "BEGIN:VALARM",
+        "TRIGGER:-PT10M",
+        "ACTION:DISPLAY",
+        "DESCRIPTION:信用卡每月1號登錄提醒",
+        "END:VALARM",
+        "END:VEVENT"
+      ].join("\r\n"));
+
+      // 若選擇完整版，加入每月 18 日 15:50 與每月 20 日 15:50 富邦J卡搶登錄提醒
+      if (mode === "all") {
+        const next18 = new Date(nextFirst.getFullYear(), nextFirst.getMonth(), 18, 15, 50, 0);
+        const next20 = new Date(nextFirst.getFullYear(), nextFirst.getMonth(), 20, 15, 50, 0);
+
+        events.push([
+          "BEGIN:VEVENT",
+          `UID:credit-card-monthly18-${Date.now()}@mycardadvisor`,
+          `DTSTAMP:${formatICSDate(now)}`,
+          `DTSTART;TZID=Asia/Taipei:${formatICSDate(next18)}`,
+          `DTEND;TZID=Asia/Taipei:${formatICSDate(new Date(next18.getTime() + 20 * 60000))}`,
+          "RRULE:FREQ=MONTHLY;BYMONTHDAY=18",
+          "SUMMARY:🔥【16:00搶登錄】富邦J卡日本交通卡(Suica/ICOCA)最高10%",
+          `DESCRIPTION:${escapeICS("16:00準時登錄富邦J卡日本交通卡Apple Pay加值最高10%活動！網址：https://www.fubon.com/banking/personal/credit_card/all_card/jcard/jcard.htm")}`,
+          "BEGIN:VALARM",
+          "TRIGGER:-PT5M",
+          "ACTION:DISPLAY",
+          "DESCRIPTION:富邦J卡16:00登錄倒數5分鐘",
+          "END:VALARM",
+          "END:VEVENT"
+        ].join("\r\n"));
+
+        events.push([
+          "BEGIN:VEVENT",
+          `UID:credit-card-monthly20-${Date.now()}@mycardadvisor`,
+          `DTSTAMP:${formatICSDate(now)}`,
+          `DTSTART;TZID=Asia/Taipei:${formatICSDate(next20)}`,
+          `DTEND;TZID=Asia/Taipei:${formatICSDate(new Date(next20.getTime() + 20 * 60000))}`,
+          "RRULE:FREQ=MONTHLY;BYMONTHDAY=20",
+          "SUMMARY:🔥【16:00搶登錄】富邦J卡日韓泰實體消費最高6%",
+          `DESCRIPTION:${escapeICS("16:00準時登錄富邦J卡日韓泰實體消費最高6%活動！網址：https://www.fubon.com/banking/personal/credit_card/all_card/jcard/jcard.htm")}`,
+          "BEGIN:VALARM",
+          "TRIGGER:-PT5M",
+          "ACTION:DISPLAY",
+          "DESCRIPTION:富邦J卡16:00登錄倒數5分鐘",
+          "END:VALARM",
+          "END:VEVENT"
+        ].join("\r\n"));
+      }
+
+      const icsContent = [
+        "BEGIN:VCALENDAR",
+        "VERSION:2.0",
+        "PRODID:-//Personal Credit Card Advisor 2026//TW",
+        "CALSCALE:GREGORIAN",
+        "METHOD:PUBLISH",
+        ...events,
+        "END:VCALENDAR"
+      ].join("\r\n");
+
+      const blob = new Blob([icsContent], { type: "text/calendar;charset=utf-8" });
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement("a");
+      a.href = url;
+      a.download = mode === "all" ? "信用卡每月1日18日20日登錄提醒.ics" : "信用卡每月1號登錄提醒.ics";
+      document.body.appendChild(a);
+      a.click();
+      document.body.removeChild(a);
+      URL.revokeObjectURL(url);
+
+      showToast("✅ 已下載 .ics 行事曆檔！請開啟檔案並匯入 Google 或 Apple 行事曆即可每月自動提醒。", "success");
+    }
+
+    // =========================================================================
+    // 5. 卡片庫管理 (CRUD + JSON 匯入匯出)
+    // =========================================================================
+    function renderWalletList() {
+      const container = document.getElementById("wallet-list");
+      container.innerHTML = cards.map(card => {
+        return `
+          <div class="bg-white dark:bg-navy-900 rounded-2xl p-4 sm:p-5 border transition ${
+            card.enabled
+              ? "border-slate-200 dark:border-slate-800 shadow-sm"
+              : "border-slate-200/60 dark:border-slate-800/50 opacity-60"
+          }">
+            <div class="flex items-start justify-between gap-2">
+              <div>
+                <div class="flex items-center gap-2">
+                  <span class="text-xs font-bold text-amber-600 dark:text-amber-400">${escapeHtml(card.bank)}</span>
+                  <span class="text-[10px] font-black px-1.5 py-0.5 rounded bg-slate-200 dark:bg-navy-800">${card.network}</span>
+                </div>
+                <h3 class="text-base font-extrabold mt-0.5">${escapeHtml(card.name)}</h3>
+              </div>
+
+              <!-- 啟用/停用開關 -->
+              <label class="inline-flex items-center gap-1.5 cursor-pointer">
+                <input type="checkbox" ${card.enabled ? "checked" : ""} onchange="toggleCardEnabled('${card.id}')" class="w-4 h-4 rounded text-amber-500 focus:ring-amber-500" />
+                <span class="text-xs font-bold">${card.enabled ? "啟用中" : "已停用"}</span>
+              </label>
+            </div>
+
+            <p class="text-xs text-slate-500 dark:text-slate-400 mt-2 leading-relaxed">
+              ${escapeHtml(card.baseNote)}
+            </p>
+
+            <!-- 加碼規則摘要 -->
+            <div class="mt-3 space-y-1.5">
+              ${card.rules.map(r => `
+                <div class="text-xs px-2.5 py-1.5 rounded-lg bg-slate-100 dark:bg-navy-800 flex items-center justify-between gap-2">
+                  <span class="truncate font-medium">${escapeHtml(r.title)}</span>
+                  <span class="font-black text-amber-600 dark:text-amber-400 shrink-0">${r.rate}%</span>
+                </div>
+              `).join("")}
+            </div>
+
+            <div class="mt-4 pt-3 border-t border-slate-100 dark:border-slate-800 flex justify-end gap-2">
+              <button onclick="openCardModal('${card.id}')" class="px-3 py-1.5 rounded-lg bg-slate-200/80 dark:bg-navy-800 hover:bg-amber-500/20 text-xs font-bold transition">
+                ✏️ 編輯規則
+              </button>
+              <button onclick="confirmDeleteCard('${card.id}')" class="px-3 py-1.5 rounded-lg bg-rose-500/10 text-rose-500 hover:bg-rose-500/20 text-xs font-bold transition">
+                🗑️ 刪除
+              </button>
+            </div>
+          </div>
+        `;
+      }).join("");
+    }
+
+    function toggleCardEnabled(cardId) {
+      const card = cards.find(c => c.id === cardId);
+      if (card) {
+        card.enabled = !card.enabled;
+        saveCardsToStorage();
+        renderWalletList();
+        handleSearch();
+        renderReminders();
+        showToast(`${card.bank} ${card.name} 已${card.enabled ? "啟用" : "停用"}`);
+      }
+    }
+
+    // 開啟新增/編輯彈窗
+    function openCardModal(cardId = null) {
+      const modal = document.getElementById("card-modal");
+      const rulesList = document.getElementById("rules-editor-list");
+      rulesList.innerHTML = "";
+
+      if (cardId) {
+        const card = cards.find(c => c.id === cardId);
+        if (!card) return;
+        document.getElementById("modal-title").textContent = `✏️ 編輯：${card.bank} ${card.name}`;
+        document.getElementById("edit-card-id").value = card.id;
+        document.getElementById("f-bank").value = card.bank;
+        document.getElementById("f-name").value = card.name;
+        document.getElementById("f-network").value = card.network;
+        document.getElementById("f-baseDomestic").value = card.baseDomestic;
+        document.getElementById("f-baseOverseas").value = card.baseOverseas;
+        document.getElementById("f-refundFeeReturned").value = card.refundFeeReturned || "false";
+        document.getElementById("f-rewardType").value = card.rewardType;
+        document.getElementById("f-baseNote").value = card.baseNote;
+        card.rules.forEach(r => addRuleRow(r));
+      } else {
+        document.getElementById("modal-title").textContent = "➕ 新增信用卡與回饋規則";
+        document.getElementById("edit-card-id").value = "";
+        document.getElementById("card-form").reset();
+        addRuleRow();
+      }
+      modal.classList.remove("hidden");
+    }
+
+    function closeCardModal() {
+      document.getElementById("card-modal").classList.add("hidden");
+    }
+
+    function addRuleRow(rule = null) {
+      const container = document.getElementById("rules-editor-list");
+      const div = document.createElement("div");
+      div.className = "rule-row p-3 rounded-xl bg-slate-100 dark:bg-navy-800 border border-slate-300 dark:border-slate-700 space-y-2 relative";
+      div.innerHTML = `
+        <div class="flex justify-between items-center">
+          <span class="text-[11px] font-bold text-slate-500">加碼通路規則</span>
+          <button type="button" onclick="this.closest('.rule-row').remove()" class="text-xs text-rose-500 font-bold hover:underline">移除此條</button>
+        </div>
+        <div class="grid grid-cols-1 sm:grid-cols-3 gap-2">
+          <input type="text" class="r-title sm:col-span-2 px-2.5 py-1.5 rounded-lg bg-white dark:bg-navy-900 border border-slate-300 dark:border-slate-700 text-xs" placeholder="規則名稱 (例：日本藥妝最高8.5%)" value="${rule ? escapeHtml(rule.title) : ''}" required />
+          <input type="number" step="0.1" class="r-rate px-2.5 py-1.5 rounded-lg bg-white dark:bg-navy-900 border border-slate-300 dark:border-slate-700 text-xs" placeholder="最高回饋 % (例：8.5)" value="${rule ? rule.rate : ''}" required />
+        </div>
+        <input type="text" class="r-keywords w-full px-2.5 py-1.5 rounded-lg bg-white dark:bg-navy-900 border border-slate-300 dark:border-slate-700 text-xs" placeholder="觸發關鍵字，用逗號分隔 (例：日本, 藥妝, LINE Pay, 超商)" value="${rule ? escapeHtml((rule.keywords || []).join(', ')) : ''}" required />
+        <div class="grid grid-cols-1 sm:grid-cols-2 gap-2">
+          <select class="r-actionType px-2.5 py-1.5 rounded-lg bg-white dark:bg-navy-900 border border-slate-300 dark:border-slate-700 text-xs">
+            <option value="none" ${rule?.actionType === 'none' ? 'selected' : ''}>免登錄 / 免切方案</option>
+            <option value="register_monthly1" ${rule?.actionType === 'register_monthly1' ? 'selected' : ''}>需每月1號/定期登錄</option>
+            <option value="switch_app" ${rule?.actionType === 'switch_app' ? 'selected' : ''}>需於 App 領券或切換權益方案</option>
+            <option value="register_special" ${rule?.actionType === 'register_special' ? 'selected' : ''}>指定日期搶名額登錄</option>
+          </select>
+          <input type="text" class="r-actionLabel px-2.5 py-1.5 rounded-lg bg-white dark:bg-navy-900 border border-slate-300 dark:border-slate-700 text-xs" placeholder="提醒標籤文字 (例：⚠️ 需每月登錄)" value="${rule ? escapeHtml(rule.actionLabel || '') : ''}" />
+        </div>
+        <div class="grid grid-cols-1 sm:grid-cols-2 gap-2">
+          <input type="text" class="r-capNote px-2.5 py-1.5 rounded-lg bg-white dark:bg-navy-900 border border-slate-300 dark:border-slate-700 text-xs" placeholder="上限說明 (例：加碼上限500元/月)" value="${rule ? escapeHtml(rule.capNote || '') : ''}" />
+          <input type="url" class="r-registerUrl px-2.5 py-1.5 rounded-lg bg-white dark:bg-navy-900 border border-slate-300 dark:border-slate-700 text-xs" placeholder="活動登錄網址 (選填)" value="${rule ? escapeHtml(rule.registerUrl || '') : ''}" />
+        </div>
+      `;
+      container.appendChild(div);
+    }
+
+    function saveCardForm(e) {
+      e.preventDefault();
+      const editId = document.getElementById("edit-card-id").value;
+      const ruleRows = document.querySelectorAll(".rule-row");
+      const newRules = [];
+
+      ruleRows.forEach(row => {
+        const title = row.querySelector(".r-title").value.trim();
+        const rate = parseFloat(row.querySelector(".r-rate").value) || 0;
+        const keywords = row.querySelector(".r-keywords").value.split(/[,，、]/).map(s => s.trim()).filter(Boolean);
+        const actionType = row.querySelector(".r-actionType").value;
+        const actionLabel = row.querySelector(".r-actionLabel").value.trim() || (actionType === "none" ? "免登錄" : "需登錄/確認方案");
+        const capNote = row.querySelector(".r-capNote").value.trim() || "依銀行公告為準";
+        const registerUrl = row.querySelector(".r-registerUrl").value.trim();
+
+        if (title) {
+          newRules.push({
+            title,
+            rate,
+            capAmount: null,
+            capRateDiff: 0,
+            capNote,
+            keywords,
+            actionType,
+            actionLabel,
+            registerDay: actionType === "none" ? "" : "每月確認",
+            registerUrl
+      const refundFeeReturned = document.getElementById("f-refundFeeReturned").value;
+      const cardObj = {
+        id: editId || `custom-${Date.now()}`,
+        bank: document.getElementById("f-bank").value.trim(),
+        name: document.getElementById("f-name").value.trim(),
+        network: document.getElementById("f-network").value,
+        enabled: true,
+        baseDomestic: parseFloat(document.getElementById("f-baseDomestic").value) || 0,
+        baseOverseas: parseFloat(document.getElementById("f-baseOverseas").value) || 0,
+        refundFeeReturned,
+        refundNote: refundFeeReturned === "true" ? "刷退會退 1.5% 手續費" : (refundFeeReturned === "partial" ? "部分退 1.5%" : "刷退不退 1.5% 手續費"),
+        rewardType: document.getElementById("f-rewardType").value.trim(),
+        baseNote: document.getElementById("f-baseNote").value.trim() || "一般消費基本回饋",
+        rules: newRules
+      };
+
+      if (editId) {
+        const idx = cards.findIndex(c => c.id === editId);
+        if (idx !== -1) {
+          cardObj.enabled = cards[idx].enabled;
+          cards[idx] = cardObj;
+        }
+      } else {
+        cards.unshift(cardObj);
+      }
+
+      saveCardsToStorage();
+      closeCardModal();
+      renderWalletList();
+      handleSearch();
+      initTaxRefundCalculator();
+      renderReminders();
+      showToast(`✅ 已儲存「${cardObj.bank} ${cardObj.name}」`, "success");
+    }
+
+    function confirmDeleteCard(cardId) {
+      const card = cards.find(c => c.id === cardId);
+      if (!card) return;
+      openConfirmModal(
+        "刪除信用卡",
+        `確定要從卡片庫移除「${card.bank} ${card.name}」嗎？（若只是暫時不用，建議使用右上角的停用開關即可）`,
+        () => {
+          cards = cards.filter(c => c.id !== cardId);
+          saveCardsToStorage();
+          renderWalletList();
+          handleSearch();
+          renderReminders();
+          showToast(`已刪除「${card.bank} ${card.name}」`);
+        }
+      );
+    }
+
+    function openResetConfirm() {
+      openConfirmModal(
+        "重置為 2026 預設 16 張卡片權益",
+        "這將會把卡片庫還原為系統內建的 16 張信用卡（2026年最新權益規則），您自行新增或修改的內容將會被覆蓋。確定要重置嗎？",
+        () => {
+          cards = JSON.parse(JSON.stringify(DEFAULT_CARDS_2026));
+          saveCardsToStorage();
+          renderWalletList();
+          handleSearch();
+          initTaxRefundCalculator();
+          renderReminders();
+          showToast("🔄 已還原為 2026 最新 16 張信用卡預設權益！", "success");
+        }
+      );
+    }
+
+    function exportJSON() {
+      const dataStr = JSON.stringify(cards, null, 2);
+      const blob = new Blob([dataStr], { type: "application/json" });
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement("a");
+      a.href = url;
+      a.download = `my-credit-cards-backup-${getCurrentMonthKey()}.json`;
+      document.body.appendChild(a);
+      a.click();
+      document.body.removeChild(a);
+      URL.revokeObjectURL(url);
+      showToast("📤 已匯出 JSON 備份檔案！", "success");
+    }
+
+    function importJSON(event) {
+      const file = event.target.files[0];
+      if (!file) return;
+      const reader = new FileReader();
+      reader.onload = (e) => {
+        try {
+          const imported = JSON.parse(e.target.result);
+          if (!Array.isArray(imported)) throw new Error("格式錯誤");
+          cards = imported;
+          saveCardsToStorage();
+          renderWalletList();
+          handleSearch();
+          renderReminders();
+          showToast(`📥 成功匯入 ${cards.length} 張信用卡資料！`, "success");
+        } catch (err) {
+          showToast("❌ 匯入失敗：請確認 JSON 檔案格式正確。", "error");
+        }
+        event.target.value = "";
+      };
+      reader.readAsText(file);
+    }
+
+    // =========================================================================
+    // 6. UI 互動輔助（分頁切換、主題切換、自訂 Modal、Toast、PWA）
+    // =========================================================================
+    function switchTab(tabName) {
+      ["advisor", "taxrefund", "reminders", "wallet"].forEach(t => {
+        document.getElementById(`tab-${t}`).classList.toggle("hidden", t !== tabName);
+
+        // 桌機導覽狀態
+        const navBtn = document.getElementById(`nav-${t}`);
+        if (navBtn) {
+          if (t === tabName) {
+            navBtn.className = "tab-btn px-3.5 py-1.5 rounded-lg text-sm font-bold transition-all bg-white dark:bg-navy-700 text-amber-600 dark:text-amber-400 shadow-sm flex items-center gap-1.5";
+          } else {
+            navBtn.className = "tab-btn px-3.5 py-1.5 rounded-lg text-sm font-bold transition-all text-slate-600 dark:text-slate-300 hover:text-slate-900 dark:hover:text-white flex items-center gap-1.5";
+          }
+        }
+
+        // 手機底部導覽狀態
+        const mNavBtn = document.getElementById(`m-nav-${t}`);
+        if (mNavBtn) {
+          if (t === tabName) {
+            mNavBtn.classList.add("text-amber-600", "dark:text-amber-400");
+            mNavBtn.classList.remove("text-slate-500", "dark:text-slate-400");
+          } else {
+            mNavBtn.classList.remove("text-amber-600", "dark:text-amber-400");
+            mNavBtn.classList.add("text-slate-500", "dark:text-slate-400");
+          }
+        }
+      });
+      window.scrollTo({ top: 0, behavior: "smooth" });
+    }
+
+    function toggleTheme() {
+      const isDark = document.documentElement.classList.toggle("dark");
+      localStorage.setItem(STORAGE_KEY_THEME, isDark ? "dark" : "light");
+      document.getElementById("theme-icon").textContent = isDark ? "☀️" : "🌙";
+    }
+
+    function openConfirmModal(title, desc, onConfirm) {
+      document.getElementById("confirm-title").textContent = title;
+      document.getElementById("confirm-desc").textContent = desc;
+      confirmCallback = onConfirm;
+      document.getElementById("confirm-modal").classList.remove("hidden");
+    }
+
+    function closeConfirmModal() {
+      document.getElementById("confirm-modal").classList.add("hidden");
+      confirmCallback = null;
+    }
+
+    document.getElementById("confirm-ok-btn").addEventListener("click", () => {
+      if (confirmCallback) confirmCallback();
+      closeConfirmModal();
+    });
+
+    function showToast(message, type = "info") {
+      const container = document.getElementById("toast-container");
+      const toast = document.createElement("div");
+      const bgClass = type === "error"
+        ? "bg-rose-600 text-white"
+        : type === "success"
+        ? "bg-navy-800 dark:bg-navy-800 text-amber-300 border border-amber-500/40"
+        : "bg-slate-800 text-white";
+
+      toast.className = `${bgClass} px-4 py-3 rounded-xl shadow-2xl text-xs sm:text-sm font-bold transition-all duration-300 transform translate-y-0 opacity-100 pointer-events-auto`;
+      toast.textContent = message;
+      container.appendChild(toast);
+
+      setTimeout(() => {
+        toast.classList.add("opacity-0", "-translate-y-2");
+        setTimeout(() => toast.remove(), 300);
+      }, 3500);
+    }
+
+    function escapeHtml(str) {
+      if (!str) return "";
+      return String(str)
+        .replace(/&/g, "&amp;")
+        .replace(/</g, "&lt;")
+        .replace(/>/g, "&gt;")
+        .replace(/"/g, "&quot;");
+    }
+
+    function setupPWAManifest() {
+      const manifest = {
+        name: "神卡神算｜個人信用卡回饋與登錄管家",
+        short_name: "神卡神算",
+        start_url: ".",
+        display: "standalone",
+        background_color: "#060B19",
+        theme_color: "#0B132B",
+        icons: [
+          {
+            src: "https://placehold.co/192x192/0B132B/FBBF24?text=CARD",
+            sizes: "192x192",
+            type: "image/png"
+          }
+        ]
+      };
+      const stringManifest = JSON.stringify(manifest);
+      const blob = new Blob([stringManifest], { type: "application/json" });
+      const manifestURL = URL.createObjectURL(blob);
+      document.getElementById("pwa-manifest").setAttribute("href", manifestURL);
+    }
+
+    window.onload = initApp;
+  </script>
+</body>
+</html>
