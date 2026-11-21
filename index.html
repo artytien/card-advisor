@@ -24,7 +24,7 @@
     }
   </style>
 </head>
-<body class="pb-20">
+<body class="pb-16">
 
   <!-- Top Header -->
   <header class="sticky top-0 z-30 bg-white/95 backdrop-blur border-b border-slate-200 px-4 py-3">
@@ -41,10 +41,10 @@
       </button>
     </div>
 
-    <!-- Context-Aware Dynamic Tier Control Bar (7 Tiered Cards) -->
-    <div id="dynamicTierBar" class="max-w-3xl mx-auto mt-2.5 pt-2 border-t border-slate-100 flex flex-wrap items-center gap-2 text-xs">
+    <!-- Context-Aware Dynamic Control Bar (Only shows tiers for cards in user's wallet) -->
+    <div id="dynamicTierBar" class="hidden max-w-3xl mx-auto mt-2.5 pt-2 border-t border-slate-100 flex flex-wrap items-center gap-2 text-xs">
       <!-- 1. 玉山 Unicard -->
-      <div id="ctrl_esun_unicard" class="hidden items-center gap-1 bg-indigo-50 border border-indigo-200 rounded-xl px-2.5 py-1">
+      <div id="ctrl_esun_unicard" class="hidden flex items-center gap-1 bg-indigo-50 border border-indigo-200 rounded-lg px-2 py-1">
         <span class="font-bold text-indigo-900">玉山Unicard:</span>
         <select id="unicardPlan" onchange="saveSettingsAndRender()" class="bg-transparent font-bold text-indigo-700 focus:outline-none">
           <option value="simple">簡單選 3%</option>
@@ -54,7 +54,7 @@
       </div>
 
       <!-- 2. 國泰 CUBE -->
-      <div id="ctrl_cathay_cube" class="hidden items-center gap-1 bg-emerald-50 border border-emerald-200 rounded-xl px-2.5 py-1">
+      <div id="ctrl_cathay_cube" class="hidden flex items-center gap-1 bg-emerald-50 border border-emerald-200 rounded-lg px-2 py-1">
         <span class="font-bold text-emerald-900">國泰CUBE:</span>
         <select id="cubeLevel" onchange="saveSettingsAndRender()" class="bg-transparent font-bold text-emerald-700 focus:outline-none">
           <option value="2">Lv1 2%</option>
@@ -64,34 +64,34 @@
       </div>
 
       <!-- 3. 永豐 SPORT -->
-      <label id="ctrl_sinopac_sport" class="hidden items-center gap-1.5 bg-amber-50 border border-amber-200 rounded-xl px-2.5 py-1 cursor-pointer select-none">
+      <label id="ctrl_sinopac_sport" class="hidden flex items-center gap-1 bg-amber-50 border border-amber-200 rounded-lg px-2 py-1 cursor-pointer">
         <input type="checkbox" id="sportGoal" checked onchange="saveSettingsAndRender()" class="accent-amber-600 rounded" />
         <span class="font-bold text-amber-900">永豐SPORT達標(6%)</span>
       </label>
 
       <!-- 4. 華南 Rich+ 富家卡 -->
-      <div id="ctrl_huanan_rich" class="hidden items-center gap-1 bg-rose-50 border border-rose-200 rounded-xl px-2.5 py-1">
-        <span class="font-bold text-rose-900">華南富家卡:</span>
-        <select id="huananTier" onchange="saveSettingsAndRender()" class="bg-transparent font-bold text-rose-700 focus:outline-none">
-          <option value="base">一般戶 (1%/2%)</option>
-          <option value="small">小富家 (2%/3%)</option>
-          <option value="big" selected>大富家 (3%/4%)</option>
-          <option value="giant">鉅富家 (4%/5%)</option>
+      <div id="ctrl_huanan_rich" class="hidden flex items-center gap-1 bg-sky-50 border border-sky-200 rounded-lg px-2 py-1">
+        <span class="font-bold text-sky-900">華南富家:</span>
+        <select id="huananTier" onchange="saveSettingsAndRender()" class="bg-transparent font-bold text-sky-700 focus:outline-none">
+          <option value="0">一般戶 (1%/2%)</option>
+          <option value="1">小富家 (2%/3%)</option>
+          <option value="2" selected>大富家 (3%/4%)</option>
+          <option value="3">鉅富家 (4%/5%)</option>
         </select>
       </div>
 
       <!-- 5. 台新 Richart卡 -->
-      <div id="ctrl_taishin_richart" class="hidden items-center gap-1 bg-sky-50 border border-sky-200 rounded-xl px-2.5 py-1">
-        <span class="font-bold text-sky-900">台新Richart:</span>
-        <select id="richartTier" onchange="saveSettingsAndRender()" class="bg-transparent font-bold text-sky-700 focus:outline-none">
+      <div id="ctrl_taishin_richart" class="hidden flex items-center gap-1 bg-rose-50 border border-rose-200 rounded-lg px-2 py-1">
+        <span class="font-bold text-rose-900">台新Richart:</span>
+        <select id="taishinTier" onchange="saveSettingsAndRender()" class="bg-transparent font-bold text-rose-700 focus:outline-none">
           <option value="lv1">Lv1未自扣 (1.3%)</option>
           <option value="lv2" selected>Lv2自扣達標 (3.3%)</option>
         </select>
       </div>
 
       <!-- 6. 永豐 DAWHO 大戶卡 -->
-      <div id="ctrl_sinopac_dawho" class="hidden items-center gap-1 bg-purple-50 border border-purple-200 rounded-xl px-2.5 py-1">
-        <span class="font-bold text-purple-900">永豐DAWHO:</span>
+      <div id="ctrl_sinopac_dawho" class="hidden flex items-center gap-1 bg-purple-50 border border-purple-200 rounded-lg px-2 py-1">
+        <span class="font-bold text-purple-900">永豐大戶:</span>
         <select id="dawhoTier" onchange="saveSettingsAndRender()" class="bg-transparent font-bold text-purple-700 focus:outline-none">
           <option value="dada">大大 (1%/2%)</option>
           <option value="dahu" selected>大戶30萬 (3.5%/4.5%)</option>
@@ -100,7 +100,7 @@
       </div>
 
       <!-- 7. 永豐 幣倍卡 -->
-      <label id="ctrl_sinopac_currency" class="hidden items-center gap-1.5 bg-teal-50 border border-teal-200 rounded-xl px-2.5 py-1 cursor-pointer select-none">
+      <label id="ctrl_sinopac_currency" class="hidden flex items-center gap-1 bg-teal-50 border border-teal-200 rounded-lg px-2 py-1 cursor-pointer">
         <input type="checkbox" id="currencyQualified" checked onchange="saveSettingsAndRender()" class="accent-teal-600 rounded" />
         <span class="font-bold text-teal-900">永豐幣倍達標(6%)</span>
       </label>
@@ -146,7 +146,8 @@
         <button type="button" onclick="quickQuery('餐廳')" class="shrink-0 text-xs bg-slate-100 text-slate-700 px-2.5 py-1 rounded-full font-semibold">🍽️ 餐廳吃飯</button>
         <button type="button" onclick="quickQuery('超商')" class="shrink-0 text-xs bg-slate-100 text-slate-700 px-2.5 py-1 rounded-full font-semibold">🏪 超商</button>
         <button type="button" onclick="quickQuery('網購')" class="shrink-0 text-xs bg-slate-100 text-slate-700 px-2.5 py-1 rounded-full font-semibold">📦 網購</button>
-        <button type="button" onclick="quickQuery('LINE Pay')" class="shrink-0 text-xs bg-slate-100 text-slate-700 px-2.5 py-1 rounded-full font-semibold">💚 LINE Pay</button>
+        <button type="button" onclick="quickQuery('LINE Pay')" class="shrink-0 text-xs bg-emerald-50 text-emerald-800 border border-emerald-200 px-2.5 py-1 rounded-full font-bold">💚 LINE Pay</button>
+        <button type="button" onclick="quickQuery('行動支付')" class="shrink-0 text-xs bg-slate-100 text-slate-700 px-2.5 py-1 rounded-full font-semibold">📲 行動支付總覽</button>
       </div>
 
       <!-- Japan PayPay Platform Reminder Banner -->
@@ -308,7 +309,7 @@
 
       <!-- Filter Cards in Modal -->
       <div class="px-5 pt-3 pb-2">
-        <input id="walletFilterInput" type="text" oninput="renderWalletList()" placeholder="搜尋銀行或卡片名稱（如：玉山、國泰、台新、Richart、熊本熊、富家卡...）"
+        <input id="walletFilterInput" type="text" oninput="renderWalletList()" placeholder="搜尋銀行或卡片名稱（如：玉山、國泰、台新、Richart、華南、大戶...）"
           class="w-full bg-slate-100 border border-slate-200 rounded-xl px-3.5 py-2 text-xs font-medium focus:outline-none focus:bg-white focus:border-slate-900" />
       </div>
 
@@ -342,722 +343,2434 @@
 <script>
 /**
  * ============================================================================
- * 1. 台灣 50 張主流現役信用卡資料庫 (基準日: 2026/11 官網實證校正)
- *    - 支援 7 張分級卡片動態計算：玉山Unicard、國泰CUBE、永豐SPORT、
- *      華南Rich+富家卡、台新Richart卡、永豐DAWHO大戶卡、永豐幣倍卡
+ * 1. 台灣主流信用卡資料庫 (50張現役主力卡｜基準日: 2026/11 官網實證校正)
  * ============================================================================
  */
 const CARD_DATABASE = [
   {
-    id: "esun_kumamon",
-    bank: "玉山銀行",
-    name: "熊本熊卡 (JCB)",
-    travel5: true,
-    my16: true,
-    refunds15: false,
-    jpDefaultRate: 8.5,
-    rules: [
-      { keywords: ["日本paypay", "paypay", "玉山wallet"], rate: 5.0, cap: "加碼3.5%上限100元/季 + 免1.5%手續費", note: "📱【需用玉山 Wallet 掃碼】日本 PayPay 最高 5%（含免收 1.5% 海外交易費）" },
-      { keywords: ["日本藥妝", "日本家電", "bic", "yodobashi", "唐吉訶德", "松本清", "大國藥妝", "uniqlo", "gu", "無印良品", "suica", "pasmo", "icoca", "jr", "一蘭", "壽司郎", "藏壽司", "敘敘苑", "牛角", "鳥貴族", "迪士尼", "環球影城"], rate: 8.5, cap: "加碼6%上限500元/期(刷8,333元封頂)", note: "需登錄1次；含日本一般2.5%無上限+指定商店6%" },
-      { keywords: ["日本實體", "日本", "日幣", "海外"], rate: 2.5, cap: "無上限", note: "日本一般消費2.5%無上限（雙幣卡免1.5%國外手續費）" },
-      { keywords: ["一般消費", "國內"], rate: 1.0, cap: "無上限", note: "國內一般消費1%" }
+    "id": "esun_kumamon",
+    "bank": "玉山銀行",
+    "name": "熊本熊卡 (JCB)",
+    "travel5": true,
+    "my16": true,
+    "refunds15": false,
+    "jpDefaultRate": 8.5,
+    "rules": [
+      {
+        "keywords": [
+          "日本paypay",
+          "paypay",
+          "玉山wallet"
+        ],
+        "rate": 5.0,
+        "cap": "加碼3.5%上限100元/季 + 免1.5%手續費",
+        "note": "📱【需用玉山 Wallet 掃碼】日本 PayPay 最高 5%（含免收 1.5% 海外交易費）"
+      },
+      {
+        "keywords": [
+          "日本藥妝",
+          "日本家電",
+          "bic",
+          "yodobashi",
+          "唐吉訶德",
+          "松本清",
+          "大國藥妝",
+          "uniqlo",
+          "gu",
+          "無印良品",
+          "suica",
+          "pasmo",
+          "icoca",
+          "jr",
+          "一蘭",
+          "壽司郎",
+          "藏壽司",
+          "敘敘苑",
+          "牛角",
+          "鳥貴族",
+          "迪士尼",
+          "環球影城"
+        ],
+        "rate": 8.5,
+        "cap": "加碼6%上限500元/期(刷8,333元封頂)",
+        "note": "需登錄1次；含日本一般2.5%無上限+指定商店6%"
+      },
+      {
+        "keywords": [
+          "日本實體",
+          "日本",
+          "日幣",
+          "海外"
+        ],
+        "rate": 2.5,
+        "cap": "無上限",
+        "note": "日本一般消費2.5%無上限（雙幣卡免1.5%國外手續費）"
+      },
+      {
+        "keywords": [
+          "行動支付",
+          "line pay",
+          "街口",
+          "apple pay",
+          "google pay",
+          "台灣pay",
+          "全支付",
+          "一般消費",
+          "國內"
+        ],
+        "rate": 1.0,
+        "cap": "無上限（無行動支付額外加碼）",
+        "note": "國內一般消費及行動支付（LINE Pay/Apple Pay等）僅基本1%"
+      }
     ]
   },
   {
-    id: "ubot_jiho",
-    bank: "聯邦銀行",
-    name: "吉鶴卡 (JCB)",
-    travel5: true,
-    my16: false,
-    refunds15: true,
-    jpDefaultRate: 5.0,
-    rules: [
-      { keywords: ["日本實體", "日本感應", "apple pay", "google pay"], rate: 5.0, cap: "行動支付加碼1%上限200/月 + 滿3萬登錄1.5%上限600/月", note: "日幣2.5%無上限 + Apple/Google Pay感應最高5%（新戶再+3%達8%~11%）" },
-      { keywords: ["日本藥妝", "日本家電", "唐吉訶德", "松本清", "bic", "yodobashi", "uniqlo", "gu", "無印良品"], rate: 5.5, cap: "11大熱門商店加碼3%上限600元/活動期", note: "2.5%無上限 + 11大指定商店加碼3%" },
-      { keywords: ["日本", "日幣", "海外"], rate: 2.5, cap: "無上限", note: "日幣一般消費2.5%回饋無上限" },
-      { keywords: ["一般消費", "國內"], rate: 1.0, cap: "無上限", note: "國內一般消費1%" }
+    "id": "ubot_jiho",
+    "bank": "聯邦銀行",
+    "name": "吉鶴卡 (JCB)",
+    "travel5": true,
+    "my16": false,
+    "refunds15": true,
+    "jpDefaultRate": 5.0,
+    "rules": [
+      {
+        "keywords": [
+          "日本實體",
+          "日本感應",
+          "apple pay",
+          "google pay"
+        ],
+        "rate": 5.0,
+        "cap": "日本QUICPay/感應加碼1%上限200/月 + 滿3萬登錄1.5%上限600/月",
+        "note": "日幣2.5%無上限 + 日本Apple/Google Pay感應最高5%（國內一般Apple Pay僅1%）"
+      },
+      {
+        "keywords": [
+          "日本藥妝",
+          "日本家電",
+          "唐吉訶德",
+          "松本清",
+          "bic",
+          "yodobashi",
+          "uniqlo",
+          "gu",
+          "無印良品"
+        ],
+        "rate": 5.5,
+        "cap": "11大熱門商店加碼3%上限600元/活動期",
+        "note": "2.5%無上限 + 11大指定商店加碼3%"
+      },
+      {
+        "keywords": [
+          "日本",
+          "日幣",
+          "海外"
+        ],
+        "rate": 2.5,
+        "cap": "無上限",
+        "note": "日幣一般消費2.5%回饋無上限"
+      },
+      {
+        "keywords": [
+          "行動支付",
+          "line pay",
+          "街口",
+          "台灣pay",
+          "全支付",
+          "一般消費",
+          "國內"
+        ],
+        "rate": 1.0,
+        "cap": "無上限（無國內行動支付加碼）",
+        "note": "國內一般消費及LINE Pay/街口僅基本1%"
+      }
     ]
   },
   {
-    id: "dbs_eco",
-    bank: "星展銀行",
-    name: "eco 永續卡 (Mastercard)",
-    travel5: true,
-    my16: true,
-    refunds15: false,
-    jpDefaultRate: 5.0,
-    rules: [
-      { keywords: ["日本實體", "日本", "韓國", "泰國", "新加坡", "美國", "歐洲", "海外實體"], rate: 5.0, cap: "加碼4%上限600點/期(刷15,000元封頂)", note: "免切方案免登錄，日韓泰新美歐實體商店無腦5%；⚠️刷退不退1.5%手續費" },
-      { keywords: ["綠色消費", "tesla", "gogoro", "充電"], rate: 10.0, cap: "依星展eco活動上限", note: "Tesla充電/Gogoro電池資費及指定eco消費最高10%" },
-      { keywords: ["一般消費", "國內", "海外"], rate: 1.0, cap: "無上限", note: "國內外一般消費1%無上限" }
+    "id": "dbs_eco",
+    "bank": "星展銀行",
+    "name": "eco 永續卡 (Mastercard)",
+    "travel5": true,
+    "my16": true,
+    "refunds15": false,
+    "jpDefaultRate": 5.0,
+    "rules": [
+      {
+        "keywords": [
+          "日本實體",
+          "日本",
+          "韓國",
+          "泰國",
+          "新加坡",
+          "美國",
+          "歐洲",
+          "海外實體"
+        ],
+        "rate": 5.0,
+        "cap": "加碼4%上限600點/期(刷15,000元封頂)",
+        "note": "免切方案免登錄，日韓泰新美歐實體商店無腦5%；⚠️刷退不退1.5%手續費"
+      },
+      {
+        "keywords": [
+          "綠色消費",
+          "tesla",
+          "gogoro",
+          "充電"
+        ],
+        "rate": 10.0,
+        "cap": "依星展eco活動上限",
+        "note": "Tesla充電/Gogoro電池資費及指定eco消費最高10%"
+      },
+      {
+        "keywords": [
+          "行動支付",
+          "line pay",
+          "街口",
+          "apple pay",
+          "google pay",
+          "台灣pay",
+          "全支付",
+          "一般消費",
+          "國內",
+          "海外"
+        ],
+        "rate": 1.0,
+        "cap": "無上限（無行動支付額外加碼）",
+        "note": "國內外一般消費及LINE Pay/Apple Pay等僅基本1%無上限"
+      }
     ]
   },
   {
-    id: "cathay_cube",
-    bank: "國泰世華",
-    name: "CUBE卡",
-    travel5: true,
-    my16: true,
-    refunds15: true,
-    jpDefaultRate: 3.3,
-    dynamicCube: true,
-    tierHint: "支援等級切換：Lv1 2% / Lv2 3% / Lv3 3.3%（集精選固定2%不隨等級調升）",
-    rules: [
-      { keywords: ["日本paypay", "paypay", "全支付"], rate: 8.5, cap: "全支付3.5%(上限140/月) + 滿千加碼5%(上限100/波)", note: "📱【需用全支付綁卡掃碼】日本 PayPay 筆筆3.5%+滿千加碼5%（免1.5%手續費）" },
-      { keywords: ["日本實體", "日本", "海外", "旅遊訂房", "航空", "高鐵", "agoda", "booking", "klook", "kkday", "飯店", "機票"], rate: "CUBE", cap: "小樹點無上限（秋日遊活動至2026/11/30）", note: "常駐切換【趣旅行】2%~3.3%無上限（2026/11/30前切換【秋日遊】指定日本實體5%、日系名店8%）" },
-      { keywords: ["餐廳", "吃飯", "外送", "百貨購物", "藥妝", "康是美", "寶雅", "屈臣氏", "日本藥妝", "日本家電"], rate: "CUBE", cap: "小樹點無上限（生日當月【慶生月】最高10%）", note: "常駐切換【樂饗購】2%~3.3%無上限（親子戶可解鎖【童樂匯】5%~10%）" },
-      { keywords: ["網購", "蝦皮", "momo", "pchome", "coupang", "chatgpt", "gemini", "影音"], rate: "CUBE", cap: "小樹點無上限", note: "常駐切換【玩數位】2%~3.3%無上限" },
-      { keywords: ["超商", "7-11", "全家", "萊爾富", "全聯", "超市量販", "家樂福", "加油", "中油", "充電", "停車", "ikea"], rate: 2.0, cap: "固定2%無上限（不隨Lv2/Lv3調升）", note: "切換【集精選】固定2%；⚠️切【固定回饋】1.2%/2.5%會鎖死至年底；分期0利率僅0.3%" },
-      { keywords: ["一般消費"], rate: 0.3, cap: "無上限", note: "未在切換權益通路內之一般消費為0.3%" }
+    "id": "cathay_cube",
+    "bank": "國泰世華",
+    "name": "CUBE卡",
+    "travel5": true,
+    "my16": true,
+    "refunds15": true,
+    "jpDefaultRate": 3.3,
+    "dynamicCube": true,
+    "rules": [
+      {
+        "keywords": [
+          "日本paypay",
+          "全支付日本"
+        ],
+        "rate": 8.5,
+        "cap": "全支付3.5%(上限140/月) + 滿千加碼5%(上限100/波)",
+        "note": "📱【需用全支付綁卡掃碼日本PayPay】筆筆3.5%+滿千加碼5%（免1.5%手續費）"
+      },
+      {
+        "keywords": [
+          "日本實體",
+          "日本",
+          "海外",
+          "旅遊訂房",
+          "航空",
+          "高鐵",
+          "agoda",
+          "booking",
+          "klook",
+          "kkday",
+          "飯店",
+          "機票"
+        ],
+        "rate": "CUBE",
+        "cap": "小樹點無上限（秋日遊活動至2026/11/30）",
+        "note": "常駐切換【趣旅行】2%~3.3%無上限（2026/11/30前切換【秋日遊】指定日本實體5%、日系名店8%）"
+      },
+      {
+        "keywords": [
+          "餐廳",
+          "吃飯",
+          "外送",
+          "百貨購物",
+          "藥妝",
+          "康是美",
+          "寶雅",
+          "屈臣氏",
+          "日本藥妝",
+          "日本家電"
+        ],
+        "rate": "CUBE",
+        "cap": "小樹點無上限（生日當月【慶生月】最高10%）",
+        "note": "常駐切換【樂饗購】2%~3.3%無上限（親子戶可解鎖【童樂匯】5%~10%）"
+      },
+      {
+        "keywords": [
+          "網購",
+          "蝦皮",
+          "momo",
+          "pchome",
+          "coupang",
+          "chatgpt",
+          "gemini",
+          "影音"
+        ],
+        "rate": "CUBE",
+        "cap": "小樹點無上限",
+        "note": "常駐切換【玩數位】2%~3.3%無上限"
+      },
+      {
+        "keywords": [
+          "超商",
+          "7-11",
+          "全家",
+          "萊爾富",
+          "全聯",
+          "超市量販",
+          "家樂福",
+          "加油",
+          "中油",
+          "充電",
+          "停車",
+          "ikea"
+        ],
+        "rate": 2.0,
+        "cap": "固定2%無上限（不隨Lv2/Lv3調升）",
+        "note": "切換【集精選】固定2%；⚠️切【固定回饋】1.2%/2.5%會鎖死至年底；分期0利率僅0.3%"
+      },
+      {
+        "keywords": [
+          "line pay",
+          "linepay"
+        ],
+        "rate": 2.0,
+        "cap": "CUBE App領券且月刷滿8筆上限100點/月(未滿8筆僅0.3%)",
+        "note": "⚠️無常駐高回饋！需於CUBE App領券且當月LINE Pay刷滿8筆享2%（基本0.3%+領券1.7%）"
+      },
+      {
+        "keywords": [
+          "行動支付",
+          "apple pay",
+          "google pay",
+          "samsung pay",
+          "街口",
+          "全支付",
+          "台灣pay",
+          "悠遊付",
+          "icash pay"
+        ],
+        "rate": "CUBE",
+        "cap": "依實際消費店家所屬方案計算（非店家通路僅0.3%）",
+        "note": "Apple/Google Pay感應依店家認定方案(2%~3.3%)；綁街口/全支付/台灣Pay等第三方支付多數僅0.3%"
+      },
+      {
+        "keywords": [
+          "一般消費"
+        ],
+        "rate": 0.3,
+        "cap": "無上限",
+        "note": "未在切換權益通路內之一般消費為0.3%"
+      }
     ]
   },
   {
-    id: "sinopac_currency",
-    bank: "永豐銀行",
-    name: "幣倍卡 (Mastercard)",
-    travel5: true,
-    my16: false,
-    refunds15: true,
-    dynamicCurrency: true,
-    tierHint: "支援等級切換：達標戶-10萬資產或大戶 (最高6%) / 未達標 (國外2%無上限)",
-    jpDefaultRate: 6.0,
-    rules: [
-      { keywords: ["日本實體", "日本", "海外", "旅遊訂房", "航空", "agoda", "booking", "klook", "kkday"], rate: "CURRENCY_SELECT", cap: "達標戶加碼4%上限800元/期(刷20,000元封頂)", note: "達標戶(外幣自扣+資產10萬或大戶等級)享精選/海外最高6%，未達標2%無上限；刷退退1.5%" },
-      { keywords: ["日幣", "美元", "歐元", "外幣"], rate: 2.0, cap: "無上限", note: "國外消費2%現金回饋無上限" },
-      { keywords: ["一般消費", "國內"], rate: 1.0, cap: "無上限", note: "國內一般消費1%" }
+    "id": "sinopac_currency",
+    "bank": "永豐銀行",
+    "name": "幣倍卡 (Mastercard)",
+    "travel5": true,
+    "my16": false,
+    "refunds15": true,
+    "jpDefaultRate": 6.0,
+    "rules": [
+      {
+        "keywords": [
+          "日本實體",
+          "日本",
+          "海外",
+          "旅遊訂房",
+          "航空",
+          "agoda",
+          "booking",
+          "klook",
+          "kkday"
+        ],
+        "rate": 6.0,
+        "cap": "加碼4%上限800元/期(刷20,000元封頂)",
+        "note": "需台外幣帳戶自扣＋往來資產達10萬(或大戶等級)；刷退退1.5%手續費"
+      },
+      {
+        "keywords": [
+          "apple pay",
+          "google pay",
+          "samsung pay",
+          "行動支付"
+        ],
+        "rate": 3.0,
+        "cap": "指定行動支付加碼+2%上限200元/月(新申辦活動)",
+        "note": "國內綁Apple/Google/Samsung Pay基本1%+活動加碼2%最高3%（LINE Pay/街口僅1%）"
+      },
+      {
+        "keywords": [
+          "日幣",
+          "美元",
+          "歐元",
+          "外幣"
+        ],
+        "rate": 2.0,
+        "cap": "無上限",
+        "note": "國外消費2%現金回饋無上限"
+      },
+      {
+        "keywords": [
+          "line pay",
+          "街口",
+          "台灣pay",
+          "全支付",
+          "一般消費",
+          "國內"
+        ],
+        "rate": 1.0,
+        "cap": "無上限",
+        "note": "國內一般消費及LINE Pay/街口1%無上限"
+      }
     ]
   },
   {
-    id: "esun_unicard",
-    bank: "玉山銀行",
-    name: "Unicard",
-    travel5: false,
-    my16: true,
-    refunds15: false,
-    jpDefaultRate: 4.5,
-    dynamicUnicard: true,
-    tierHint: "支援方案切換：簡單選 3% / 任意選 3.5% / UP選 4.5% (扣149點月費試算)",
-    rules: [
-      { keywords: ["日本paypay", "paypay", "玉山wallet"], rate: 1.5, cap: "免收1.5%海外交易手續費", note: "📱【需用玉山 Wallet 掃碼】日本 PayPay 免收1.5%海外交易費（不計百大特店加碼）" },
-      { keywords: ["日本實體", "日本", "海外", "餐廳", "吃飯", "外送", "百貨購物", "3c", "娛樂", "ktv", "三井outlet", "華泰名品城", "lalaport", "line pay", "街口", "網購", "蝦皮", "momo", "高鐵", "旅遊訂房", "家樂福", "藥妝", "加油", "充電"], rate: "UNICARD", cap: "簡單/任意選上限1,000點；UP選上限5,000點", note: "涵蓋百大特店（日本、餐飲、百貨、LINE Pay、網購）" },
-      { keywords: ["一般消費"], rate: 1.0, cap: "無上限", note: "非百大特店一般消費1% e point（含玉山自扣+0.7%）" }
+    "id": "esun_unicard",
+    "bank": "玉山銀行",
+    "name": "Unicard",
+    "travel5": false,
+    "my16": true,
+    "refunds15": false,
+    "jpDefaultRate": 4.5,
+    "dynamicUnicard": true,
+    "rules": [
+      {
+        "keywords": [
+          "日本paypay",
+          "玉山wallet日本"
+        ],
+        "rate": 1.5,
+        "cap": "免收1.5%海外交易手續費",
+        "note": "📱【需用玉山 Wallet 掃碼日本PayPay】免收1.5%海外交易費（不計百大特店加碼）"
+      },
+      {
+        "keywords": [
+          "行動支付",
+          "line pay",
+          "linepay",
+          "全支付",
+          "街口",
+          "悠遊付",
+          "全盈+pay",
+          "ipass money",
+          "icash pay",
+          "玉山wallet",
+          "台灣pay",
+          "twqr"
+        ],
+        "rate": "UNICARD",
+        "cap": "簡單選3% / 任意選3.5%(上限1,000點) / UP選4.5%(上限5,000點)",
+        "note": "✅百大特店直接涵蓋8大行動支付（LINE Pay/全支付/街口/悠遊付/全盈/iPASS/icash/玉山WalletTWQR）"
+      },
+      {
+        "keywords": [
+          "日本實體",
+          "日本",
+          "海外",
+          "餐廳",
+          "吃飯",
+          "外送",
+          "百貨購物",
+          "3c",
+          "娛樂",
+          "ktv",
+          "三井outlet",
+          "華泰名品城",
+          "lalaport",
+          "網購",
+          "蝦皮",
+          "momo",
+          "高鐵",
+          "旅遊訂房",
+          "家樂福",
+          "藥妝",
+          "加油",
+          "充電"
+        ],
+        "rate": "UNICARD",
+        "cap": "簡單/任意選上限1,000點；UP選上限5,000點",
+        "note": "涵蓋百大特店（日本、餐飲、百貨、LINE Pay、網購）"
+      },
+      {
+        "keywords": [
+          "apple pay",
+          "google pay",
+          "samsung pay"
+        ],
+        "rate": "UNICARD",
+        "cap": "依刷卡店家是否屬百大特店認定（非百大特店為1%）",
+        "note": "綁Apple/Google Pay直接感應依消費商店認定（百大特店3%~4.5%，其餘1%）"
+      },
+      {
+        "keywords": [
+          "一般消費"
+        ],
+        "rate": 1.0,
+        "cap": "無上限",
+        "note": "非百大特店一般消費1% e point（含玉山自扣+0.7%）"
+      }
     ]
   },
   {
-    id: "taishin_richart",
-    bank: "台新銀行",
-    name: "Richart卡 (原GoGo/FlyGo/太陽玫瑰整併)",
-    travel5: false,
-    my16: true,
-    refunds15: true,
-    dynamicRichart: true,
-    tierHint: "支援等級切換：Lv1未自扣 (1.3%) / Lv2台新帳戶自扣達標 (3.3%~3.8%)",
-    jpDefaultRate: 3.3,
-    rules: [
-      { keywords: ["日本paypay", "paypay", "台新pay"], rate: "RICHART_PAY", cap: "依台新Pay+跨境活動上限", note: "📱【需用台新 Pay+ 掃碼】日本 PayPay 最高3.8%（免1.5%海外手續費）" },
-      { keywords: ["日本實體", "日本", "海外", "旅遊訂房", "航空", "高鐵", "agoda", "booking", "klook", "kkday", "suica", "icoca"], rate: "RICHART_STD", cap: "無上限 (Lv2自扣3.3%，達美元存款任務最高6%)", note: "切換【玩旅刷】Lv2自扣享海外/航空/訂房3.3%無上限（Lv1未自扣1.3%）" },
-      { keywords: ["餐廳", "吃飯", "百貨購物", "加油", "中油"], rate: "RICHART_STD", cap: "無上限 (Chill刷指定火鍋燒肉最高10%)", note: "切換【好饗刷】或【大筆刷】Lv2自扣享餐飲/百貨3.3%無上限" },
-      { keywords: ["line pay", "街口", "行動支付", "網購", "蝦皮", "momo", "pchome"], rate: "RICHART_PAY", cap: "LINE Pay領券最高3.8%", note: "切換【數趣刷】網購3.3%或【Pay著刷】台新Pay 3.8%（Lv1未自扣1.3%）" },
-      { keywords: ["超商", "7-11", "全家", "藥妝", "唐吉訶德"], rate: "RICHART_STD", cap: "上限依台新公告", note: "切換【天天刷】Lv2自扣享超商/藥妝/唐吉訶德最高3.3%" },
-      { keywords: ["一般消費"], rate: 0.3, cap: "無上限", note: "非指定切換通路一般消費0.3%（假日刷切換享2%無上限）" }
+    "id": "taishin_richart",
+    "bank": "台新銀行",
+    "name": "Richart卡 (原GoGo/FlyGo/太陽玫瑰整併)",
+    "travel5": false,
+    "my16": true,
+    "refunds15": true,
+    "jpDefaultRate": 3.8,
+    "rules": [
+      {
+        "keywords": [
+          "日本paypay",
+          "台新pay日本"
+        ],
+        "rate": 3.8,
+        "cap": "依台新Pay+跨境活動上限",
+        "note": "📱【需用台新 Pay+ 掃碼日本PayPay】最高3.8%（免1.5%海外手續費）"
+      },
+      {
+        "keywords": [
+          "台新pay",
+          "台新pay+"
+        ],
+        "rate": 3.8,
+        "cap": "切換【Pay著刷】最高3.8%（上限依台新公告）",
+        "note": "切換【Pay著刷】綁定台新Pay/台新Pay+消費最高3.8%"
+      },
+      {
+        "keywords": [
+          "line pay",
+          "linepay",
+          "全盈+pay",
+          "行動支付"
+        ],
+        "rate": 3.8,
+        "cap": "切換【Pay著刷】基本2.3% + Richart Life領LINE Pay券+1.5%(上限500點/月)",
+        "note": "切換【Pay著刷】LINE Pay/全盈+Pay基本2.3%，每月於Richart Life領券加碼至3.8%（假日刷2%）"
+      },
+      {
+        "keywords": [
+          "日本實體",
+          "日本",
+          "海外",
+          "旅遊訂房",
+          "航空",
+          "高鐵",
+          "agoda",
+          "booking",
+          "klook",
+          "kkday",
+          "suica",
+          "icoca"
+        ],
+        "rate": 3.3,
+        "cap": "無上限 (達美元存款任務最高6%)",
+        "note": "切換【玩旅刷】享海外/航空/訂房/Suica儲值3.3%無上限"
+      },
+      {
+        "keywords": [
+          "餐廳",
+          "吃飯",
+          "百貨購物",
+          "加油",
+          "中油"
+        ],
+        "rate": 3.3,
+        "cap": "無上限 (Chill刷指定火鍋燒肉最高10%)",
+        "note": "切換【好饗刷】或【大筆刷】享餐飲/百貨3.3%無上限"
+      },
+      {
+        "keywords": [
+          "網購",
+          "蝦皮",
+          "momo",
+          "pchome"
+        ],
+        "rate": 3.3,
+        "cap": "上限依台新Richart Life公告",
+        "note": "切換【數趣刷】享網購最高3.3%"
+      },
+      {
+        "keywords": [
+          "超商",
+          "7-11",
+          "全家",
+          "藥妝",
+          "唐吉訶德"
+        ],
+        "rate": 3.3,
+        "cap": "上限依台新公告",
+        "note": "切換【天天刷】享超商/藥妝/唐吉訶德最高3.3%"
+      },
+      {
+        "keywords": [
+          "街口",
+          "apple pay",
+          "google pay",
+          "台灣pay",
+          "全支付"
+        ],
+        "rate": 2.0,
+        "cap": "假日刷2% / 平日非指定通路0.3%",
+        "note": "街口/全支付/台灣Pay非Pay著刷指定支付（建議切【假日刷】節假日享2%，平日僅0.3%）"
+      },
+      {
+        "keywords": [
+          "一般消費"
+        ],
+        "rate": 0.3,
+        "cap": "無上限",
+        "note": "非指定切換通路一般消費0.3%（假日刷切換享2%無上限）"
+      }
     ]
   },
   {
-    id: "fubon_j",
-    bank: "台北富邦",
-    name: "J卡 (JCB)",
-    travel5: false,
-    my16: true,
-    refunds15: false,
-    jpDefaultRate: 6.0,
-    rules: [
-      { keywords: ["suica", "pasmo", "icoca", "日本交通卡"], rate: 10.0, cap: "單筆滿NT$2,000加碼7%上限200元/季", note: "Apple Pay 儲值日本三大交通卡登錄最高10%（每月18日16:00登錄）" },
-      { keywords: ["日本實體", "日本", "韓國", "泰國"], rate: 6.0, cap: "單筆滿NT$1,000加碼3%上限1,000元/季", note: "3%無上限 + 單筆滿千登錄加碼3%（每月20日16:00登錄）" },
-      { keywords: ["一般消費", "國內"], rate: 1.0, cap: "無上限", note: "國內一般消費1%" }
+    "id": "fubon_j",
+    "bank": "台北富邦",
+    "name": "J卡 (JCB)",
+    "travel5": false,
+    "my16": true,
+    "refunds15": false,
+    "jpDefaultRate": 6.0,
+    "rules": [
+      {
+        "keywords": [
+          "suica",
+          "pasmo",
+          "icoca",
+          "日本交通卡"
+        ],
+        "rate": 10.0,
+        "cap": "單筆滿NT$2,000加碼7%上限200元/季",
+        "note": "Apple Pay 儲值日本三大交通卡登錄最高10%（每月18日16:00登錄）"
+      },
+      {
+        "keywords": [
+          "日本實體",
+          "日本",
+          "韓國",
+          "泰國"
+        ],
+        "rate": 6.0,
+        "cap": "單筆滿NT$1,000加碼3%上限1,000元/季",
+        "note": "3%無上限 + 單筆滿千登錄加碼3%（每月20日16:00登錄）"
+      },
+      {
+        "keywords": [
+          "行動支付",
+          "line pay",
+          "linepay",
+          "apple pay",
+          "google pay",
+          "街口",
+          "台灣pay",
+          "一般消費",
+          "國內"
+        ],
+        "rate": 1.0,
+        "cap": "無上限（回饋為LINE POINTS）",
+        "note": "國內一般消費及LINE Pay/Apple Pay等享1% LINE POINTS無上限（需電子帳單或富邦自扣）"
+      }
     ]
   },
   {
-    id: "fubon_costco",
-    bank: "台北富邦",
-    name: "Costco 聯名卡",
-    travel5: false,
-    my16: true,
-    refunds15: false,
-    jpDefaultRate: 1.0,
-    rules: [
-      { keywords: ["好市多", "costco"], rate: 2.0, cap: "店內2%無上限 / 線上購物3%無上限", note: "好市多賣場2%好多金無上限，好市多線上購物3%" },
-      { keywords: ["好市多加油", "costco加油"], rate: 3.0, cap: "上限200元/月", note: "好市多自助加油3%" },
-      { keywords: ["一般消費"], rate: 1.0, cap: "無上限", note: "店外一般消費1%好多金" }
+    "id": "fubon_costco",
+    "bank": "台北富邦",
+    "name": "Costco 聯名卡",
+    "travel5": false,
+    "my16": true,
+    "refunds15": false,
+    "jpDefaultRate": 1.0,
+    "rules": [
+      {
+        "keywords": [
+          "好市多",
+          "costco"
+        ],
+        "rate": 2.0,
+        "cap": "店內2%無上限 / 線上購物3%無上限",
+        "note": "好市多賣場2%好多金無上限（店內支援Costco Pay/Apple Pay/Google Pay），線上購物3%"
+      },
+      {
+        "keywords": [
+          "好市多加油",
+          "costco加油"
+        ],
+        "rate": 3.0,
+        "cap": "上限200元/月",
+        "note": "好市多自助加油3%"
+      },
+      {
+        "keywords": [
+          "行動支付",
+          "line pay",
+          "街口",
+          "apple pay",
+          "google pay",
+          "台灣pay",
+          "一般消費"
+        ],
+        "rate": 1.0,
+        "cap": "無上限",
+        "note": "好市多店外一般消費及行動支付（LINE Pay/Apple Pay等）均為1%好多金"
+      }
     ]
   },
   {
-    id: "sinopac_mitsui",
-    bank: "永豐銀行",
-    name: "MITSUI OUTLET PARK 聯名卡",
-    travel5: false,
-    my16: true,
-    refunds15: true,
-    jpDefaultRate: 5.0,
-    rules: [
-      { keywords: ["三井outlet", "mitsui", "lalaport"], rate: 8.0, cap: "館內餐飲/指定日加碼上限依永豐公告", note: "台灣三井Outlet/LaLaport館內消費與餐飲最高8%" },
-      { keywords: ["日本實體", "日本", "海外"], rate: 5.0, cap: "海外加碼上限依永豐季度公告", note: "海外/日本三井Outlet消費最高5%；刷退退1.5%手續費" },
-      { keywords: ["一般消費"], rate: 1.0, cap: "無上限", note: "一般消費1%" }
+    "id": "sinopac_mitsui",
+    "bank": "永豐銀行",
+    "name": "MITSUI OUTLET PARK 聯名卡",
+    "travel5": false,
+    "my16": true,
+    "refunds15": true,
+    "jpDefaultRate": 5.0,
+    "rules": [
+      {
+        "keywords": [
+          "三井outlet",
+          "mitsui",
+          "lalaport"
+        ],
+        "rate": 8.0,
+        "cap": "館內餐飲/指定日加碼上限依永豐公告",
+        "note": "台灣三井Outlet/LaLaport館內消費與餐飲最高8%"
+      },
+      {
+        "keywords": [
+          "日本實體",
+          "日本",
+          "海外"
+        ],
+        "rate": 5.0,
+        "cap": "海外加碼上限依永豐季度公告",
+        "note": "海外/日本三井Outlet消費最高5%；刷退退1.5%手續費"
+      },
+      {
+        "keywords": [
+          "行動支付",
+          "line pay",
+          "街口",
+          "apple pay",
+          "google pay",
+          "台灣pay",
+          "一般消費"
+        ],
+        "rate": 1.0,
+        "cap": "無上限",
+        "note": "館外一般消費及行動支付（LINE Pay/Apple Pay等）為1%"
+      }
     ]
   },
   {
-    id: "sinopac_sport",
-    bank: "永豐銀行",
-    name: "SPORT卡",
-    travel5: false,
-    my16: true,
-    refunds15: true,
-    dynamicSport: true,
-    tierHint: "支援任務切換：運動達標(6%/2%) / 未達標(1%)",
-    jpDefaultRate: 2.0,
-    rules: [
-      { keywords: ["apple pay", "google pay", "行動支付", "運動", "健身", "迪卡儂", "摩曼頓"], rate: "SPORT", cap: "加碼4%上限300豐點/月(運動獎勵+1%上限50)", note: "需每月達成1萬大卡運動目標（汗水不白流App）享Apple/Google Pay最高5%~6%" },
-      { keywords: ["一般消費", "海外"], rate: "SPORT_BASE", cap: "達標2%無上限（未達標1%）", note: "運動達標基本回饋2%無上限（未達標電子帳單1%）" }
+    "id": "sinopac_sport",
+    "bank": "永豐銀行",
+    "name": "SPORT卡",
+    "travel5": false,
+    "my16": true,
+    "refunds15": true,
+    "dynamicSport": true,
+    "jpDefaultRate": 2.0,
+    "rules": [
+      {
+        "keywords": [
+          "apple pay",
+          "google pay",
+          "samsung pay",
+          "garmin pay",
+          "行動支付",
+          "運動",
+          "健身",
+          "迪卡儂",
+          "摩曼頓"
+        ],
+        "rate": "SPORT",
+        "cap": "加碼4%上限300豐點/月(運動獎勵+1%上限50)",
+        "note": "✅【限Apple Pay / Google Pay / Samsung Pay / Garmin Pay】運動達標最高5%~6%（⚠️不含LINE Pay/街口）"
+      },
+      {
+        "keywords": [
+          "line pay",
+          "街口",
+          "台灣pay",
+          "全支付",
+          "一般消費",
+          "海外"
+        ],
+        "rate": 2.0,
+        "cap": "達標2%無上限（不適用行動支付加碼）",
+        "note": "運動達標一般消費2%無上限（⚠️LINE Pay/街口不計入Apple/Google Pay加碼，僅享2%）"
+      }
     ]
   },
   {
-    id: "ctbc_cht",
-    bank: "中國信託",
-    name: "中華電信聯名卡",
-    travel5: false,
-    my16: true,
-    refunds15: false,
-    jpDefaultRate: 2.0,
-    rules: [
-      { keywords: ["中華電信", "電信費", "mod", "hami"], rate: 3.0, cap: "電信點數回饋", note: "代扣繳中華電信資費最高3%電信點" },
-      { keywords: ["海外", "日本"], rate: 2.0, cap: "無上限", note: "海外消費2%電信點無上限" },
-      { keywords: ["一般消費"], rate: 1.0, cap: "無上限", note: "國內一般消費1%" }
+    "id": "ctbc_cht",
+    "bank": "中國信託",
+    "name": "中華電信聯名卡",
+    "travel5": false,
+    "my16": true,
+    "refunds15": false,
+    "jpDefaultRate": 2.0,
+    "rules": [
+      {
+        "keywords": [
+          "中華電信",
+          "電信費",
+          "mod",
+          "hami"
+        ],
+        "rate": 3.0,
+        "cap": "電信點數回饋",
+        "note": "代扣繳中華電信資費最高3%電信點"
+      },
+      {
+        "keywords": [
+          "海外",
+          "日本"
+        ],
+        "rate": 2.0,
+        "cap": "無上限",
+        "note": "海外消費2%電信點無上限"
+      },
+      {
+        "keywords": [
+          "行動支付",
+          "line pay",
+          "街口",
+          "apple pay",
+          "google pay",
+          "hami pay",
+          "一般消費"
+        ],
+        "rate": 1.0,
+        "cap": "無上限",
+        "note": "國內一般消費及行動支付（Hami Pay/LINE Pay/Apple Pay等）享1%電信點"
+      }
     ]
   },
   {
-    id: "rakuten_tiger",
-    bank: "樂天信用卡",
-    name: "樂虎卡 (台灣虎航聯名)",
-    travel5: false,
-    my16: true,
-    refunds15: false,
-    jpDefaultRate: 2.5,
-    rules: [
-      { keywords: ["虎航", "台灣虎航", "tigerair", "機票"], rate: 8.0, cap: "平日購票85折+2%虎足跡 / 壽星月8折", note: "台灣虎航官網購票專屬優惠與優先登機/行李禮遇" },
-      { keywords: ["日本實體", "日本"], rate: 2.5, cap: "依樂天季度活動登錄", note: "日本實體消費最高2.5%回饋" },
-      { keywords: ["一般消費"], rate: 1.0, cap: "無上限", note: "國內一般消費1%" }
+    "id": "rakuten_tiger",
+    "bank": "樂天信用卡",
+    "name": "樂虎卡 (台灣虎航聯名)",
+    "travel5": false,
+    "my16": true,
+    "refunds15": false,
+    "jpDefaultRate": 2.5,
+    "rules": [
+      {
+        "keywords": [
+          "虎航",
+          "台灣虎航",
+          "tigerair",
+          "機票"
+        ],
+        "rate": 8.0,
+        "cap": "平日購票85折+2%虎足跡 / 壽星月8折",
+        "note": "台灣虎航官網購票專屬優惠與優先登機/行李禮遇"
+      },
+      {
+        "keywords": [
+          "日本實體",
+          "日本"
+        ],
+        "rate": 2.5,
+        "cap": "依樂天季度活動登錄",
+        "note": "日本實體消費最高2.5%回饋"
+      },
+      {
+        "keywords": [
+          "行動支付",
+          "line pay",
+          "街口",
+          "apple pay",
+          "google pay",
+          "台灣pay",
+          "一般消費"
+        ],
+        "rate": 1.0,
+        "cap": "無上限",
+        "note": "國內一般消費及行動支付1%"
+      }
     ]
   },
   {
-    id: "ubot_green",
-    bank: "聯邦銀行",
-    name: "綠卡",
-    travel5: false,
-    my16: true,
-    refunds15: true,
-    jpDefaultRate: 1.0,
-    rules: [
-      { keywords: ["綠色消費", "電動車", "gogoro", "tesla", "充電", "高鐵", "台鐵", "共享機車", "wemo", "irent", "goshare", "蔬食"], rate: 12.0, cap: "綠色通路加碼上限300元/月", note: "指定綠色運輸、電動車充電、蔬食餐廳與共享汽機車最高6%~12%" },
-      { keywords: ["一般消費"], rate: 1.0, cap: "無上限", note: "一般消費1%" }
+    "id": "ubot_green",
+    "bank": "聯邦銀行",
+    "name": "綠卡",
+    "travel5": false,
+    "my16": true,
+    "refunds15": true,
+    "jpDefaultRate": 1.0,
+    "rules": [
+      {
+        "keywords": [
+          "綠色消費",
+          "電動車",
+          "gogoro",
+          "tesla",
+          "充電",
+          "高鐵",
+          "台鐵",
+          "共享機車",
+          "wemo",
+          "irent",
+          "goshare",
+          "蔬食"
+        ],
+        "rate": 12.0,
+        "cap": "綠色通路加碼上限300元/月",
+        "note": "指定綠色運輸、電動車充電、蔬食餐廳與共享汽機車最高6%~12%"
+      },
+      {
+        "keywords": [
+          "行動支付",
+          "line pay",
+          "街口",
+          "apple pay",
+          "google pay",
+          "台灣pay",
+          "一卡通money",
+          "一般消費"
+        ],
+        "rate": 1.0,
+        "cap": "無上限（無行動支付額外加碼）",
+        "note": "一般消費及行動支付（LINE Pay/街口/Apple Pay等）基本1%"
+      }
     ]
   },
   {
-    id: "first_ileo",
-    bank: "第一銀行",
-    name: "iLEO 信用卡",
-    travel5: false,
-    my16: true,
-    refunds15: false,
-    jpDefaultRate: 3.0,
-    rules: [
-      { keywords: ["日本實體", "日本", "海外"], rate: 3.0, cap: "加碼1.5%上限500/月 + 實體1%上限200/月", note: "設定iLEO自扣+電子帳單，日本實體消費3%（新戶90天內加碼10%達13%）" },
-      { keywords: ["line pay", "街口", "台灣pay", "行動支付"], rate: 3.0, cap: "指定支付加碼上限依一銀公告", note: "綁定指定行動支付最高3%" },
-      { keywords: ["一般消費"], rate: 0.5, cap: "無上限", note: "一般消費0.5%" }
+    "id": "first_ileo",
+    "bank": "第一銀行",
+    "name": "iLEO 信用卡",
+    "travel5": false,
+    "my16": true,
+    "refunds15": false,
+    "jpDefaultRate": 3.0,
+    "rules": [
+      {
+        "keywords": [
+          "行動支付",
+          "line pay",
+          "linepay",
+          "街口",
+          "台灣pay",
+          "twqr"
+        ],
+        "rate": 3.0,
+        "cap": "指定通路加碼1.5%(上限500/期) + 單筆滿千再+1%(上限200/期)",
+        "note": "✅【LINE Pay / 街口 / 台灣Pay】不限金額2%，單筆滿NT$1,000達3%（新戶90天內最高13%）"
+      },
+      {
+        "keywords": [
+          "apple pay",
+          "google pay",
+          "samsung pay"
+        ],
+        "rate": 1.5,
+        "cap": "單筆滿千加碼1%上限200元/期（新戶最高11.5%）",
+        "note": "Apple/Google/Samsung Pay基本0.5%，單筆滿NT$1,000加碼1%達1.5%"
+      },
+      {
+        "keywords": [
+          "日本實體",
+          "日本",
+          "海外"
+        ],
+        "rate": 3.0,
+        "cap": "加碼1.5%上限500/月 + 實體1%上限200/月",
+        "note": "設定iLEO自扣+電子帳單，日本實體消費3%（新戶90天內加碼10%達13%）"
+      },
+      {
+        "keywords": [
+          "一般消費"
+        ],
+        "rate": 0.5,
+        "cap": "無上限",
+        "note": "一般消費0.5%"
+      }
     ]
   },
   {
-    id: "huanan_rich",
-    bank: "華南銀行",
-    name: "Rich+ 富家卡",
-    travel5: false,
-    my16: true,
-    refunds15: false,
-    dynamicHuanan: true,
-    tierHint: "支援等級切換：一般戶(1%/2%) / 小富家(2%/3%) / 大富家(3%/4%) / 鉅富家(4%/5%)",
-    jpDefaultRate: 4.0,
-    rules: [
-      { keywords: ["海外", "日本"], rate: "HUANAN_OVERSEAS", cap: "小富家上限500/大富家3,000/鉅富家10,000點", note: "依華南往來資產分級：一般戶2% / 小富家3% / 大富家4% / 鉅富家5%" },
-      { keywords: ["一般消費", "國內"], rate: "HUANAN_DOMESTIC", cap: "小富家上限500/大富家3,000/鉅富家10,000點", note: "依華南往來資產分級：一般戶1% / 小富家2% / 大富家3% / 鉅富家4%" }
+    "id": "huanan_rich",
+    "bank": "華南銀行",
+    "name": "Rich+ 富家卡",
+    "travel5": false,
+    "my16": true,
+    "refunds15": false,
+    "jpDefaultRate": 2.0,
+    "rules": [
+      {
+        "keywords": [
+          "海外",
+          "日本"
+        ],
+        "rate": 2.0,
+        "cap": "無上限",
+        "note": "海外一般消費2%無上限（依富家等級最高達5%）"
+      },
+      {
+        "keywords": [
+          "行動支付",
+          "line pay",
+          "街口",
+          "apple pay",
+          "google pay",
+          "台灣pay",
+          "一般消費",
+          "國內"
+        ],
+        "rate": 3.0,
+        "cap": "無行動支付額外加碼，依富家等級計算（最高5%）",
+        "note": "無行動支付額外加碼；國內一般消費及LINE Pay/Apple Pay依富家等級享1%~5%"
+      }
     ]
   },
   {
-    id: "yuanta_diamond",
-    bank: "元大銀行",
-    name: "鑽金智富卡 / 鑽金卡",
-    travel5: false,
-    my16: true,
-    refunds15: false,
-    jpDefaultRate: 2.2,
-    rules: [
-      { keywords: ["海外", "日本"], rate: 2.2, cap: "無上限", note: "海外消費2.2%現金回饋無上限" },
-      { keywords: ["一般消費", "國內"], rate: 1.2, cap: "無上限", note: "國內一般消費1.2%無上限" }
+    "id": "yuanta_diamond",
+    "bank": "元大銀行",
+    "name": "鑽金智富卡 / 鑽金卡",
+    "travel5": false,
+    "my16": true,
+    "refunds15": false,
+    "jpDefaultRate": 2.2,
+    "rules": [
+      {
+        "keywords": [
+          "海外",
+          "日本"
+        ],
+        "rate": 2.2,
+        "cap": "無上限",
+        "note": "海外消費2.2%現金回饋無上限"
+      },
+      {
+        "keywords": [
+          "行動支付",
+          "line pay",
+          "街口",
+          "apple pay",
+          "google pay",
+          "台灣pay",
+          "一般消費",
+          "國內"
+        ],
+        "rate": 1.2,
+        "cap": "無上限（無行動支付額外加碼）",
+        "note": "國內一般消費及行動支付（LINE Pay/Apple Pay等）享1.2%現金回饋無上限"
+      }
     ]
   },
   {
-    id: "sinopac_jcb",
-    bank: "永豐銀行",
-    name: "現金回饋 JCB 卡",
-    travel5: false,
-    my16: false,
-    refunds15: true,
-    jpDefaultRate: 5.0,
-    rules: [
-      { keywords: ["日本實體", "日本", "日本藥妝", "日本家電"], rate: 5.0, cap: "特選加碼3%上限300元/期（Q4登錄最高10%~11%）", note: "國外2%無上限+日本特選3%（達成Q4登錄任務最高疊加至10%）" },
-      { keywords: ["網購", "蝦皮", "momo", "coupang", "百貨購物", "sogo"], rate: 5.0, cap: "特選加碼3%上限300元/期", note: "電子帳單+當期消費滿3,000元，指定網購/百貨最高5%" },
-      { keywords: ["一般消費"], rate: 1.0, cap: "無上限", note: "國內一般消費1%無上限" }
+    "id": "sinopac_jcb",
+    "bank": "永豐銀行",
+    "name": "現金回饋 JCB 卡",
+    "travel5": false,
+    "my16": false,
+    "refunds15": true,
+    "jpDefaultRate": 5.0,
+    "rules": [
+      {
+        "keywords": [
+          "日本實體",
+          "日本",
+          "日本藥妝",
+          "日本家電"
+        ],
+        "rate": 5.0,
+        "cap": "特選加碼3%上限300元/期（Q4登錄最高10%~11%）",
+        "note": "國外2%無上限+日本特選3%（達成Q4登錄任務最高疊加至10%）"
+      },
+      {
+        "keywords": [
+          "網購",
+          "蝦皮",
+          "momo",
+          "coupang",
+          "百貨購物",
+          "sogo"
+        ],
+        "rate": 5.0,
+        "cap": "特選加碼3%上限300元/期",
+        "note": "電子帳單+當期消費滿3,000元，指定網購/百貨最高5%"
+      },
+      {
+        "keywords": [
+          "行動支付",
+          "line pay",
+          "街口",
+          "apple pay",
+          "google pay",
+          "台灣pay",
+          "一般消費"
+        ],
+        "rate": 1.0,
+        "cap": "無上限（無行動支付額外加碼）",
+        "note": "國內一般消費及行動支付（LINE Pay/Apple Pay等）1%無上限"
+      }
     ]
   },
   {
-    id: "sinopac_dawho",
-    bank: "永豐銀行",
-    name: "DAWHO 現金回饋卡 (大戶卡)",
-    travel5: false,
-    my16: false,
-    refunds15: true,
-    dynamicDawho: true,
-    tierHint: "支援等級切換：大大(1%/2%) / 大戶30萬(3.5%/4.5%) / 大戶Plus(5%/6%)",
-    jpDefaultRate: 4.5,
-    rules: [
-      { keywords: ["日本實體", "日本", "海外", "旅遊訂房", "航空", "餐廳", "吃飯"], rate: "DAWHO_OVERSEAS", cap: "大戶加碼上限400元/月；大戶Plus加碼上限1,000元/月", note: "依永豐財富等級：大大2% / 大戶(30萬)4.5% / 大戶Plus(100萬)6%" },
-      { keywords: ["悠遊卡", "全聯"], rate: 3.0, cap: "自動加值加碼上限100元/月", note: "大戶等級悠遊卡自動加值3%（大戶Plus最高5%）" },
-      { keywords: ["一般消費", "國內"], rate: "DAWHO_DOMESTIC", cap: "大戶上限400元/月；大戶Plus上限1,000元/月", note: "依永豐財富等級：大大1% / 大戶3.5% / 大戶Plus 5%" }
+    "id": "sinopac_dawho",
+    "bank": "永豐銀行",
+    "name": "DAWHO 現金回饋卡 (大戶卡)",
+    "travel5": false,
+    "my16": false,
+    "refunds15": true,
+    "jpDefaultRate": 4.5,
+    "rules": [
+      {
+        "keywords": [
+          "日本實體",
+          "日本",
+          "海外",
+          "旅遊訂房",
+          "航空",
+          "餐廳",
+          "吃飯"
+        ],
+        "rate": 4.5,
+        "cap": "大戶加碼2.5%上限400元/月(刷16,000元封頂)",
+        "note": "需維持永豐大戶往來資產30萬或月換匯5,000元，海外4.5%/國內3.5%"
+      },
+      {
+        "keywords": [
+          "悠遊卡",
+          "全聯"
+        ],
+        "rate": 3.0,
+        "cap": "自動加值加碼上限100元/月",
+        "note": "大戶等級悠遊卡自動加值3%回饋"
+      },
+      {
+        "keywords": [
+          "行動支付",
+          "line pay",
+          "街口",
+          "apple pay",
+          "google pay",
+          "台灣pay",
+          "一般消費"
+        ],
+        "rate": 3.5,
+        "cap": "大戶國內上限300元/月（無行動支付額外加碼）",
+        "note": "無行動支付額外加碼，綁LINE Pay/Apple Pay依大戶等級享1% / 3.5% / 5%"
+      }
     ]
   },
   {
-    id: "sinopac_daway",
-    bank: "永豐銀行",
-    name: "DAWAY卡",
-    travel5: false,
-    my16: false,
-    refunds15: true,
-    jpDefaultRate: 2.5,
-    rules: [
-      { keywords: ["line pay", "行動支付"], rate: 4.5, cap: "新戶/自扣加碼上限依永豐公告", note: "綁定LINE Pay國內最高4.5%（舊戶自扣約2%~3%）" },
-      { keywords: ["海外", "日本"], rate: 2.5, cap: "無上限", note: "海外消費2.5% LINE POINTS無上限" },
-      { keywords: ["一般消費"], rate: 1.0, cap: "無上限", note: "國內一般消費1%" }
+    "id": "sinopac_daway",
+    "bank": "永豐銀行",
+    "name": "DAWAY卡",
+    "travel5": false,
+    "my16": false,
+    "refunds15": true,
+    "jpDefaultRate": 2.5,
+    "rules": [
+      {
+        "keywords": [
+          "line pay",
+          "linepay",
+          "行動支付"
+        ],
+        "rate": 2.0,
+        "cap": "舊戶DAWAY GO享2%(加碼1.5%上限300點/期)；新戶享8%(上限800點/期)",
+        "note": "✅【LINE Pay 專屬主力卡】綁定LINE Pay並完成DAWAY GO任務享2%（新戶最高8%）LINE POINTS"
+      },
+      {
+        "keywords": [
+          "海外",
+          "日本"
+        ],
+        "rate": 2.5,
+        "cap": "無上限（綁LINE Pay國外最高4%~10%）",
+        "note": "海外消費2.5% LINE POINTS無上限"
+      },
+      {
+        "keywords": [
+          "街口",
+          "apple pay",
+          "google pay",
+          "台灣pay",
+          "一般消費"
+        ],
+        "rate": 0.5,
+        "cap": "無上限（未綁LINE Pay國內僅0.5%）",
+        "note": "⚠️非LINE Pay交易（含街口/Apple Pay/實體卡）國內基礎回饋僅0.5% LINE POINTS"
+      }
     ]
   },
   {
-    id: "sinopac_green",
-    bank: "永豐銀行",
-    name: "現金回饋 Green 卡",
-    travel5: false,
-    my16: false,
-    refunds15: true,
-    jpDefaultRate: 2.0,
-    rules: [
-      { keywords: ["綠色消費", "高鐵", "台鐵", "充電", "gogoro", "共享機車"], rate: 5.0, cap: "加碼4%上限300元/期", note: "電子帳單+永豐自扣，指定國內綠色通路最高5%" },
-      { keywords: ["海外", "日本"], rate: 2.0, cap: "無上限", note: "國外一般消費2%現金回饋無上限" },
-      { keywords: ["一般消費"], rate: 1.0, cap: "無上限", note: "國內一般消費1%" }
+    "id": "sinopac_green",
+    "bank": "永豐銀行",
+    "name": "現金回饋 Green 卡",
+    "travel5": false,
+    "my16": false,
+    "refunds15": true,
+    "jpDefaultRate": 2.0,
+    "rules": [
+      {
+        "keywords": [
+          "綠色消費",
+          "高鐵",
+          "台鐵",
+          "充電",
+          "gogoro",
+          "共享機車"
+        ],
+        "rate": 5.0,
+        "cap": "加碼4%上限300元/期",
+        "note": "電子帳單+永豐自扣，指定國內綠色通路最高5%"
+      },
+      {
+        "keywords": [
+          "海外",
+          "日本"
+        ],
+        "rate": 2.0,
+        "cap": "無上限",
+        "note": "國外一般消費2%現金回饋無上限"
+      },
+      {
+        "keywords": [
+          "行動支付",
+          "line pay",
+          "街口",
+          "apple pay",
+          "google pay",
+          "台灣pay",
+          "一般消費"
+        ],
+        "rate": 1.0,
+        "cap": "無上限（無行動支付額外加碼）",
+        "note": "國內一般消費及行動支付（LINE Pay/Apple Pay等）1%"
+      }
     ]
   },
   {
-    id: "ctbc_uniopen",
-    bank: "中國信託",
-    name: "uniopen 聯名卡",
-    travel5: false,
-    my16: false,
-    refunds15: false,
-    jpDefaultRate: 11.0,
-    rules: [
-      { keywords: ["日本實體", "海外實體", "日本"], rate: 11.0, cap: "加碼8%上限500點/月(刷6,250元封頂)", note: "國外實體3%無上限 + 加碼8%（免領券，適合小額高回饋）" },
-      { keywords: ["7-11", "超商", "星巴克", "康是美", "統一時代", "夢時代", "icash pay"], rate: 7.0, cap: "單筆滿199元踩點/icash Pay上限150點/月", note: "統一集團指定通路踩點加碼最高7%~11%" },
-      { keywords: ["海外"], rate: 2.0, cap: "無上限", note: "國外一般消費2% OPENPOINT無上限" },
-      { keywords: ["一般消費", "國內"], rate: 1.0, cap: "無上限", note: "國內一般消費1%" }
+    "id": "ctbc_uniopen",
+    "bank": "中國信託",
+    "name": "uniopen 聯名卡",
+    "travel5": false,
+    "my16": false,
+    "refunds15": false,
+    "jpDefaultRate": 11.0,
+    "rules": [
+      {
+        "keywords": [
+          "日本實體",
+          "海外實體",
+          "日本"
+        ],
+        "rate": 11.0,
+        "cap": "加碼8%上限500點/月(刷6,250元封頂)",
+        "note": "國外實體3%無上限 + 加碼8%（免領券，適合小額高回饋）"
+      },
+      {
+        "keywords": [
+          "icash pay",
+          "行動支付",
+          "7-11",
+          "超商",
+          "星巴克",
+          "康是美",
+          "統一時代",
+          "夢時代"
+        ],
+        "rate": 7.0,
+        "cap": "統一集團踩點最高7%~11%；icash Pay指定通路加碼上限150點/月",
+        "note": "✅【統一集團＋icash Pay主力卡】統一集團通路最高7%~11%（綁LINE Pay/街口一般消費僅1%）"
+      },
+      {
+        "keywords": [
+          "海外"
+        ],
+        "rate": 2.0,
+        "cap": "無上限",
+        "note": "國外一般消費2% OPENPOINT無上限"
+      },
+      {
+        "keywords": [
+          "line pay",
+          "街口",
+          "apple pay",
+          "google pay",
+          "台灣pay",
+          "一般消費",
+          "國內"
+        ],
+        "rate": 1.0,
+        "cap": "無上限",
+        "note": "非統一集團通路之一般消費及LINE Pay/街口僅基本1% OPENPOINT"
+      }
     ]
   },
   {
-    id: "ctbc_linepay",
-    bank: "中國信託",
-    name: "LINE Pay 信用卡",
-    travel5: false,
-    my16: false,
-    refunds15: false,
-    jpDefaultRate: 5.0,
-    rules: [
-      { keywords: ["日本實體", "日本", "海外實體"], rate: 5.0, cap: "限時加碼上限依中信公告", note: "國外消費2.8%無上限，指定海外實體活動最高5% LINE POINTS" },
-      { keywords: ["line pay", "行動支付", "星巴克", "屈臣氏", "寶雅", "唐吉訶德", "ikea"], rate: 4.0, cap: "每LINE Pay帳號上限150點/月", note: "綁定LINE Pay於指定餐飲/藥妝/居家通路加碼" },
-      { keywords: ["一般消費", "國內"], rate: 1.0, cap: "無上限", note: "國內一般消費1%" }
+    "id": "ctbc_linepay",
+    "bank": "中國信託",
+    "name": "LINE Pay 信用卡",
+    "travel5": false,
+    "my16": false,
+    "refunds15": false,
+    "jpDefaultRate": 5.0,
+    "rules": [
+      {
+        "keywords": [
+          "日本實體",
+          "日本",
+          "海外實體"
+        ],
+        "rate": 5.0,
+        "cap": "限時加碼上限依中信公告",
+        "note": "國外消費2.8%無上限，指定海外實體活動最高5% LINE POINTS"
+      },
+      {
+        "keywords": [
+          "line pay",
+          "linepay",
+          "行動支付",
+          "星巴克",
+          "屈臣氏",
+          "寶雅",
+          "唐吉訶德",
+          "ikea"
+        ],
+        "rate": 4.0,
+        "cap": "指定品牌加碼上限150點/月（一般LINE Pay通路為1%）",
+        "note": "綁定LINE Pay於指定連鎖餐飲/藥妝/居家最高3%~4%，一般LINE Pay消費1%"
+      },
+      {
+        "keywords": [
+          "街口",
+          "apple pay",
+          "google pay",
+          "台灣pay",
+          "一般消費",
+          "國內"
+        ],
+        "rate": 1.0,
+        "cap": "無上限",
+        "note": "國內一般消費及行動支付1% LINE POINTS無上限"
+      }
     ]
   },
   {
-    id: "ctbc_ana",
-    bank: "中國信託",
-    name: "ANA 聯名卡",
-    travel5: false,
-    my16: false,
-    refunds15: false,
-    jpDefaultRate: 3.5,
-    rules: [
-      { keywords: ["日本實體", "日本", "ana", "機票", "海外"], rate: 3.5, cap: "極緻卡海外實體NT$10=1哩（換算約3.5%~4%價值）", note: "日本ANA免稅店最高9折、ANA特約商店額外累哩" },
-      { keywords: ["一般消費", "國內"], rate: 1.5, cap: "無上限", note: "國內消費NT$20~30=1 ANA哩程" }
+    "id": "ctbc_ana",
+    "bank": "中國信託",
+    "name": "ANA 聯名卡",
+    "travel5": false,
+    "my16": false,
+    "refunds15": false,
+    "jpDefaultRate": 3.5,
+    "rules": [
+      {
+        "keywords": [
+          "日本實體",
+          "日本",
+          "ana",
+          "機票",
+          "海外"
+        ],
+        "rate": 3.5,
+        "cap": "極緻卡海外實體NT$10=1哩（換算約3.5%~4%價值）",
+        "note": "日本ANA免稅店最高9折、ANA特約商店額外累哩"
+      },
+      {
+        "keywords": [
+          "行動支付",
+          "line pay",
+          "街口",
+          "apple pay",
+          "google pay",
+          "一般消費",
+          "國內"
+        ],
+        "rate": 1.5,
+        "cap": "無上限（無行動支付額外加碼）",
+        "note": "國內消費及行動支付NT$20~30=1 ANA哩程（換算約1.5%價值）"
+      }
     ]
   },
   {
-    id: "ctbc_cal",
-    bank: "中國信託",
-    name: "中華航空聯名卡",
-    travel5: false,
-    my16: false,
-    refunds15: false,
-    jpDefaultRate: 3.5,
-    rules: [
-      { keywords: ["華航", "中華航空", "機票", "海外", "日本"], rate: 3.5, cap: "海外/華航官網最優NT$9~10=1哩", note: "華航官網購票86折起、生日月海外消費哩程加碼" },
-      { keywords: ["一般消費", "國內"], rate: 1.5, cap: "無上限", note: "國內消費累積華夏哩程" }
+    "id": "ctbc_cal",
+    "bank": "中國信託",
+    "name": "中華航空聯名卡",
+    "travel5": false,
+    "my16": false,
+    "refunds15": false,
+    "jpDefaultRate": 3.5,
+    "rules": [
+      {
+        "keywords": [
+          "華航",
+          "中華航空",
+          "機票",
+          "海外",
+          "日本"
+        ],
+        "rate": 3.5,
+        "cap": "海外/華航官網最優NT$9~10=1哩",
+        "note": "華航官網購票86折起、生日月海外消費哩程加碼"
+      },
+      {
+        "keywords": [
+          "行動支付",
+          "line pay",
+          "街口",
+          "apple pay",
+          "google pay",
+          "一般消費",
+          "國內"
+        ],
+        "rate": 1.5,
+        "cap": "無上限（無行動支付額外加碼）",
+        "note": "國內消費及行動支付累積華夏哩程（換算約1.5%價值）"
+      }
     ]
   },
   {
-    id: "ctbc_allme",
-    bank: "中國信託",
-    name: "ALL ME 卡",
-    travel5: false,
-    my16: false,
-    refunds15: false,
-    jpDefaultRate: 2.2,
-    rules: [
-      { keywords: ["網購", "pchome", "超商", "7-11", "全家", "行動支付"], rate: 3.0, cap: "加碼上限依中信公告(刷15,000元內)", note: "綁定Pi拍錢包/Hami Pay於超商、PChome等指定通路最高3%" },
-      { keywords: ["海外", "日本"], rate: 2.2, cap: "無上限", note: "海外消費2.2%回饋無上限" },
-      { keywords: ["一般消費"], rate: 1.0, cap: "無上限", note: "國內一般消費1%" }
+    "id": "ctbc_allme",
+    "bank": "中國信託",
+    "name": "ALL ME 卡",
+    "travel5": false,
+    "my16": false,
+    "refunds15": false,
+    "jpDefaultRate": 2.2,
+    "rules": [
+      {
+        "keywords": [
+          "pi拍錢包",
+          "hami pay",
+          "行動支付",
+          "網購",
+          "pchome",
+          "超商",
+          "7-11",
+          "全家"
+        ],
+        "rate": 3.0,
+        "cap": "綁定Pi拍錢包/Hami Pay加碼上限依中信公告(刷15,000元內)",
+        "note": "✅【需綁定 Pi拍錢包 或 Hami Pay】於指定生活/超商/PChome通路最高3%（LINE Pay僅1%）"
+      },
+      {
+        "keywords": [
+          "海外",
+          "日本"
+        ],
+        "rate": 2.2,
+        "cap": "無上限",
+        "note": "海外消費2.2%回饋無上限"
+      },
+      {
+        "keywords": [
+          "line pay",
+          "街口",
+          "apple pay",
+          "google pay",
+          "一般消費"
+        ],
+        "rate": 1.0,
+        "cap": "無上限",
+        "note": "國內一般消費及LINE Pay/街口為1%"
+      }
     ]
   },
   {
-    id: "ctbc_lalaport",
-    bank: "中國信託",
-    name: "LaLaport 聯名卡",
-    travel5: false,
-    my16: false,
-    refunds15: false,
-    jpDefaultRate: 2.0,
-    rules: [
-      { keywords: ["lalaport", "三井outlet", "百貨購物"], rate: 6.0, cap: "館內指定品牌/餐飲加碼上限依中信公告", note: "Mitsui Shopping Park LaLaport 館內消費最高4%~6%及免費停車" },
-      { keywords: ["海外", "日本"], rate: 2.0, cap: "無上限", note: "海外消費2%無上限" },
-      { keywords: ["一般消費"], rate: 0.5, cap: "無上限", note: "館外一般消費0.5%" }
+    "id": "ctbc_lalaport",
+    "bank": "中國信託",
+    "name": "LaLaport 聯名卡",
+    "travel5": false,
+    "my16": false,
+    "refunds15": false,
+    "jpDefaultRate": 2.0,
+    "rules": [
+      {
+        "keywords": [
+          "lalaport",
+          "三井outlet",
+          "百貨購物"
+        ],
+        "rate": 6.0,
+        "cap": "館內指定品牌/餐飲加碼上限依中信公告",
+        "note": "Mitsui Shopping Park LaLaport 館內消費最高4%~6%及免費停車"
+      },
+      {
+        "keywords": [
+          "海外",
+          "日本"
+        ],
+        "rate": 2.0,
+        "cap": "無上限",
+        "note": "海外消費2%無上限"
+      },
+      {
+        "keywords": [
+          "行動支付",
+          "line pay",
+          "街口",
+          "apple pay",
+          "google pay",
+          "一般消費"
+        ],
+        "rate": 0.5,
+        "cap": "無上限",
+        "note": "館外一般消費及行動支付0.5%"
+      }
     ]
   },
   {
-    id: "esun_ubear",
-    bank: "玉山銀行",
-    name: "U Bear 信用卡",
-    travel5: false,
-    my16: true,
-    refunds15: false,
-    jpDefaultRate: 1.0,
-    rules: [
-      { keywords: ["網購", "蝦皮", "momo", "pchome", "行動支付", "line pay", "街口"], rate: 3.0, cap: "網購加碼2%上限150元/月(刷7,500元封頂)", note: "網購與LINE Pay/街口3%現折帳單（LINE Pay滿500登錄活動最高5%）" },
-      { keywords: ["netflix", "spotify", "影音", "chatgpt", "gemini", "steam"], rate: 10.0, cap: "上限100元/月", note: "指定娛樂/AI訂閱平台10%現金回饋" },
-      { keywords: ["一般消費"], rate: 1.0, cap: "無上限", note: "一般消費1%" }
+    "id": "esun_ubear",
+    "bank": "玉山銀行",
+    "name": "U Bear 信用卡",
+    "travel5": false,
+    "my16": true,
+    "refunds15": false,
+    "jpDefaultRate": 1.0,
+    "rules": [
+      {
+        "keywords": [
+          "行動支付",
+          "line pay",
+          "linepay",
+          "街口",
+          "網購",
+          "蝦皮",
+          "momo",
+          "pchome"
+        ],
+        "rate": 3.0,
+        "cap": "網購/指定行動支付加碼2%上限150元/月(刷7,500元封頂)",
+        "note": "✅【LINE Pay / 街口 / 網購 3%】現折帳單（基本1%+加碼2%，每月刷NT$7,500封頂；不含超商/全聯）"
+      },
+      {
+        "keywords": [
+          "netflix",
+          "spotify",
+          "影音",
+          "chatgpt",
+          "gemini",
+          "steam"
+        ],
+        "rate": 10.0,
+        "cap": "上限100元/月",
+        "note": "指定娛樂/AI訂閱平台10%現金回饋"
+      },
+      {
+        "keywords": [
+          "apple pay",
+          "google pay",
+          "台灣pay",
+          "一般消費"
+        ],
+        "rate": 1.0,
+        "cap": "無上限（Apple/Google Pay實體感應僅1%）",
+        "note": "一般消費及Apple/Google Pay實體感應1%無上限"
+      }
     ]
   },
   {
-    id: "esun_ecard",
-    bank: "玉山銀行",
-    name: "數位e卡 (輕時尚/寵生活版)",
-    travel5: false,
-    my16: false,
-    refunds15: false,
-    jpDefaultRate: 0.5,
-    rules: [
-      { keywords: ["百貨購物", "新光三越", "遠百", "sogo", "藥妝", "屈臣氏", "寶雅", "康是美", "星巴克", "路易莎"], rate: 3.0, cap: "加碼2.5%上限250點/期", note: "需玉山自扣+e化帳單，綁Apple Pay/Google Pay/玉山Wallet享百貨美妝/咖啡3%" },
-      { keywords: ["綠色消費", "有機", "里仁", "聖德科斯"], rate: 5.0, cap: "加碼4.5%上限250點/期", note: "環保/有機指定通路登錄最高5%" },
-      { keywords: ["一般消費"], rate: 0.5, cap: "無上限", note: "一般消費0.5%" }
+    "id": "esun_ecard",
+    "bank": "玉山銀行",
+    "name": "數位e卡 (輕時尚/寵生活版)",
+    "travel5": false,
+    "my16": false,
+    "refunds15": false,
+    "jpDefaultRate": 0.5,
+    "rules": [
+      {
+        "keywords": [
+          "apple pay",
+          "google pay",
+          "玉山wallet",
+          "行動支付",
+          "百貨購物",
+          "新光三越",
+          "遠百",
+          "sogo",
+          "藥妝",
+          "屈臣氏",
+          "寶雅",
+          "康是美",
+          "星巴克",
+          "路易莎"
+        ],
+        "rate": 3.0,
+        "cap": "加碼2.5%上限250點/期",
+        "note": "✅【需綁 Apple Pay / Google Pay / 玉山Wallet】於指定百貨/美妝/咖啡消費享3%（LINE Pay僅0.5%）"
+      },
+      {
+        "keywords": [
+          "綠色消費",
+          "有機",
+          "里仁",
+          "聖德科斯"
+        ],
+        "rate": 5.0,
+        "cap": "加碼4.5%上限250點/期",
+        "note": "環保/有機指定通路登錄最高5%"
+      },
+      {
+        "keywords": [
+          "line pay",
+          "街口",
+          "一般消費"
+        ],
+        "rate": 0.5,
+        "cap": "無上限",
+        "note": "一般消費及LINE Pay/街口0.5%"
+      }
     ]
   },
   {
-    id: "esun_starlux",
-    bank: "玉山銀行",
-    name: "星宇航空聯名卡",
-    travel5: false,
-    my16: false,
-    refunds15: false,
-    jpDefaultRate: 3.5,
-    rules: [
-      { keywords: ["星宇", "機票", "日本", "海外"], rate: 3.5, cap: "海外/星宇官網最優NT$10=1哩（換算約3.5%價值）", note: "星宇官網購票與日本實體消費最優10元1哩" },
-      { keywords: ["一般消費"], rate: 1.2, cap: "無上限", note: "國內消費累積星宇哩程" }
+    "id": "esun_starlux",
+    "bank": "玉山銀行",
+    "name": "星宇航空聯名卡",
+    "travel5": false,
+    "my16": false,
+    "refunds15": false,
+    "jpDefaultRate": 3.5,
+    "rules": [
+      {
+        "keywords": [
+          "星宇",
+          "機票",
+          "日本",
+          "海外"
+        ],
+        "rate": 3.5,
+        "cap": "海外/星宇官網最優NT$10=1哩（換算約3.5%價值）",
+        "note": "星宇官網購票與日本實體消費最優10元1哩"
+      },
+      {
+        "keywords": [
+          "行動支付",
+          "line pay",
+          "街口",
+          "apple pay",
+          "google pay",
+          "一般消費"
+        ],
+        "rate": 1.2,
+        "cap": "無上限（無行動支付額外加碼）",
+        "note": "國內一般消費及行動支付累積星宇哩程（換算約1.2%）"
+      }
     ]
   },
   {
-    id: "esun_pi",
-    bank: "玉山銀行",
-    name: "Pi 拍錢包信用卡",
-    travel5: false,
-    my16: false,
-    refunds15: false,
-    jpDefaultRate: 1.0,
-    rules: [
-      { keywords: ["行動支付", "pi拍錢包", "超商", "全家", "pchome"], rate: 4.0, cap: "指定通路加碼上限依玉山公告", note: "綁定Pi拍錢包於指定生活通路最高4%~5% P幣回饋" },
-      { keywords: ["一般消費"], rate: 1.0, cap: "無上限", note: "一般消費1% P幣無上限" }
+    "id": "esun_pi",
+    "bank": "玉山銀行",
+    "name": "Pi 拍錢包信用卡",
+    "travel5": false,
+    "my16": false,
+    "refunds15": false,
+    "jpDefaultRate": 1.0,
+    "rules": [
+      {
+        "keywords": [
+          "pi拍錢包",
+          "行動支付",
+          "超商",
+          "全家",
+          "pchome"
+        ],
+        "rate": 4.0,
+        "cap": "指定通路加碼上限依玉山公告",
+        "note": "✅【需綁定 Pi拍錢包】於指定生活通路最高4%~5% P幣回饋（LINE Pay僅1%）"
+      },
+      {
+        "keywords": [
+          "line pay",
+          "街口",
+          "apple pay",
+          "google pay",
+          "一般消費"
+        ],
+        "rate": 1.0,
+        "cap": "無上限",
+        "note": "一般消費及非Pi拍錢包支付享1% P幣無上限"
+      }
     ]
   },
   {
-    id: "cathay_eva",
-    bank: "國泰世華",
-    name: "長榮航空聯名卡",
-    travel5: false,
-    my16: false,
-    refunds15: true,
-    jpDefaultRate: 3.5,
-    rules: [
-      { keywords: ["長榮", "機票", "海外", "日本"], rate: 3.5, cap: "極致無限卡海外/長榮最優NT$10=1哩", note: "長榮官網購票與海外消費最優10元1哩；刷退退1.5%手續費" },
-      { keywords: ["一般消費"], rate: 1.2, cap: "無上限", note: "國內消費累積長榮哩程" }
+    "id": "cathay_eva",
+    "bank": "國泰世華",
+    "name": "長榮航空聯名卡",
+    "travel5": false,
+    "my16": false,
+    "refunds15": true,
+    "jpDefaultRate": 3.5,
+    "rules": [
+      {
+        "keywords": [
+          "長榮",
+          "機票",
+          "海外",
+          "日本"
+        ],
+        "rate": 3.5,
+        "cap": "極致無限卡海外/長榮最優NT$10=1哩",
+        "note": "長榮官網購票與海外消費最優10元1哩；刷退退1.5%手續費"
+      },
+      {
+        "keywords": [
+          "行動支付",
+          "line pay",
+          "街口",
+          "apple pay",
+          "google pay",
+          "一般消費"
+        ],
+        "rate": 1.2,
+        "cap": "無上限（無行動支付額外加碼）",
+        "note": "國內一般消費及行動支付累積長榮哩程"
+      }
     ]
   },
   {
-    id: "cathay_shopee",
-    bank: "國泰世華",
-    name: "蝦皮購物聯名卡",
-    travel5: false,
-    my16: false,
-    refunds15: true,
-    jpDefaultRate: 0.5,
-    rules: [
-      { keywords: ["網購", "蝦皮"], rate: 4.0, cap: "促刷檔期登錄加碼最高6%~10%蝦幣", note: "蝦皮商城2%+促刷檔期加碼6%蝦幣（月消費滿5千或5筆送免運券）" },
-      { keywords: ["一般消費"], rate: 0.5, cap: "無上限", note: "站外一般消費0.5%蝦幣" }
+    "id": "cathay_shopee",
+    "bank": "國泰世華",
+    "name": "蝦皮購物聯名卡",
+    "travel5": false,
+    "my16": false,
+    "refunds15": true,
+    "jpDefaultRate": 0.5,
+    "rules": [
+      {
+        "keywords": [
+          "網購",
+          "蝦皮"
+        ],
+        "rate": 4.0,
+        "cap": "促刷檔期登錄加碼最高6%~10%蝦幣",
+        "note": "蝦皮商城2%+促刷檔期加碼6%蝦幣（月消費滿5千或5筆送免運券）"
+      },
+      {
+        "keywords": [
+          "行動支付",
+          "line pay",
+          "街口",
+          "apple pay",
+          "google pay",
+          "一般消費"
+        ],
+        "rate": 0.5,
+        "cap": "無上限",
+        "note": "站外一般消費及行動支付0.5%蝦幣"
+      }
     ]
   },
   {
-    id: "taishin_mercedes",
-    bank: "台新銀行",
-    name: "Mercedes-Benz 聯名卡",
-    travel5: false,
-    my16: false,
-    refunds15: true,
-    jpDefaultRate: 3.0,
-    rules: [
-      { keywords: ["海外", "日本", "賓士", "保養"], rate: 3.0, cap: "無上限", note: "海外消費3%回饋無上限；刷退退1.5%手續費" },
-      { keywords: ["一般消費"], rate: 1.0, cap: "無上限", note: "國內一般消費1%" }
+    "id": "taishin_mercedes",
+    "bank": "台新銀行",
+    "name": "Mercedes-Benz 聯名卡",
+    "travel5": false,
+    "my16": false,
+    "refunds15": true,
+    "jpDefaultRate": 3.0,
+    "rules": [
+      {
+        "keywords": [
+          "海外",
+          "日本",
+          "賓士",
+          "保養"
+        ],
+        "rate": 3.0,
+        "cap": "無上限",
+        "note": "海外消費3%回饋無上限；刷退退1.5%手續費"
+      },
+      {
+        "keywords": [
+          "行動支付",
+          "line pay",
+          "街口",
+          "apple pay",
+          "google pay",
+          "一般消費"
+        ],
+        "rate": 1.0,
+        "cap": "無上限",
+        "note": "國內一般消費及行動支付1%"
+      }
     ]
   },
   {
-    id: "taishin_jkopay",
-    bank: "台新銀行",
-    name: "街口聯名卡",
-    travel5: false,
-    my16: false,
-    refunds15: true,
-    jpDefaultRate: 3.5,
-    rules: [
-      { keywords: ["日本paypay", "paypay", "街口"], rate: 3.5, cap: "依街口日本跨境活動上限", note: "📱【需用街口支付 App 掃碼】日本 PayPay 跨境免1.5%手續費+街口活動回饋" },
-      { keywords: ["行動支付", "超商", "7-11", "全家"], rate: 3.0, cap: "精選通路最高3.5%街口幣", note: "綁定街口支付於指定通路與繳費最高1.15%~3.5%" },
-      { keywords: ["一般消費"], rate: 1.0, cap: "無上限", note: "一般消費1%街口幣無上限" }
+    "id": "taishin_jkopay",
+    "bank": "台新銀行",
+    "name": "街口聯名卡",
+    "travel5": false,
+    "my16": false,
+    "refunds15": true,
+    "jpDefaultRate": 3.5,
+    "rules": [
+      {
+        "keywords": [
+          "日本paypay",
+          "街口日本"
+        ],
+        "rate": 3.5,
+        "cap": "依街口日本跨境活動上限",
+        "note": "📱【需用街口支付 App 掃碼日本PayPay】跨境免1.5%手續費+街口活動回饋"
+      },
+      {
+        "keywords": [
+          "街口",
+          "行動支付",
+          "超商",
+          "7-11",
+          "全家"
+        ],
+        "rate": 3.0,
+        "cap": "精選通路最高3.5%街口幣",
+        "note": "✅【街口支付主力卡】綁定街口支付於指定通路最高3%~3.5%街口幣"
+      },
+      {
+        "keywords": [
+          "line pay",
+          "apple pay",
+          "google pay",
+          "一般消費"
+        ],
+        "rate": 1.0,
+        "cap": "無上限",
+        "note": "一般消費及非街口行動支付1%街口幣無上限"
+      }
     ]
   },
   {
-    id: "fubon_momo",
-    bank: "台北富邦",
-    name: "momo 聯名卡",
-    travel5: false,
-    my16: false,
-    refunds15: false,
-    jpDefaultRate: 1.0,
-    rules: [
-      { keywords: ["網購", "momo"], rate: 3.0, cap: "momo站內3%無上限 / 精選品牌最高7%", note: "momo購物網消費3% mo幣無上限，指定品牌加碼最高7%" },
-      { keywords: ["一般消費"], rate: 1.0, cap: "無上限", note: "站外一般消費1% mo幣無上限" }
+    "id": "fubon_momo",
+    "bank": "台北富邦",
+    "name": "momo 聯名卡",
+    "travel5": false,
+    "my16": false,
+    "refunds15": false,
+    "jpDefaultRate": 1.0,
+    "rules": [
+      {
+        "keywords": [
+          "網購",
+          "momo"
+        ],
+        "rate": 3.0,
+        "cap": "momo站內3%無上限 / 精選品牌最高7%",
+        "note": "momo購物網消費3% mo幣無上限，指定品牌加碼最高7%"
+      },
+      {
+        "keywords": [
+          "行動支付",
+          "line pay",
+          "街口",
+          "apple pay",
+          "google pay",
+          "一般消費"
+        ],
+        "rate": 1.0,
+        "cap": "無上限",
+        "note": "站外一般消費及行動支付1% mo幣無上限"
+      }
     ]
   },
   {
-    id: "fubon_open",
-    bank: "台北富邦",
-    name: "Open Possible 聯名卡",
-    travel5: false,
-    my16: false,
-    refunds15: false,
-    jpDefaultRate: 2.0,
-    rules: [
-      { keywords: ["電信費", "台灣大哥大", "網購", "momo", "myfone"], rate: 5.0, cap: "電信費最高5% / 指定通路加碼上限依富邦公告", note: "台灣大哥大電信費代扣繳最高5%現金回饋" },
-      { keywords: ["海外", "日本"], rate: 2.0, cap: "無上限", note: "海外消費2%現金回饋無上限" },
-      { keywords: ["一般消費"], rate: 1.0, cap: "無上限", note: "一般消費1%" }
+    "id": "fubon_open",
+    "bank": "台北富邦",
+    "name": "Open Possible 聯名卡",
+    "travel5": false,
+    "my16": false,
+    "refunds15": false,
+    "jpDefaultRate": 2.0,
+    "rules": [
+      {
+        "keywords": [
+          "電信費",
+          "台灣大哥大",
+          "網購",
+          "momo",
+          "myfone"
+        ],
+        "rate": 5.0,
+        "cap": "電信費最高5% / 指定通路加碼上限依富邦公告",
+        "note": "台灣大哥大電信費代扣繳最高5%現金回饋"
+      },
+      {
+        "keywords": [
+          "海外",
+          "日本"
+        ],
+        "rate": 2.0,
+        "cap": "無上限",
+        "note": "海外消費2%現金回饋無上限"
+      },
+      {
+        "keywords": [
+          "行動支付",
+          "line pay",
+          "街口",
+          "apple pay",
+          "google pay",
+          "一般消費"
+        ],
+        "rate": 1.0,
+        "cap": "無上限",
+        "note": "一般消費及行動支付1%"
+      }
     ]
   },
   {
-    id: "dbs_aov",
-    bank: "星展銀行",
-    name: "傳說對決聯名卡",
-    travel5: false,
-    my16: false,
-    refunds15: false,
-    jpDefaultRate: 5.0,
-    rules: [
-      { keywords: ["日本實體", "日本", "韓國", "泰國", "新加坡", "美國", "歐洲", "海外實體"], rate: 5.0, cap: "需星展帳戶自扣，加碼上限500元/月(刷12,500元封頂)", note: "星展自扣享日韓泰新美歐實體商店5%現金積點" },
-      { keywords: ["網購", "蝦皮", "影音", "netflix", "外送", "ubereats", "foodpanda"], rate: 10.0, cap: "需星展帳戶自扣，上限500元/月(刷5,555元封頂)", note: "生活玩家精選通路（含外送/影音/遊戲/蝦皮）最高10%" },
-      { keywords: ["一般消費"], rate: 1.0, cap: "無上限", note: "星展帳戶自扣國內外一般消費1%無上限" }
+    "id": "dbs_aov",
+    "bank": "星展銀行",
+    "name": "傳說對決聯名卡",
+    "travel5": false,
+    "my16": false,
+    "refunds15": false,
+    "jpDefaultRate": 5.0,
+    "rules": [
+      {
+        "keywords": [
+          "日本實體",
+          "日本",
+          "韓國",
+          "泰國",
+          "新加坡",
+          "美國",
+          "歐洲",
+          "海外實體"
+        ],
+        "rate": 5.0,
+        "cap": "需星展帳戶自扣，加碼上限500元/月(刷12,500元封頂)",
+        "note": "星展自扣享日韓泰新美歐實體商店5%現金積點"
+      },
+      {
+        "keywords": [
+          "line pay",
+          "linepay",
+          "行動支付",
+          "網購",
+          "蝦皮",
+          "影音",
+          "netflix",
+          "外送",
+          "ubereats",
+          "foodpanda"
+        ],
+        "rate": 10.0,
+        "cap": "需星展帳戶自扣，加碼9%上限500元/月(刷5,555元封頂)",
+        "note": "✅【LINE Pay / 外送 / 蝦皮 / 影音最高10%】星展帳戶自扣享精選生活通路10%（Apple/Google Pay僅1%）"
+      },
+      {
+        "keywords": [
+          "apple pay",
+          "google pay",
+          "街口",
+          "台灣pay",
+          "一般消費"
+        ],
+        "rate": 1.0,
+        "cap": "無上限",
+        "note": "星展帳戶自扣國內外一般消費及Apple/Google Pay 1%無上限"
+      }
     ]
   },
   {
-    id: "dbs_flight",
-    bank: "星展銀行",
-    name: "飛行世界商務卡",
-    travel5: false,
-    my16: false,
-    refunds15: false,
-    jpDefaultRate: 3.0,
-    rules: [
-      { keywords: ["海外", "日本", "機票", "航空"], rate: 3.0, cap: "海外NT$15=1點飛行積金無上限", note: "飛行積金終身有效，可1:1兌換長榮/華航/亞洲萬里通/新航哩程" },
-      { keywords: ["一般消費"], rate: 1.8, cap: "國內NT$18=1點飛行積金無上限", note: "國內一般消費最優18元1哩" }
+    "id": "dbs_flight",
+    "bank": "星展銀行",
+    "name": "飛行世界商務卡",
+    "travel5": false,
+    "my16": false,
+    "refunds15": false,
+    "jpDefaultRate": 3.0,
+    "rules": [
+      {
+        "keywords": [
+          "海外",
+          "日本",
+          "機票",
+          "航空"
+        ],
+        "rate": 3.0,
+        "cap": "海外NT$15=1點飛行積金無上限",
+        "note": "飛行積金終身有效，可1:1兌換長榮/華航/亞洲萬里通/新航哩程"
+      },
+      {
+        "keywords": [
+          "行動支付",
+          "line pay",
+          "街口",
+          "apple pay",
+          "google pay",
+          "一般消費"
+        ],
+        "rate": 1.8,
+        "cap": "國內NT$18=1點飛行積金無上限",
+        "note": "國內一般消費及行動支付最優18元1哩"
+      }
     ]
   },
   {
-    id: "ubot_linebank",
-    bank: "聯邦銀行",
-    name: "LINE Bank 聯名卡",
-    travel5: false,
-    my16: false,
-    refunds15: true,
-    jpDefaultRate: 2.5,
-    rules: [
-      { keywords: ["網購", "蝦皮", "momo", "pchome", "coupang", "淘寶", "影音", "遊戲"], rate: 4.0, cap: "網購加碼3%上限300元/月(刷10,000元封頂)", note: "指定網購/影音/遊戲最高4%現金回饋，設定LINE Bank自扣再享扣繳加碼" },
-      { keywords: ["海外", "日本"], rate: 2.5, cap: "無上限", note: "海外消費2.5%現金回饋無上限；刷退退1.5%手續費" },
-      { keywords: ["一般消費"], rate: 1.0, cap: "無上限", note: "國內一般消費1%" }
+    "id": "ubot_linebank",
+    "bank": "聯邦銀行",
+    "name": "LINE Bank 聯名卡",
+    "travel5": false,
+    "my16": false,
+    "refunds15": true,
+    "jpDefaultRate": 2.5,
+    "rules": [
+      {
+        "keywords": [
+          "網購",
+          "蝦皮",
+          "momo",
+          "pchome",
+          "coupang",
+          "淘寶",
+          "影音",
+          "遊戲"
+        ],
+        "rate": 4.0,
+        "cap": "網購加碼3%上限300元/月(刷10,000元封頂)",
+        "note": "指定網購/影音/遊戲最高4%現金回饋，設定LINE Bank自扣再享扣繳加碼"
+      },
+      {
+        "keywords": [
+          "海外",
+          "日本"
+        ],
+        "rate": 2.5,
+        "cap": "無上限",
+        "note": "海外消費2.5%現金回饋無上限；刷退退1.5%手續費"
+      },
+      {
+        "keywords": [
+          "行動支付",
+          "line pay",
+          "街口",
+          "apple pay",
+          "google pay",
+          "一般消費"
+        ],
+        "rate": 1.0,
+        "cap": "無上限（無行動支付額外加碼）",
+        "note": "國內一般消費及行動支付（LINE Pay/街口/Apple Pay等）1%"
+      }
     ]
   },
   {
-    id: "ubot_lai",
-    bank: "聯邦銀行",
-    name: "賴點卡",
-    travel5: false,
-    my16: false,
-    refunds15: true,
-    jpDefaultRate: 3.0,
-    rules: [
-      { keywords: ["line pay", "行動支付"], rate: 5.0, cap: "偶數日LINE Pay指定通路最高5%", note: "綁定聯邦自扣享LINE Pay指定通路偶數日最高5% LINE POINTS" },
-      { keywords: ["海外", "日本"], rate: 3.0, cap: "無上限", note: "聯邦自扣享海外消費3% LINE POINTS無上限" },
-      { keywords: ["一般消費"], rate: 1.3, cap: "無上限", note: "聯邦自扣享國內一般消費1.3%無上限" }
+    "id": "ubot_lai",
+    "bank": "聯邦銀行",
+    "name": "賴點卡",
+    "travel5": false,
+    "my16": false,
+    "refunds15": true,
+    "jpDefaultRate": 3.0,
+    "rules": [
+      {
+        "keywords": [
+          "line pay",
+          "linepay",
+          "行動支付"
+        ],
+        "rate": 2.0,
+        "cap": "LINE Pay滿百+1%(上限200點/月)；偶數日指定通路+5%(上限150點/月)",
+        "note": "✅【LINE Pay 專屬主力卡】聯邦自扣享LINE Pay滿百2%，偶數日指定通路最高7% LINE POINTS"
+      },
+      {
+        "keywords": [
+          "海外",
+          "日本"
+        ],
+        "rate": 3.0,
+        "cap": "無上限",
+        "note": "聯邦自扣享海外消費3% LINE POINTS無上限"
+      },
+      {
+        "keywords": [
+          "街口",
+          "apple pay",
+          "google pay",
+          "台灣pay",
+          "一般消費"
+        ],
+        "rate": 1.3,
+        "cap": "無上限",
+        "note": "聯邦自扣享國內一般消費及Apple Pay/街口1.3% LINE POINTS無上限"
+      }
     ]
   },
   {
-    id: "hsbc_liveplus",
-    bank: "滙豐銀行",
-    name: "Live+ 現金回饋卡",
-    travel5: false,
-    my16: false,
-    refunds15: false,
-    jpDefaultRate: 5.88,
-    rules: [
-      { keywords: ["日本實體", "日本", "餐廳", "吃飯"], rate: 5.88, cap: "餐飲/購物/娛樂+3%上限888元/月(精選國家餐飲再+1%)", note: "滙豐帳戶自扣享4.88%，日本/日韓泰等精選國家餐飲最高5.88%" },
-      { keywords: ["百貨購物", "三井outlet", "網購", "momo", "蝦皮"], rate: 4.88, cap: "加碼3%上限888元/月", note: "三大通路（餐飲/購物/娛樂）完成滙豐自扣享4.88%現金積點" },
-      { keywords: ["一般消費"], rate: 1.88, cap: "無上限", note: "基本0.88% + 滙豐帳戶自動扣繳加碼1% = 1.88%無上限" }
+    "id": "hsbc_liveplus",
+    "bank": "滙豐銀行",
+    "name": "Live+ 現金回饋卡",
+    "travel5": false,
+    "my16": false,
+    "refunds15": false,
+    "jpDefaultRate": 5.88,
+    "rules": [
+      {
+        "keywords": [
+          "日本實體",
+          "日本",
+          "餐廳",
+          "吃飯"
+        ],
+        "rate": 5.88,
+        "cap": "餐飲/購物/娛樂+3%上限888元/月(精選國家餐飲再+1%)",
+        "note": "滙豐帳戶自扣享4.88%，日本/日韓泰等精選國家餐飲最高5.88%"
+      },
+      {
+        "keywords": [
+          "百貨購物",
+          "三井outlet",
+          "網購",
+          "momo",
+          "蝦皮"
+        ],
+        "rate": 4.88,
+        "cap": "加碼3%上限888元/月",
+        "note": "三大通路（餐飲/購物/娛樂）完成滙豐自扣享4.88%現金積點"
+      },
+      {
+        "keywords": [
+          "行動支付",
+          "line pay",
+          "街口",
+          "apple pay",
+          "google pay",
+          "台灣pay",
+          "一般消費"
+        ],
+        "rate": 1.88,
+        "cap": "無上限（無行動支付專屬加碼，但綁在餐飲/購物/娛樂通路仍享4.88%）",
+        "note": "基本0.88%+滙豐自扣1%=1.88%無上限（綁LINE Pay/Apple Pay於三大通路仍享4.88%）"
+      }
     ]
   },
   {
-    id: "hsbc_cashback",
-    bank: "滙豐銀行",
-    name: "現金回饋御璽卡",
-    travel5: false,
-    my16: false,
-    refunds15: false,
-    jpDefaultRate: 2.22,
-    rules: [
-      { keywords: ["海外", "日本"], rate: 2.22, cap: "無上限", note: "海外消費2.22%現金回饋無上限，免切方案、免登錄" },
-      { keywords: ["一般消費", "國內"], rate: 1.22, cap: "無上限", note: "國內一般消費1.22%現金回饋無上限" }
+    "id": "hsbc_cashback",
+    "bank": "滙豐銀行",
+    "name": "現金回饋御璽卡",
+    "travel5": false,
+    "my16": false,
+    "refunds15": false,
+    "jpDefaultRate": 2.22,
+    "rules": [
+      {
+        "keywords": [
+          "海外",
+          "日本"
+        ],
+        "rate": 2.22,
+        "cap": "無上限",
+        "note": "海外消費2.22%現金回饋無上限，免切方案、免登錄"
+      },
+      {
+        "keywords": [
+          "行動支付",
+          "line pay",
+          "街口",
+          "apple pay",
+          "google pay",
+          "台灣pay",
+          "一般消費",
+          "國內"
+        ],
+        "rate": 1.22,
+        "cap": "無上限",
+        "note": "國內一般消費及行動支付（LINE Pay/Apple Pay/街口等）1.22%現金回饋無上限"
+      }
     ]
   },
   {
-    id: "hsbc_traveler",
-    bank: "滙豐銀行",
-    name: "旅人御璽卡 / 無限卡",
-    travel5: false,
-    my16: false,
-    refunds15: false,
-    jpDefaultRate: 3.5,
-    rules: [
-      { keywords: ["海外", "日本", "機票", "航空"], rate: 3.5, cap: "無限卡海外NT$10=1哩 / 御璽卡NT$15=1哩無上限", note: "旅遊積分可1:1兌換15家以上航空哩程（長榮/華航/亞萬/日航等）" },
-      { keywords: ["一般消費"], rate: 1.8, cap: "無上限", note: "國內消費NT$18=1旅遊積分無上限" }
+    "id": "hsbc_traveler",
+    "bank": "滙豐銀行",
+    "name": "旅人御璽卡 / 無限卡",
+    "travel5": false,
+    "my16": false,
+    "refunds15": false,
+    "jpDefaultRate": 3.5,
+    "rules": [
+      {
+        "keywords": [
+          "海外",
+          "日本",
+          "機票",
+          "航空"
+        ],
+        "rate": 3.5,
+        "cap": "無限卡海外NT$10=1哩 / 御璽卡NT$15=1哩無上限",
+        "note": "旅遊積分可1:1兌換15家以上航空哩程（長榮/華航/亞萬/日航等）"
+      },
+      {
+        "keywords": [
+          "行動支付",
+          "line pay",
+          "街口",
+          "apple pay",
+          "google pay",
+          "一般消費"
+        ],
+        "rate": 1.8,
+        "cap": "無上限",
+        "note": "國內一般消費及行動支付NT$18=1旅遊積分無上限"
+      }
     ]
   },
   {
-    id: "hsbc_huizuan",
-    bank: "滙豐銀行",
-    name: "匯鑽卡",
-    travel5: false,
-    my16: false,
-    refunds15: false,
-    jpDefaultRate: 1.0,
-    rules: [
-      { keywords: ["行動支付", "街口", "網購", "momo", "外送", "ubereats", "影音", "netflix"], rate: 6.0, cap: "基本3%(上限2,000/月)，達門檻翻倍6%", note: "指定通路3%，累積滿5,000點且滙豐帳戶往來達30萬可翻倍兌換1萬元(6%)" },
-      { keywords: ["一般消費"], rate: 1.0, cap: "無上限", note: "一般消費1%" }
+    "id": "hsbc_huizuan",
+    "bank": "滙豐銀行",
+    "name": "匯鑽卡",
+    "travel5": false,
+    "my16": false,
+    "refunds15": false,
+    "jpDefaultRate": 1.0,
+    "rules": [
+      {
+        "keywords": [
+          "街口",
+          "paypal",
+          "行動支付",
+          "網購",
+          "momo",
+          "外送",
+          "ubereats",
+          "影音",
+          "netflix"
+        ],
+        "rate": 6.0,
+        "cap": "基本3%(上限2,000/月)，達5,000點且資產30萬翻倍6%",
+        "note": "✅【街口支付 / PayPal / 指定網購外送 3%~6%】（⚠️不含LINE Pay，LINE Pay僅1%）"
+      },
+      {
+        "keywords": [
+          "line pay",
+          "apple pay",
+          "google pay",
+          "一般消費"
+        ],
+        "rate": 1.0,
+        "cap": "無上限",
+        "note": "一般消費及LINE Pay/Apple Pay為1%"
+      }
     ]
   },
   {
-    id: "feib_lejia",
-    bank: "遠東商銀",
-    name: "遠東樂家+卡",
-    travel5: false,
-    my16: false,
-    refunds15: false,
-    jpDefaultRate: 3.5,
-    rules: [
-      { keywords: ["日本實體", "日本", "韓國", "新加坡", "美國", "海外"], rate: 3.5, cap: "海外2.5%無上限 + 日韓新美單月滿5~6萬登錄加碼1%上限500", note: "海外一般消費2.5%現金回饋無上限，達滿額門檻登錄最高3.5%" },
-      { keywords: ["寵物", "動物醫院", "超市量販", "藥妝"], rate: 4.0, cap: "指定生活通路最高4% / 寵物最高10%", note: "需遠銀帳戶自扣，指定親子/超市/藥妝/寵物通路高回饋" },
-      { keywords: ["一般消費"], rate: 0.5, cap: "無上限", note: "國內一般消費0.5%" }
+    "id": "feib_lejia",
+    "bank": "遠東商銀",
+    "name": "遠東樂家+卡",
+    "travel5": false,
+    "my16": false,
+    "refunds15": false,
+    "jpDefaultRate": 3.5,
+    "rules": [
+      {
+        "keywords": [
+          "日本實體",
+          "日本",
+          "韓國",
+          "新加坡",
+          "美國",
+          "海外"
+        ],
+        "rate": 3.5,
+        "cap": "海外2.5%無上限 + 日韓新美單月滿5~6萬登錄加碼1%上限500",
+        "note": "海外一般消費2.5%現金回饋無上限，達滿額門檻登錄最高3.5%"
+      },
+      {
+        "keywords": [
+          "寵物",
+          "動物醫院",
+          "超市量販",
+          "藥妝"
+        ],
+        "rate": 4.0,
+        "cap": "指定生活通路最高4% / 寵物最高10%",
+        "note": "需遠銀帳戶自扣，指定親子/超市/藥妝/寵物通路高回饋"
+      },
+      {
+        "keywords": [
+          "行動支付",
+          "line pay",
+          "街口",
+          "apple pay",
+          "google pay",
+          "一般消費"
+        ],
+        "rate": 0.5,
+        "cap": "無上限",
+        "note": "非指定通路之國內一般消費及行動支付0.5%"
+      }
     ]
   },
   {
-    id: "feib_happy",
-    bank: "遠東商銀",
-    name: "遠東快樂信用卡",
-    travel5: false,
-    my16: false,
-    refunds15: false,
-    jpDefaultRate: 1.0,
-    rules: [
-      { keywords: ["line pay", "行動支付", "百貨購物", "遠百", "sogo"], rate: 5.0, cap: "每月登錄，加碼上限依遠銀公告", note: "指定行動支付(LINE Pay等)與遠東百貨/SOGO最高5%" },
-      { keywords: ["一般消費"], rate: 1.0, cap: "無上限", note: "一般消費1%" }
+    "id": "feib_happy",
+    "bank": "遠東商銀",
+    "name": "遠東快樂信用卡",
+    "travel5": false,
+    "my16": false,
+    "refunds15": false,
+    "jpDefaultRate": 1.0,
+    "rules": [
+      {
+        "keywords": [
+          "line pay",
+          "linepay",
+          "悠遊付",
+          "happy go pay",
+          "行動支付",
+          "百貨購物",
+          "遠百",
+          "sogo"
+        ],
+        "rate": 5.0,
+        "cap": "每月登錄，指定行動支付與遠東百貨/SOGO最高5%",
+        "note": "✅【LINE Pay / 悠遊付 / HAPPY GO Pay】每月登錄於指定通路最高5%"
+      },
+      {
+        "keywords": [
+          "街口",
+          "apple pay",
+          "google pay",
+          "一般消費"
+        ],
+        "rate": 1.0,
+        "cap": "無上限",
+        "note": "一般消費1%"
+      }
     ]
   },
   {
-    id: "mega_lido",
-    bank: "兆豐銀行",
-    name: "利多御璽卡",
-    travel5: false,
-    my16: false,
-    refunds15: false,
-    jpDefaultRate: 3.1,
-    rules: [
-      { keywords: ["海外", "日本", "網購"], rate: 3.1, cap: "海外加碼上限500元/月(電子帳單+兆豐自扣)", note: "電子帳單且兆豐自扣，海外消費3.1%（疊加行動支付活動最高可達9.1%）" },
-      { keywords: ["行動支付", "line pay", "街口", "台灣pay"], rate: 6.0, cap: "指定10大行動支付活動限量登錄", note: "綁定指定行動支付享加碼回饋" },
-      { keywords: ["一般消費"], rate: 1.0, cap: "無上限", note: "一般消費1%" }
+    "id": "mega_lido",
+    "bank": "兆豐銀行",
+    "name": "利多御璽卡",
+    "travel5": false,
+    "my16": false,
+    "refunds15": false,
+    "jpDefaultRate": 3.1,
+    "rules": [
+      {
+        "keywords": [
+          "行動支付",
+          "line pay",
+          "linepay",
+          "街口",
+          "台灣pay",
+          "悠遊付",
+          "icash pay",
+          "全支付",
+          "apple pay",
+          "google pay"
+        ],
+        "rate": 3.1,
+        "cap": "基本1%+自扣加碼0.1%+行動支付活動登錄再加碼(最高可達6%~9.1%)",
+        "note": "✅【支援10大行動支付】LINE Pay/街口/台灣Pay/悠遊付/Apple Pay等享基本1.1%+季度登錄加碼"
+      },
+      {
+        "keywords": [
+          "海外",
+          "日本",
+          "網購"
+        ],
+        "rate": 3.1,
+        "cap": "海外/網購加碼上限500元/月(電子帳單+兆豐自扣)",
+        "note": "電子帳單且兆豐自扣，海外消費與網購3.1%"
+      },
+      {
+        "keywords": [
+          "一般消費"
+        ],
+        "rate": 1.0,
+        "cap": "無上限",
+        "note": "一般消費1%"
+      }
     ]
   },
   {
-    id: "mega_esec",
-    bank: "兆豐銀行",
-    name: "e秒刷鈦金卡",
-    travel5: false,
-    my16: false,
-    refunds15: false,
-    jpDefaultRate: 3.0,
-    rules: [
-      { keywords: ["網購", "蝦皮", "momo", "pchome", "海外"], rate: 3.0, cap: "網購加碼上限200元/月(刷8,000元封頂)", note: "不限通路網購最高3%（⚠️注意單筆滿3,000元自動3期0利率無回饋，需致電關閉）" },
-      { keywords: ["一般消費"], rate: 0.5, cap: "無上限", note: "一般消費0.5%" }
+    "id": "mega_esec",
+    "bank": "兆豐銀行",
+    "name": "e秒刷鈦金卡",
+    "travel5": false,
+    "my16": false,
+    "refunds15": false,
+    "jpDefaultRate": 3.0,
+    "rules": [
+      {
+        "keywords": [
+          "行動支付",
+          "line pay",
+          "linepay",
+          "街口",
+          "apple pay",
+          "google pay",
+          "台灣pay",
+          "網購",
+          "蝦皮",
+          "momo",
+          "pchome",
+          "海外"
+        ],
+        "rate": 3.0,
+        "cap": "網購/行動支付加碼2%上限200元/月(刷10,000元封頂)",
+        "note": "✅【行動支付皆認列網購3%】LINE Pay/街口/Apple Pay等享最高3%（⚠️單筆滿3,000自動3期0利率無回饋，需致電關閉）"
+      },
+      {
+        "keywords": [
+          "一般消費"
+        ],
+        "rate": 0.5,
+        "cap": "無上限",
+        "note": "一般實體消費0.5%"
+      }
     ]
   },
   {
-    id: "kgi_morebuy",
-    bank: "凱基銀行",
-    name: "魔BUY 悠遊鈦金卡",
-    travel5: false,
-    my16: false,
-    refunds15: false,
-    jpDefaultRate: 2.0,
-    rules: [
-      { keywords: ["行動支付", "line pay", "街口", "apple pay", "google pay", "悠遊付"], rate: 4.0, cap: "每月登錄且當期一般消費滿3,000元", note: "綁定12大指定行動支付國內消費最高4%現金積點" },
-      { keywords: ["海外", "日本"], rate: 2.0, cap: "無上限", note: "國外消費及國外網購2%回饋無上限" },
-      { keywords: ["一般消費"], rate: 0.7, cap: "無上限", note: "一般消費0.7%" }
+    "id": "kgi_morebuy",
+    "bank": "凱基銀行",
+    "name": "魔BUY 悠遊鈦金卡",
+    "travel5": false,
+    "my16": false,
+    "refunds15": false,
+    "jpDefaultRate": 2.0,
+    "rules": [
+      {
+        "keywords": [
+          "行動支付",
+          "line pay",
+          "linepay",
+          "街口",
+          "apple pay",
+          "google pay",
+          "悠遊付",
+          "台灣pay",
+          "全支付",
+          "icash pay"
+        ],
+        "rate": 4.0,
+        "cap": "每月登錄且當期一般消費滿3,000元（加碼3.3%上限300點/月）",
+        "note": "✅【12大行動支付 4%】LINE Pay/街口/Apple Pay/Google Pay/悠遊付/全支付等登錄且滿3千享4%"
+      },
+      {
+        "keywords": [
+          "海外",
+          "日本"
+        ],
+        "rate": 2.0,
+        "cap": "無上限",
+        "note": "國外消費及國外網購2%回饋無上限"
+      },
+      {
+        "keywords": [
+          "一般消費"
+        ],
+        "rate": 0.7,
+        "cap": "無上限",
+        "note": "一般消費0.7%"
+      }
     ]
   }
 ];
 
 /**
  * ============================================================================
- * 2. 台灣與日本高頻連鎖品牌語意映射字典 (220+ 品牌完整收錄)
+ * 2. 台灣高頻連鎖品牌語意映射字典 (220+ 國內外通路與可切換方案特店)
  * ============================================================================
  */
 const BUILTIN_BRAND_TAXONOMY = {
@@ -1393,6 +3106,16 @@ let customBrandMap = {};
 let pausedCardIds = [];
 let isFirstTimeVisitor = false;
 
+const TIERED_CARD_IDS = [
+  "esun_unicard",
+  "cathay_cube",
+  "sinopac_sport",
+  "huanan_rich",
+  "taishin_richart",
+  "sinopac_dawho",
+  "sinopac_currency"
+];
+
 function showToast(msg) {
   const banner = document.getElementById("toastBanner");
   const text = document.getElementById("toastMessage");
@@ -1406,25 +3129,22 @@ function showToast(msg) {
 }
 
 function initApp() {
-  // 載入設定
   try {
     const savedSettings = JSON.parse(localStorage.getItem(STORAGE_KEYS.SETTINGS) || "{}");
     if (savedSettings.unicardPlan) document.getElementById("unicardPlan").value = savedSettings.unicardPlan;
     if (savedSettings.cubeLevel) document.getElementById("cubeLevel").value = savedSettings.cubeLevel;
     if (typeof savedSettings.sportGoal === "boolean") document.getElementById("sportGoal").checked = savedSettings.sportGoal;
     if (savedSettings.huananTier) document.getElementById("huananTier").value = savedSettings.huananTier;
-    if (savedSettings.richartTier) document.getElementById("richartTier").value = savedSettings.richartTier;
+    if (savedSettings.taishinTier) document.getElementById("taishinTier").value = savedSettings.taishinTier;
     if (savedSettings.dawhoTier) document.getElementById("dawhoTier").value = savedSettings.dawhoTier;
     if (typeof savedSettings.currencyQualified === "boolean") document.getElementById("currencyQualified").checked = savedSettings.currencyQualified;
   } catch (e) {}
 
-  // 載入自訂品牌記憶與暫停卡片
   try {
     customBrandMap = JSON.parse(localStorage.getItem(STORAGE_KEYS.CUSTOM_BRANDS) || "{}");
     pausedCardIds = JSON.parse(localStorage.getItem(STORAGE_KEYS.PAUSED_CARDS) || "[]");
   } catch (e) {}
 
-  // 檢查網址參數 ?preset=my16 / #my16 / ?q= / ?tab=
   const urlParams = new URLSearchParams(window.location.search);
   const presetParam = urlParams.get("preset");
   const queryParam = urlParams.get("q");
@@ -1454,6 +3174,7 @@ function initApp() {
     }
   }
 
+  updateDynamicTierControls();
   initTaxCalculator();
   updateActiveBadge();
 
@@ -1461,7 +3182,6 @@ function initApp() {
     document.getElementById("searchInput").value = queryParam;
     document.getElementById("clearSearchBtn").classList.remove("hidden");
   }
-
   renderResults();
 
   if (tabParam === "tax") {
@@ -1471,9 +3191,24 @@ function initApp() {
   }
 }
 
+function updateDynamicTierControls() {
+  let anyVisible = false;
+  TIERED_CARD_IDS.forEach(cid => {
+    const el = document.getElementById("ctrl_" + cid);
+    if (el) {
+      const hasCard = userWalletIds.includes(cid);
+      el.classList.toggle("hidden", !hasCard);
+      if (hasCard) anyVisible = true;
+    }
+  });
+  const bar = document.getElementById("dynamicTierBar");
+  if (bar) bar.classList.toggle("hidden", !anyVisible);
+}
+
 function saveWallet() {
   localStorage.setItem(STORAGE_KEYS.WALLET, JSON.stringify(userWalletIds));
   updateActiveBadge();
+  updateDynamicTierControls();
 }
 
 function saveSettingsAndRender() {
@@ -1482,50 +3217,23 @@ function saveSettingsAndRender() {
     cubeLevel: document.getElementById("cubeLevel").value,
     sportGoal: document.getElementById("sportGoal").checked,
     huananTier: document.getElementById("huananTier").value,
-    richartTier: document.getElementById("richartTier").value,
+    taishinTier: document.getElementById("taishinTier").value,
     dawhoTier: document.getElementById("dawhoTier").value,
     currencyQualified: document.getElementById("currencyQualified").checked
   };
   localStorage.setItem(STORAGE_KEYS.SETTINGS, JSON.stringify(settings));
-  populateTaxCardDropdowns();
   renderResults();
-}
-
-function syncTierControlsVisibility() {
-  const tieredIds = [
-    "esun_unicard",
-    "cathay_cube",
-    "sinopac_sport",
-    "huanan_rich",
-    "taishin_richart",
-    "sinopac_dawho",
-    "sinopac_currency"
-  ];
-  let visibleCount = 0;
-  tieredIds.forEach(cid => {
-    const el = document.getElementById(`ctrl_${cid}`);
-    if (!el) return;
-    const active = userWalletIds.includes(cid);
-    el.classList.toggle("hidden", !active);
-    el.classList.toggle("flex", active);
-    if (active) visibleCount++;
-  });
-  const bar = document.getElementById("dynamicTierBar");
-  if (bar) {
-    bar.classList.toggle("hidden", visibleCount === 0);
-    bar.classList.toggle("flex", visibleCount > 0);
-  }
+  populateTaxCardDropdowns();
 }
 
 function updateActiveBadge() {
   document.getElementById("activeCountBadge").textContent = `持有 ${userWalletIds.length} 張卡`;
   document.getElementById("modalSelectedCount").textContent = `已選取 ${userWalletIds.length} 張卡片`;
-  syncTierControlsVisibility();
 }
 
 /**
  * ============================================================================
- * 5. 情境選卡與品牌語意比對引擎
+ * 5. 情境選卡與分級動態計算引擎
  * ============================================================================
  */
 function switchTab(tab) {
@@ -1553,7 +3261,9 @@ function handleSearchInput() {
   renderResults();
 }
 
-function resolveEffectiveRate(card, rawRate) {
+function resolveEffectiveRate(card, rule) {
+  const rawRate = rule.rate;
+
   if (rawRate === "CUBE") {
     return parseFloat(document.getElementById("cubeLevel").value || "3");
   }
@@ -1566,45 +3276,69 @@ function resolveEffectiveRate(card, rawRate) {
   if (rawRate === "SPORT") {
     return document.getElementById("sportGoal").checked ? 6.0 : 1.0;
   }
-  if (rawRate === "SPORT_BASE") {
-    return document.getElementById("sportGoal").checked ? 2.0 : 1.0;
+
+  if (card.id === "huanan_rich") {
+    const bonus = parseInt(document.getElementById("huananTier").value || "2", 10);
+    const isOverseas = rule.keywords.includes("海外") || rule.keywords.includes("日本");
+    return (isOverseas ? 2.0 : 1.0) + bonus;
   }
-  if (rawRate === "HUANAN_DOMESTIC") {
-    const tier = document.getElementById("huananTier").value;
-    if (tier === "base") return 1.0;
-    if (tier === "small") return 2.0;
-    if (tier === "big") return 3.0;
-    return 4.0;
+
+  if (card.id === "taishin_richart") {
+    const tier = document.getElementById("taishinTier").value;
+    if (rawRate === 3.3 || rawRate === 3.8) {
+      return tier === "lv2" ? rawRate : 1.3;
+    }
   }
-  if (rawRate === "HUANAN_OVERSEAS") {
-    const tier = document.getElementById("huananTier").value;
-    if (tier === "base") return 2.0;
-    if (tier === "small") return 3.0;
-    if (tier === "big") return 4.0;
-    return 5.0;
+
+  if (card.id === "sinopac_dawho") {
+    const dTier = document.getElementById("dawhoTier").value;
+    if (rule.keywords.includes("悠遊卡")) {
+      if (dTier === "plus") return 5.0;
+      if (dTier === "dahu") return 3.0;
+      return 0.0;
+    }
+    if (rule.keywords.includes("海外") || rule.keywords.includes("日本實體")) {
+      if (dTier === "plus") return 6.0;
+      if (dTier === "dahu") return 4.5;
+      return 2.0;
+    }
+    if (dTier === "plus") return 5.0;
+    if (dTier === "dahu") return 3.5;
+    return 1.0;
   }
-  if (rawRate === "RICHART_STD") {
-    return document.getElementById("richartTier").value === "lv1" ? 1.3 : 3.3;
+
+  if (card.id === "sinopac_currency") {
+    const qualified = document.getElementById("currencyQualified").checked;
+    if (rawRate === 6.0) {
+      return qualified ? 6.0 : 2.0;
+    }
   }
-  if (rawRate === "RICHART_PAY") {
-    return document.getElementById("richartTier").value === "lv1" ? 1.3 : 3.8;
+
+  return Number(rawRate) || 0;
+}
+
+function getEffectiveJpRate(card) {
+  if (card.id === "huanan_rich") {
+    return 2.0 + parseInt(document.getElementById("huananTier").value || "2", 10);
   }
-  if (rawRate === "DAWHO_DOMESTIC") {
-    const tier = document.getElementById("dawhoTier").value;
-    if (tier === "dada") return 1.0;
-    if (tier === "dahu") return 3.5;
-    return 5.0;
+  if (card.id === "taishin_richart") {
+    return document.getElementById("taishinTier").value === "lv2" ? 3.3 : 1.3;
   }
-  if (rawRate === "DAWHO_OVERSEAS") {
-    const tier = document.getElementById("dawhoTier").value;
-    if (tier === "dada") return 2.0;
-    if (tier === "dahu") return 4.5;
-    return 6.0;
+  if (card.id === "sinopac_dawho") {
+    const dTier = document.getElementById("dawhoTier").value;
+    return dTier === "plus" ? 6.0 : (dTier === "dahu" ? 4.5 : 2.0);
   }
-  if (rawRate === "CURRENCY_SELECT") {
+  if (card.id === "sinopac_currency") {
     return document.getElementById("currencyQualified").checked ? 6.0 : 2.0;
   }
-  return Number(rawRate) || 0;
+  if (card.id === "cathay_cube") {
+    return parseFloat(document.getElementById("cubeLevel").value || "3");
+  }
+  if (card.id === "esun_unicard") {
+    const p = document.getElementById("unicardPlan").value;
+    return p === "simple" ? 3.0 : (p === "flex" ? 3.5 : 4.5);
+  }
+  return card.jpDefaultRate;
 }
 
 function assignBrandCategory(category) {
@@ -1651,13 +3385,11 @@ function renderResults() {
   const queryLower = rawQuery.toLowerCase();
   const amount = parseFloat(document.getElementById("amountInput").value) || 0;
 
-  // 暫停提示列
   const activePausedCount = pausedCardIds.filter(id => userWalletIds.includes(id)).length;
   const pausedBar = document.getElementById("pausedNoticeBar");
   pausedBar.classList.toggle("hidden", activePausedCount === 0);
   document.getElementById("pausedCountText").textContent = activePausedCount;
 
-  // 語意擴充查詢詞
   let expandedQuery = queryLower;
   let semanticNote = "";
   let isCustomMapped = false;
@@ -1692,7 +3424,6 @@ function renderResults() {
     semanticBadge.classList.add("hidden");
   }
 
-  // 篩選使用者持有且未暫停的卡片
   const ownedCards = CARD_DATABASE.filter(c => userWalletIds.includes(c.id));
   if (ownedCards.length === 0) {
     document.getElementById("unknownMerchantBox").classList.add("hidden");
@@ -1715,7 +3446,17 @@ function renderResults() {
     return;
   }
 
-  const tokens = expandedQuery.split(/\s+/).filter(Boolean);
+  // 構建完整詞組與安全分詞，避免 "line pay" 拆成 "pay" 誤中 "paypay"
+  const phraseTokens = [];
+  const multiWordPhrases = ["line pay", "apple pay", "google pay", "samsung pay", "garmin pay", "taiwan pay", "台灣pay", "icash pay", "pi拍錢包", "happy go pay", "taishin pay", "台新pay"];
+  multiWordPhrases.forEach(p => {
+    if (expandedQuery.includes(p)) phraseTokens.push(p);
+  });
+
+  const rawWords = expandedQuery.split(/\s+/).filter(Boolean);
+  const safeWords = rawWords.filter(w => w !== "pay");
+  const tokens = Array.from(new Set([...phraseTokens, ...safeWords]));
+
   let matchedSpecificKeyword = false;
 
   const scored = activeCards.map(card => {
@@ -1724,7 +3465,7 @@ function renderResults() {
 
     if (tokens.length === 0) {
       card.rules.forEach(r => {
-        const eff = resolveEffectiveRate(card, r.rate);
+        const eff = resolveEffectiveRate(card, r);
         if (eff > bestRate) {
           bestRate = eff;
           bestRule = r;
@@ -1733,10 +3474,17 @@ function renderResults() {
     } else {
       card.rules.forEach(r => {
         const isGeneral = r.keywords.every(k => k === "一般消費" || k === "國內");
-        const hit = r.keywords.some(kw => tokens.some(t => t.includes(kw) || kw.includes(t)));
+        const hit = r.keywords.some(kw => {
+          return tokens.some(t => {
+            if (t === kw) return true;
+            if (t.length >= 2 && kw.includes(t) && !(t === "pay" && kw.includes("paypay"))) return true;
+            if (kw.length >= 2 && t.includes(kw) && !(kw === "pay" && t.includes("paypay"))) return true;
+            return false;
+          });
+        });
         if (hit) {
           if (!isGeneral) matchedSpecificKeyword = true;
-          const eff = resolveEffectiveRate(card, r.rate);
+          const eff = resolveEffectiveRate(card, r);
           if (eff > bestRate) {
             bestRate = eff;
             bestRule = r;
@@ -1747,14 +3495,13 @@ function renderResults() {
       if (!bestRule) {
         const fallback = card.rules.find(r => r.keywords.includes("一般消費")) || card.rules[card.rules.length - 1];
         bestRule = fallback;
-        bestRate = resolveEffectiveRate(card, fallback.rate);
+        bestRate = resolveEffectiveRate(card, fallback);
       }
     }
 
     return { card, bestRule, bestRate };
   });
 
-  // 未知店名判斷
   const showUnknownBox = queryLower.length > 0 && !semanticNote && !matchedSpecificKeyword;
   document.getElementById("unknownMerchantBox").classList.toggle("hidden", !showUnknownBox);
   if (showUnknownBox) {
@@ -1809,7 +3556,7 @@ function renderResults() {
 
 /**
  * ============================================================================
- * 6. 我的卡夾彈窗控制與向上相容 JSON 匯入
+ * 6. 我的卡夾彈窗控制 (Modal)
  * ============================================================================
  */
 function openWalletModal() {
@@ -1833,6 +3580,7 @@ function renderWalletList() {
 
   container.innerHTML = filtered.map(c => {
     const checked = userWalletIds.includes(c.id);
+    const hasTier = TIERED_CARD_IDS.includes(c.id);
     return `
       <label class="flex items-center justify-between p-3 rounded-xl border ${checked ? 'border-slate-900 bg-slate-50' : 'border-slate-200 bg-white'} cursor-pointer">
         <div class="flex items-center gap-3">
@@ -1842,10 +3590,9 @@ function renderWalletList() {
               <span class="text-xs font-bold text-slate-500">${c.bank}</span>
               <span class="text-sm font-extrabold text-slate-900">${c.name}</span>
               ${c.travel5 ? '<span class="text-[10px] bg-rose-100 text-rose-700 font-bold px-1.5 py-0.5 rounded">旅日推薦</span>' : ''}
-              ${c.tierHint ? '<span class="text-[10px] bg-indigo-100 text-indigo-800 font-bold px-1.5 py-0.5 rounded">⚙️ 支援等級切換</span>' : ''}
+              ${hasTier ? '<span class="text-[10px] bg-indigo-100 text-indigo-700 font-bold px-1.5 py-0.5 rounded">⚙️ 支援等級切換</span>' : ''}
             </div>
             <p class="text-[11px] text-slate-500 mt-0.5">${c.rules[0].note}</p>
-            ${c.tierHint ? `<p class="text-[10px] text-indigo-700 font-bold mt-0.5">${c.tierHint}</p>` : ''}
           </div>
         </div>
         <span class="text-xs font-bold ${c.refunds15 ? 'text-emerald-600' : 'text-slate-400'} shrink-0 ml-2">
@@ -2005,10 +3752,10 @@ function importWalletJSON(event) {
       renderResults();
       populateTaxCardDropdowns();
       event.target.value = "";
-      showToast(`✅ 已成功匯入並還原 ${userWalletIds.length} 張卡片！`);
+      showToast(`✅ 已成功匯入並還原 ${userWalletIds.length} 張卡片與自訂店家記憶！`);
     } catch (err) {
       event.target.value = "";
-      showToast("❌ JSON 檔案格式無法讀取");
+      showToast("❌ JSON 檔案格式無法讀取，請確認檔案是否為正確的備份檔");
     }
   };
   reader.readAsText(file);
@@ -2026,35 +3773,6 @@ function initTaxCalculator() {
   calcTaxRefund();
 }
 
-function getCardDynamicJpRate(card) {
-  if (!card) return 1.0;
-  if (card.id === "cathay_cube") {
-    return parseFloat(document.getElementById("cubeLevel").value || "3");
-  }
-  if (card.id === "esun_unicard") {
-    const plan = document.getElementById("unicardPlan").value;
-    return plan === "simple" ? 3.0 : plan === "flex" ? 3.5 : 4.5;
-  }
-  if (card.id === "sinopac_sport") {
-    return document.getElementById("sportGoal").checked ? 2.0 : 1.0;
-  }
-  if (card.id === "huanan_rich") {
-    const t = document.getElementById("huananTier").value;
-    return t === "base" ? 2.0 : t === "small" ? 3.0 : t === "big" ? 4.0 : 5.0;
-  }
-  if (card.id === "taishin_richart") {
-    return document.getElementById("richartTier").value === "lv1" ? 1.3 : 3.3;
-  }
-  if (card.id === "sinopac_dawho") {
-    const t = document.getElementById("dawhoTier").value;
-    return t === "dada" ? 2.0 : t === "dahu" ? 4.5 : 6.0;
-  }
-  if (card.id === "sinopac_currency") {
-    return document.getElementById("currencyQualified").checked ? 6.0 : 2.0;
-  }
-  return card.jpDefaultRate;
-}
-
 function populateTaxCardDropdowns() {
   const owned = CARD_DATABASE.filter(c => userWalletIds.includes(c.id));
   const list = owned.length > 0 ? owned : CARD_DATABASE.slice(0, 5);
@@ -2064,16 +3782,13 @@ function populateTaxCardDropdowns() {
   const prevA = cardASel.value;
   const prevB = cardBSel.value;
 
-  cardASel.innerHTML = list.map(c => `<option value="${c.id}">${c.bank} ${c.name} (日本約${getCardDynamicJpRate(c)}%)</option>`).join("");
+  cardASel.innerHTML = list.map(c => `<option value="${c.id}">${c.bank} ${c.name} (日本約${getEffectiveJpRate(c)}%)</option>`).join("");
   const prefA = list.find(c => c.id === prevA) || list.find(c => c.id === "esun_kumamon") || list[0];
   if (prefA) cardASel.value = prefA.id;
 
   const refundCards = CARD_DATABASE.filter(c => c.refunds15);
   cardBSel.innerHTML = refundCards.map(c => `<option value="${c.id}">${c.bank} ${c.name} (刷退退還1.5%手續費)</option>`).join("");
-  const prefB = refundCards.find(c => c.id === prevB) ||
-                refundCards.find(c => c.id === "sinopac_mitsui" && userWalletIds.includes(c.id)) ||
-                refundCards.find(c => userWalletIds.includes(c.id)) ||
-                refundCards[0];
+  const prefB = refundCards.find(c => c.id === prevB) || refundCards.find(c => userWalletIds.includes(c.id)) || refundCards[0];
   if (prefB) cardBSel.value = prefB.id;
 
   onTaxCardChange();
@@ -2082,7 +3797,7 @@ function populateTaxCardDropdowns() {
 function onTaxCardChange() {
   const cardA = CARD_DATABASE.find(c => c.id === document.getElementById("cardASelect").value);
   if (cardA) {
-    document.getElementById("cardARate").value = getCardDynamicJpRate(cardA);
+    document.getElementById("cardARate").value = getEffectiveJpRate(cardA);
     document.getElementById("cardARefundsFee").checked = cardA.refunds15;
   }
   calcTaxRefund();
@@ -2114,7 +3829,6 @@ function calcTaxRefund() {
   const cardARate = (parseFloat(document.getElementById("cardARate").value) || 0) / 100;
   const cardARefundsFee = document.getElementById("cardARefundsFee").checked;
 
-  // 日本消費稅 10% 計算 (未稅 = 含稅 / 1.1)
   const jpyNet = jpyGross / 1.1;
   const jpyFullTax = jpyGross - jpyNet;
 
@@ -2131,19 +3845,15 @@ function calcTaxRefund() {
 
   const jpyRefundReceived = Math.max(0, jpyFullTax - jpyPlatformFee);
 
-  // 結帳刷 A 卡台幣成本 (含 1.5% 海外交易手續費) 與 A 卡賺取回饋 (以含稅總額計)
   const twdGrossCharge = jpyGross * fx * 1.015;
   const twdCardAReward = jpyGross * fx * cardARate;
 
-  // 方案 1：刷 A 卡，退稅刷退進 B 卡 (B 卡退還 1.5% 海外退款手續費)
   const twdRefundPlan1 = jpyRefundReceived * fx * 1.015;
   const netCostPlan1 = Math.round(twdGrossCharge - twdCardAReward - twdRefundPlan1);
 
-  // 方案 2：刷 A 卡，退稅直接刷退回同一張 A 卡 (若 A 卡不退 1.5%，退款入帳會少 1.5% 匯差手續費)
   const twdRefundPlan2 = jpyRefundReceived * fx * (cardARefundsFee ? 1.015 : 0.985);
   const netCostPlan2 = Math.round(twdGrossCharge - twdCardAReward - twdRefundPlan2);
 
-  // 方案 3：刷 A 卡，機場退稅機台領日圓現鈔 (無刷退手續費損失，直接按匯率折算)
   const twdRefundPlan3 = jpyRefundReceived * fx;
   const netCostPlan3 = Math.round(twdGrossCharge - twdCardAReward - twdRefundPlan3);
 
@@ -2196,7 +3906,6 @@ function calcTaxRefund() {
   `;
 }
 
-// 啟動應用程式
 window.addEventListener("DOMContentLoaded", initApp);
 </script>
 </body>
