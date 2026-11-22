@@ -148,12 +148,21 @@
         <button type="button" onclick="quickQuery('網購')" class="shrink-0 text-xs bg-slate-100 text-slate-700 px-2.5 py-1 rounded-full font-semibold">📦 網購</button>
         <button type="button" onclick="quickQuery('LINE Pay')" class="shrink-0 text-xs bg-emerald-50 text-emerald-800 border border-emerald-200 px-2.5 py-1 rounded-full font-bold">💚 LINE Pay</button>
         <button type="button" onclick="quickQuery('行動支付')" class="shrink-0 text-xs bg-slate-100 text-slate-700 px-2.5 py-1 rounded-full font-semibold">📲 行動支付總覽</button>
+        <button type="button" onclick="quickQuery('繳保費')" class="shrink-0 text-xs bg-sky-50 text-sky-800 border border-sky-200 px-2.5 py-1 rounded-full font-bold">🛡️ 繳保費/壽險</button>
+        <button type="button" onclick="quickQuery('產險車險')" class="shrink-0 text-xs bg-slate-100 text-slate-700 px-2.5 py-1 rounded-full font-semibold">🚗 產險/車險</button>
+        <button type="button" onclick="quickQuery('保費分期')" class="shrink-0 text-xs bg-slate-100 text-slate-700 px-2.5 py-1 rounded-full font-semibold">📆 保費分期</button>
       </div>
 
       <!-- Japan PayPay Platform Reminder Banner -->
       <div id="paypayBanner" class="hidden text-xs bg-rose-50 border border-rose-200 text-rose-950 px-3 py-2.5 rounded-xl space-y-1">
         <div class="font-extrabold text-rose-800">📱 日本 PayPay 跨境掃碼平台綁卡限定提醒：</div>
         <p class="leading-relaxed">台灣信用卡<b>無法直接綁進日本 PayPay App</b>，須透過台灣跨境電支 App 掃碼（免 1.5% 海外手續費），且不適用一般海外實體回饋：<br/>• <b>玉山 Wallet</b>（僅限玉山卡：熊本熊卡 5%）｜<b>全支付</b>（信用卡僅限國泰卡：CUBE 筆筆 3.5%＋滿千 5%）｜<b>台新 Pay+ / 街口</b>（限台新卡）｜<b>iPASS MONEY / 全盈+PAY</b> 僅限連結銀行帳戶扣款。</p>
+      </div>
+
+      <!-- Insurance Payment Anti-Trap Reminder Banner -->
+      <div id="insuranceBanner" class="hidden text-xs bg-sky-50 border border-sky-200 text-sky-950 px-3 py-2.5 rounded-xl space-y-1">
+        <div class="font-extrabold text-sky-900">🛡️ 繳保費刷卡三大防呆提醒（2026/11 最新規則）：</div>
+        <p class="leading-relaxed">1. <b>分期 0 利率與回饋通常只能二選一</b>：設定保費自動分期，多數卡片回饋率直接歸零（0%）。<br/>2. <b>壽險 vs. 產險限制</b>：車險、旅平險、住宅火險屬於「產險」，許多銀行保費加碼僅限「國內人身壽險」，已為您自動過濾。<br/>3. <b>國泰 CUBE 陷阱</b>：切換【固定回饋】1.2% <b>不包含保費</b>，保費需靠 CUBE App 領取專屬優惠券才享加碼。</p>
       </div>
 
       <!-- Semantic Match Badge -->
@@ -174,6 +183,7 @@
           <button type="button" onclick="assignBrandCategory('日本實體')" class="text-xs bg-white border border-amber-300 hover:bg-amber-100 px-2.5 py-1 rounded-lg font-bold text-slate-800">🇯🇵 日本實體</button>
           <button type="button" onclick="assignBrandCategory('行動支付')" class="text-xs bg-white border border-amber-300 hover:bg-amber-100 px-2.5 py-1 rounded-lg font-bold text-slate-800">📱 行動支付</button>
           <button type="button" onclick="assignBrandCategory('旅遊訂房')" class="text-xs bg-white border border-amber-300 hover:bg-amber-100 px-2.5 py-1 rounded-lg font-bold text-slate-800">✈️ 旅遊訂房</button>
+          <button type="button" onclick="assignBrandCategory('繳保費 壽險')" class="text-xs bg-white border border-amber-300 hover:bg-amber-100 px-2.5 py-1 rounded-lg font-bold text-slate-800">🛡️ 繳保費/壽險</button>
         </div>
       </div>
     </div>
@@ -468,7 +478,117 @@ const CARD_DATABASE = [
         ],
         "rate": 2.5,
         "cap": "無上限",
+        "note": "日本一般消費2.5%無上限（雙幣卡免1.5%國外手續費）"
+      },
+      {
+        "keywords": [
+          "保費分期"
+        ],
+        "rate": 0,
+        "tags": ["⚠️ 分期0利率則無回饋", "🛡️ 僅限壽險"],
+        "cap": "單筆滿額登錄享3/6/12期0利率（分期即無現金/點數回饋）",
+        "note": "玉山保費分期0利率活動需登錄，一旦設定分期則不計入任何現金或點數回饋"
+      },
+      {
+        "keywords": [
+          "繳保費",
+          "保費",
+          "壽險",
+          "產險",
+          "車險",
+          "旅平險"
+        ],
+        "rate": 1.0,
+        "tags": ["⚠️ 分期0利率則無回饋", "🎫 需領券/登錄"],
+        "cap": "基本1%無上限（不定期保費登錄活動加碼至1.2%~1.5%）",
+        "note": "一次付清享國內一般消費1%現金回饋無上限（壽險/產險皆計；另有不定期滿額登錄加碼）"
+      },
+      {
+        "keywords": [
+          "行動支付",
+          "line pay",
+          "街口",
+          "apple pay",
+          "google pay",
+          "台灣pay",
+          "全支付",
+          "一般消費",
+          "國內"
+        ],
+        "rate": 1.0,
+        "cap": "無上限（無行動支付額外加碼）",
+        "note": "國內一般消費及行動支付（LINE Pay/Apple Pay等）僅基本1%"
+      }
+    ]
+  },
+  {
+    "id": "ubot_jiho",
+    "bank": "聯邦銀行",
+    "name": "吉鶴卡 (JCB)",
+    "travel5": true,
+    "my16": false,
+    "refunds15": true,
+    "jpDefaultRate": 5.0,
+    "rules": [
+      {
+        "keywords": [
+          "日本實體",
+          "日本感應",
+          "apple pay",
+          "google pay"
+        ],
+        "rate": 5.0,
+        "cap": "日本QUICPay/感應加碼1%上限200/月 + 滿3萬登錄1.5%上限600/月",
+        "note": "日幣2.5%無上限 + 日本Apple/Google Pay感應最高5%（國內一般Apple Pay僅1%）"
+      },
+      {
+        "keywords": [
+          "日本藥妝",
+          "日本家電",
+          "唐吉訶德",
+          "松本清",
+          "bic",
+          "yodobashi",
+          "uniqlo",
+          "gu",
+          "無印良品"
+        ],
+        "rate": 5.5,
+        "cap": "11大熱門商店加碼3%上限600元/活動期",
+        "note": "2.5%無上限 + 11大指定商店加碼3%"
+      },
+      {
+        "keywords": [
+          "日本",
+          "日幣",
+          "海外"
+        ],
+        "rate": 2.5,
+        "cap": "無上限",
         "note": "日幣一般消費2.5%回饋無上限"
+      },
+      {
+        "keywords": [
+          "保費分期"
+        ],
+        "rate": 0,
+        "tags": ["⚠️ 分期0利率則無回饋"],
+        "cap": "單筆滿額登錄享最高12期0利率（分期即0%回饋）",
+        "note": "聯邦保費登錄分期0利率活動，選擇分期即不享原卡片1%回饋"
+      },
+      {
+        "keywords": [
+          "繳保費",
+          "保費",
+          "壽險",
+          "產險",
+          "車險",
+          "旅平險"
+        ],
+        "rate": 1.0,
+        "tags": ["⚡ 免登錄無上限", "⚠️ 分期0利率則無回饋"],
+        "cap": "一次付清1%回饋無上限",
+        "note": "一次付清免登錄享1%回饋無上限（含壽險與產險/車險）"
       },
       {
         "keywords": [
@@ -520,6 +640,37 @@ const CARD_DATABASE = [
         "rate": 10.0,
         "cap": "依星展eco活動上限",
         "note": "Tesla充電/Gogoro電池資費及指定eco消費最高10%"
+      },
+      {
+        "keywords": [
+          "保費分期"
+        ],
+        "rate": 0,
+        "tags": ["⚠️ 分期0利率則無回饋", "🛡️ 僅限壽險"],
+        "cap": "登錄滿額享最高12期0利率（分期即0%回饋）",
+        "note": "星展保費專案登錄享分期0利率，分期不計任何現金積點"
+      },
+      {
+        "keywords": [
+          "繳保費",
+          "保費",
+          "壽險"
+        ],
+        "rate": 1.5,
+        "tags": ["🎫 需領券/登錄", "🛡️ 僅限壽險", "⚠️ 分期0利率則無回饋"],
+        "cap": "平日無回饋(0%)，需限量登錄滿額活動享約1.5%~2%（僅限國內壽險）",
+        "note": "⚠️星展平日保費為0%回饋！必須搶限量保費登錄活動且達單筆門檻(如滿3萬/5萬)才享約1.5%~2%"
+      },
+      {
+        "keywords": [
+          "產險",
+          "車險",
+          "旅平險"
+        ],
+        "rate": 0,
+        "tags": ["⚠️ 排除產險/保費"],
+        "cap": "不計回饋（0%）",
+        "note": "⚠️星展保費與產險/車險一般消費不計入eco永續卡1%基本回饋"
       },
       {
         "keywords": [
@@ -631,6 +782,29 @@ const CARD_DATABASE = [
       },
       {
         "keywords": [
+          "保費分期"
+        ],
+        "rate": 0.3,
+        "tags": ["⚠️ 分期0利率則無回饋"],
+        "cap": "登錄享指定期數0利率（分期僅基本0.3%或0%）",
+        "note": "國泰保費分期0利率與CUBE App領券加碼不可併用，設定分期僅剩基本0.3%"
+      },
+      {
+        "keywords": [
+          "繳保費",
+          "保費",
+          "壽險",
+          "產險",
+          "車險",
+          "旅平險"
+        ],
+        "rate": 1.2,
+        "tags": ["🎫 需領券/登錄", "⚠️ 分期0利率則無回饋"],
+        "cap": "未領券僅0.3%；CUBE App領保費專屬優惠券享1.2%~3%（⚠️固定回饋方案不含保費）",
+        "note": "務必先至CUBE App領取【保費專屬優惠券】一次付清享1.2%~3%（含壽險/指定產險）；未領券僅0.3%"
+      },
+      {
+        "keywords": [
           "line pay",
           "linepay"
         ],
@@ -710,6 +884,37 @@ const CARD_DATABASE = [
         "rate": 2.0,
         "cap": "無上限",
         "note": "國外消費2%現金回饋無上限"
+      },
+      {
+        "keywords": [
+          "保費分期"
+        ],
+        "rate": 0,
+        "tags": ["⚠️ 分期0利率則無回饋", "🛡️ 僅限壽險"],
+        "cap": "登錄滿額享6/12期0利率（分期即0%回饋）",
+        "note": "永豐保費分期與回饋活動需二選一，選擇分期0利率即無回饋"
+      },
+      {
+        "keywords": [
+          "繳保費",
+          "保費",
+          "壽險"
+        ],
+        "rate": 1.5,
+        "tags": ["🎫 需領券/登錄", "🛡️ 僅限壽險", "⚠️ 分期0利率則無回饋"],
+        "cap": "基本1%無上限（登錄滿額加碼至1.5%~2.5%，限國內人身壽險）",
+        "note": "一次付清享1%無上限，登錄永豐季度保費滿額活動最高1.5%~2.5%（限國內壽險）"
+      },
+      {
+        "keywords": [
+          "產險",
+          "車險",
+          "旅平險"
+        ],
+        "rate": 1.0,
+        "tags": ["⚡ 免登錄無上限"],
+        "cap": "基本1%無上限（不計入壽險滿額加碼）",
+        "note": "產險/車險一次付清享基本1%現金回饋無上限"
       },
       {
         "keywords": [
@@ -802,6 +1007,29 @@ const CARD_DATABASE = [
         "rate": "UNICARD",
         "cap": "依刷卡店家是否屬百大特店認定（非百大特店為1%）",
         "note": "綁Apple/Google Pay直接感應依消費商店認定（百大特店3%~4.5%，其餘1%）"
+      },
+      {
+        "keywords": [
+          "保費分期"
+        ],
+        "rate": 0,
+        "tags": ["⚠️ 分期0利率則無回饋", "🛡️ 僅限壽險"],
+        "cap": "登錄滿額享6/12期0利率（分期即0%回饋）",
+        "note": "保費設定分期0利率即不計入e point回饋"
+      },
+      {
+        "keywords": [
+          "繳保費",
+          "保費",
+          "壽險",
+          "產險",
+          "車險",
+          "旅平險"
+        ],
+        "rate": 1.0,
+        "tags": ["🎫 需領券/登錄", "⚠️ 分期0利率則無回饋"],
+        "cap": "保費不列入百大特店；玉山自扣+e化帳單享1%（領保費券/登錄最高1.2%~1.5%）",
+        "note": "⚠️保費不適用百大特店3%~4.5%！完成玉山自扣+e化帳單一次付清享1% e point無上限"
       },
       {
         "keywords": [
@@ -919,6 +1147,29 @@ const CARD_DATABASE = [
       },
       {
         "keywords": [
+          "保費分期"
+        ],
+        "rate": 0,
+        "tags": ["⚠️ 分期0利率則無回饋"],
+        "cap": "單筆滿額登錄享最高12期0利率（分期即0%回饋）",
+        "note": "⚠️設定保費分期0利率則不享1.3%台新Point回饋"
+      },
+      {
+        "keywords": [
+          "繳保費",
+          "保費",
+          "壽險",
+          "產險",
+          "車險",
+          "旅平險"
+        ],
+        "rate": 1.3,
+        "tags": ["⚡ 免登錄無上限", "⚠️ 分期0利率則無回饋"],
+        "cap": "免登錄1.3%台新Point無上限（壽險/產險皆適用）",
+        "note": "✅【保費無腦神卡】一次付清免登錄享1.3%無上限，國內壽險與產險(車險/旅平險)全數認列"
+      },
+      {
+        "keywords": [
           "一般消費"
         ],
         "rate": 0.3,
@@ -957,6 +1208,37 @@ const CARD_DATABASE = [
         "rate": 6.0,
         "cap": "單筆滿NT$1,000加碼3%上限1,000元/季",
         "note": "3%無上限 + 單筆滿千登錄加碼3%（每月20日16:00登錄）"
+      },
+      {
+        "keywords": [
+          "保費分期"
+        ],
+        "rate": 0,
+        "tags": ["⚠️ 分期0利率則無回饋", "🛡️ 僅限壽險"],
+        "cap": "登錄享最高12期0利率（分期即0%回饋）",
+        "note": "富邦保費分期與回饋活動二選一，設定分期即0%回饋"
+      },
+      {
+        "keywords": [
+          "繳保費",
+          "保費",
+          "壽險"
+        ],
+        "rate": 0.5,
+        "tags": ["🛡️ 僅限壽險", "⚠️ 分期0利率則無回饋"],
+        "cap": "一般保費0.5%（特定活動登錄最高1%~1.5%，限壽險）",
+        "note": "國內一般保費一次付清享0.5% LINE POINTS（部分聯名/活動登錄可達1%~1.5%）"
+      },
+      {
+        "keywords": [
+          "產險",
+          "車險",
+          "旅平險"
+        ],
+        "rate": 0.5,
+        "tags": ["⚠️ 分期0利率則無回饋"],
+        "cap": "產險/車險0.5%無上限",
+        "note": "產險/車險一次付清享0.5%回饋"
       },
       {
         "keywords": [
@@ -1005,6 +1287,29 @@ const CARD_DATABASE = [
       },
       {
         "keywords": [
+          "保費分期"
+        ],
+        "rate": 0,
+        "tags": ["⚠️ 分期0利率則無回饋"],
+        "cap": "登錄享最高12期0利率（分期即0%回饋）",
+        "note": "選擇分期0利率即無好多金回饋"
+      },
+      {
+        "keywords": [
+          "繳保費",
+          "保費",
+          "壽險",
+          "產險",
+          "車險",
+          "旅平險"
+        ],
+        "rate": 0.5,
+        "tags": ["⚠️ 分期0利率則無回饋"],
+        "cap": "一般保費0.5%好多金無上限",
+        "note": "店外保費一次付清享0.5%好多金無上限"
+      },
+      {
+        "keywords": [
           "行動支付",
           "line pay",
           "街口",
@@ -1050,6 +1355,29 @@ const CARD_DATABASE = [
       },
       {
         "keywords": [
+          "保費分期"
+        ],
+        "rate": 0,
+        "tags": ["⚠️ 分期0利率則無回饋", "🛡️ 僅限壽險"],
+        "cap": "登錄滿額享6/12期0利率（分期即0%回饋）",
+        "note": "保費分期與回饋二選一"
+      },
+      {
+        "keywords": [
+          "繳保費",
+          "保費",
+          "壽險",
+          "產險",
+          "車險",
+          "旅平險"
+        ],
+        "rate": 1.0,
+        "tags": ["⚡ 免登錄無上限", "⚠️ 分期0利率則無回饋"],
+        "cap": "基本1%無上限",
+        "note": "一次付清享一般消費1%現金回饋無上限"
+      },
+      {
+        "keywords": [
           "行動支付",
           "line pay",
           "街口",
@@ -1089,6 +1417,29 @@ const CARD_DATABASE = [
         "rate": "SPORT",
         "cap": "加碼4%上限300豐點/月(運動獎勵+1%上限50)",
         "note": "✅【限Apple Pay / Google Pay / Samsung Pay / Garmin Pay】運動達標最高5%~6%（⚠️不含LINE Pay/街口）"
+      },
+      {
+        "keywords": [
+          "保費分期"
+        ],
+        "rate": 0,
+        "tags": ["⚠️ 分期0利率則無回饋"],
+        "cap": "登錄享6/12期0利率（分期即0%回饋）",
+        "note": "保費設定分期0利率即無豐點回饋"
+      },
+      {
+        "keywords": [
+          "繳保費",
+          "保費",
+          "壽險",
+          "產險",
+          "車險",
+          "旅平險"
+        ],
+        "rate": 2.0,
+        "tags": ["⚡ 免登錄無上限", "⚠️ 分期0利率則無回饋"],
+        "cap": "運動達標享一般消費2%豐點無上限（未達標1%）",
+        "note": "✅運動達標一次付清享一般消費2%豐點無上限（含壽險與產險）"
       },
       {
         "keywords": [
@@ -1133,6 +1484,29 @@ const CARD_DATABASE = [
         "rate": 2.0,
         "cap": "無上限",
         "note": "海外消費2%電信點無上限"
+      },
+      {
+        "keywords": [
+          "保費分期"
+        ],
+        "rate": 0,
+        "tags": ["⚠️ 分期0利率則無回饋"],
+        "cap": "登錄享指定期數0利率（分期即0%回饋）",
+        "note": "保費分期0利率不計電信點回饋"
+      },
+      {
+        "keywords": [
+          "繳保費",
+          "保費",
+          "壽險",
+          "產險",
+          "車險",
+          "旅平險"
+        ],
+        "rate": 1.0,
+        "tags": ["⚡ 免登錄無上限", "⚠️ 分期0利率則無回饋"],
+        "cap": "一次付清1%電信點無上限",
+        "note": "國內保費一次付清享1%電信點無上限"
       },
       {
         "keywords": [
@@ -1181,6 +1555,29 @@ const CARD_DATABASE = [
       },
       {
         "keywords": [
+          "保費分期"
+        ],
+        "rate": 0,
+        "tags": ["⚠️ 分期0利率則無回饋"],
+        "cap": "保費分期不計回饋",
+        "note": "保費分期交易不計入回饋"
+      },
+      {
+        "keywords": [
+          "繳保費",
+          "保費",
+          "壽險",
+          "產險",
+          "車險",
+          "旅平險"
+        ],
+        "rate": 1.0,
+        "tags": ["⚡ 免登錄無上限"],
+        "cap": "一次付清1%回饋無上限",
+        "note": "國內保費一次付清享1%回饋無上限"
+      },
+      {
+        "keywords": [
           "行動支付",
           "line pay",
           "街口",
@@ -1222,6 +1619,29 @@ const CARD_DATABASE = [
         "rate": 12.0,
         "cap": "綠色通路加碼上限300元/月",
         "note": "指定綠色運輸、電動車充電、蔬食餐廳與共享汽機車最高6%~12%"
+      },
+      {
+        "keywords": [
+          "保費分期"
+        ],
+        "rate": 0,
+        "tags": ["⚠️ 分期0利率則無回饋"],
+        "cap": "登錄享最高12期0利率（分期即0%回饋）",
+        "note": "聯邦保費登錄分期0利率，分期不計1%回饋"
+      },
+      {
+        "keywords": [
+          "繳保費",
+          "保費",
+          "壽險",
+          "產險",
+          "車險",
+          "旅平險"
+        ],
+        "rate": 1.0,
+        "tags": ["⚡ 免登錄無上限", "⚠️ 分期0利率則無回饋"],
+        "cap": "一次付清1%回饋無上限",
+        "note": "一次付清免登錄享1%回饋無上限（含壽險與產險/車險）"
       },
       {
         "keywords": [
@@ -1284,6 +1704,29 @@ const CARD_DATABASE = [
       },
       {
         "keywords": [
+          "保費分期"
+        ],
+        "rate": 0,
+        "tags": ["⚠️ 分期0利率則無回饋"],
+        "cap": "單筆滿額登錄享最高12期0利率（分期即0%回饋）",
+        "note": "第一銀行保費分期0利率活動需登錄，分期無現金回饋"
+      },
+      {
+        "keywords": [
+          "繳保費",
+          "保費",
+          "壽險",
+          "產險",
+          "車險",
+          "旅平險"
+        ],
+        "rate": 0.5,
+        "tags": ["⚡ 免登錄無上限", "⚠️ 分期0利率則無回饋"],
+        "cap": "一般消費0.5%無上限（季度保費滿額登錄最高1.2%）",
+        "note": "一次付清享基本0.5%無上限（另有季度保費登錄滿額加碼）"
+      },
+      {
+        "keywords": [
           "一般消費"
         ],
         "rate": 0.5,
@@ -1309,6 +1752,29 @@ const CARD_DATABASE = [
         "rate": 2.0,
         "cap": "無上限",
         "note": "海外一般消費2%無上限（依富家等級最高達5%）"
+      },
+      {
+        "keywords": [
+          "保費分期"
+        ],
+        "rate": 0,
+        "tags": ["⚠️ 分期0利率則無回饋"],
+        "cap": "登錄享指定期數0利率（分期即無回饋）",
+        "note": "保費設定分期0利率則不計入儲蓄點數回饋"
+      },
+      {
+        "keywords": [
+          "繳保費",
+          "保費",
+          "壽險",
+          "產險",
+          "車險",
+          "旅平險"
+        ],
+        "rate": 3.0,
+        "tags": ["⚡ 免登錄無上限", "⚠️ 分期0利率則無回饋"],
+        "cap": "一般消費含保費，依富家等級享1%~4%（小富家500點/大富家3,000點上限）",
+        "note": "✅一般消費含國內保費一次付清，依富家資產等級享1%~4%儲蓄點數"
       },
       {
         "keywords": [
@@ -1344,6 +1810,29 @@ const CARD_DATABASE = [
         "rate": 2.2,
         "cap": "無上限",
         "note": "海外消費2.2%現金回饋無上限"
+      },
+      {
+        "keywords": [
+          "保費分期"
+        ],
+        "rate": 0,
+        "tags": ["⚠️ 分期0利率則無回饋"],
+        "cap": "保費分期0利率活動不計現金回饋",
+        "note": "設定保費分期0利率即不享1.2%現金回饋"
+      },
+      {
+        "keywords": [
+          "繳保費",
+          "保費",
+          "壽險",
+          "產險",
+          "車險",
+          "旅平險"
+        ],
+        "rate": 1.2,
+        "tags": ["⚡ 免登錄無上限", "⚠️ 分期0利率則無回饋"],
+        "cap": "一次付清1.2%現金回饋無上限（壽險/產險皆適用）",
+        "note": "✅免登錄一次付清享1.2%現金回饋無上限（含壽險與產險/車險）"
       },
       {
         "keywords": [
@@ -1397,6 +1886,29 @@ const CARD_DATABASE = [
       },
       {
         "keywords": [
+          "保費分期"
+        ],
+        "rate": 0,
+        "tags": ["⚠️ 分期0利率則無回饋", "🛡️ 僅限壽險"],
+        "cap": "登錄滿額享6/12期0利率（分期即0%回饋）",
+        "note": "保費分期0利率與回饋二選一"
+      },
+      {
+        "keywords": [
+          "繳保費",
+          "保費",
+          "壽險",
+          "產險",
+          "車險",
+          "旅平險"
+        ],
+        "rate": 1.0,
+        "tags": ["⚡ 免登錄無上限", "⚠️ 分期0利率則無回饋"],
+        "cap": "一次付清1%無上限（登錄滿額活動最高1.5%~2.5%）",
+        "note": "一次付清享1%無上限，另有季度保費登錄加碼"
+      },
+      {
+        "keywords": [
           "行動支付",
           "line pay",
           "街口",
@@ -1445,6 +1957,29 @@ const CARD_DATABASE = [
       },
       {
         "keywords": [
+          "保費分期"
+        ],
+        "rate": 0,
+        "tags": ["⚠️ 分期0利率則無回饋", "🛡️ 僅限壽險"],
+        "cap": "登錄滿額享6/12期0利率（分期即0%回饋）",
+        "note": "保費設定分期0利率即不計入大戶回饋"
+      },
+      {
+        "keywords": [
+          "繳保費",
+          "保費",
+          "壽險",
+          "產險",
+          "車險",
+          "旅平險"
+        ],
+        "rate": 3.5,
+        "tags": ["⚠️ 分期0利率則無回饋"],
+        "cap": "大戶等級國內上限300元/月（超過後享基本1%無上限）",
+        "note": "一次付清依大戶等級享1% / 3.5% / 5%（加碼上限300元/月，超出後1%無上限）"
+      },
+      {
+        "keywords": [
           "行動支付",
           "line pay",
           "街口",
@@ -1486,6 +2021,21 @@ const CARD_DATABASE = [
         "rate": 2.5,
         "cap": "無上限（綁LINE Pay國外最高4%~10%）",
         "note": "海外消費2.5% LINE POINTS無上限"
+      },
+      {
+        "keywords": [
+          "繳保費",
+          "保費",
+          "壽險",
+          "產險",
+          "車險",
+          "旅平險",
+          "保費分期"
+        ],
+        "rate": 0.5,
+        "tags": ["⚠️ 分期0利率則無回饋"],
+        "cap": "一般保費0.5% LINE POINTS無上限（分期0%）",
+        "note": "國內一般保費一次付清享0.5% LINE POINTS無上限"
       },
       {
         "keywords": [
@@ -1531,6 +2081,21 @@ const CARD_DATABASE = [
         "rate": 2.0,
         "cap": "無上限",
         "note": "國外一般消費2%現金回饋無上限"
+      },
+      {
+        "keywords": [
+          "繳保費",
+          "保費",
+          "壽險",
+          "產險",
+          "車險",
+          "旅平險",
+          "保費分期"
+        ],
+        "rate": 1.0,
+        "tags": ["⚡ 免登錄無上限", "⚠️ 分期0利率則無回饋"],
+        "cap": "一次付清1%無上限（分期0%）",
+        "note": "國內保費一次付清享1%現金回饋無上限"
       },
       {
         "keywords": [
@@ -1592,6 +2157,21 @@ const CARD_DATABASE = [
       },
       {
         "keywords": [
+          "繳保費",
+          "保費",
+          "壽險",
+          "產險",
+          "車險",
+          "旅平險",
+          "保費分期"
+        ],
+        "rate": 1.0,
+        "tags": ["⚡ 免登錄無上限", "⚠️ 分期0利率則無回饋"],
+        "cap": "一次付清1% OPENPOINT無上限（分期0%）",
+        "note": "國內保費一次付清享1% OPENPOINT無上限"
+      },
+      {
+        "keywords": [
           "line pay",
           "街口",
           "apple pay",
@@ -1642,6 +2222,21 @@ const CARD_DATABASE = [
       },
       {
         "keywords": [
+          "繳保費",
+          "保費",
+          "壽險",
+          "產險",
+          "車險",
+          "旅平險",
+          "保費分期"
+        ],
+        "rate": 1.0,
+        "tags": ["⚡ 免登錄無上限", "⚠️ 分期0利率則無回饋"],
+        "cap": "一次付清1% LINE POINTS無上限（分期0%）",
+        "note": "國內保費一次付清享1% LINE POINTS無上限"
+      },
+      {
+        "keywords": [
           "街口",
           "apple pay",
           "google pay",
@@ -1675,6 +2270,21 @@ const CARD_DATABASE = [
         "rate": 3.5,
         "cap": "極緻卡海外實體NT$10=1哩（換算約3.5%~4%價值）",
         "note": "日本ANA免稅店最高9折、ANA特約商店額外累哩"
+      },
+      {
+        "keywords": [
+          "繳保費",
+          "保費",
+          "壽險",
+          "產險",
+          "車險",
+          "旅平險",
+          "保費分期"
+        ],
+        "rate": 1.5,
+        "tags": ["⚡ 免登錄無上限", "⚠️ 分期0利率則無回饋"],
+        "cap": "保費一次付清照常累積ANA哩程（分期不累哩）",
+        "note": "國內保費一次付清NT$20~30=1 ANA哩程（換算約1.5%價值）"
       },
       {
         "keywords": [
@@ -1712,6 +2322,21 @@ const CARD_DATABASE = [
         "rate": 3.5,
         "cap": "海外/華航官網最優NT$9~10=1哩",
         "note": "華航官網購票86折起、生日月海外消費哩程加碼"
+      },
+      {
+        "keywords": [
+          "繳保費",
+          "保費",
+          "壽險",
+          "產險",
+          "車險",
+          "旅平險",
+          "保費分期"
+        ],
+        "rate": 1.5,
+        "tags": ["⚡ 免登錄無上限", "⚠️ 分期0利率則無回饋"],
+        "cap": "保費一次付清照常累積華夏哩程（分期不累哩）",
+        "note": "國內保費一次付清累積華夏哩程（換算約1.5%價值）"
       },
       {
         "keywords": [
@@ -1764,6 +2389,13 @@ const CARD_DATABASE = [
       },
       {
         "keywords": [
+          "繳保費",
+          "保費",
+          "壽險",
+          "產險",
+          "車險",
+          "旅平險",
+          "保費分期",
           "line pay",
           "街口",
           "apple pay",
@@ -1771,8 +2403,9 @@ const CARD_DATABASE = [
           "一般消費"
         ],
         "rate": 1.0,
-        "cap": "無上限",
-        "note": "國內一般消費及LINE Pay/街口為1%"
+        "tags": ["⚡ 免登錄無上限", "⚠️ 分期0利率則無回饋"],
+        "cap": "一次付清1%無上限（分期0%）",
+        "note": "國內一般消費、保費及LINE Pay/街口為1%"
       }
     ]
   },
@@ -1806,6 +2439,13 @@ const CARD_DATABASE = [
       },
       {
         "keywords": [
+          "繳保費",
+          "保費",
+          "壽險",
+          "產險",
+          "車險",
+          "旅平險",
+          "保費分期",
           "行動支付",
           "line pay",
           "街口",
@@ -1815,7 +2455,7 @@ const CARD_DATABASE = [
         ],
         "rate": 0.5,
         "cap": "無上限",
-        "note": "館外一般消費及行動支付0.5%"
+        "note": "館外一般消費、保費及行動支付0.5%"
       }
     ]
   },
@@ -1855,6 +2495,21 @@ const CARD_DATABASE = [
         "rate": 10.0,
         "cap": "上限100元/月",
         "note": "指定娛樂/AI訂閱平台10%現金回饋"
+      },
+      {
+        "keywords": [
+          "繳保費",
+          "保費",
+          "壽險",
+          "產險",
+          "車險",
+          "旅平險",
+          "保費分期"
+        ],
+        "rate": 1.0,
+        "tags": ["⚡ 免登錄無上限", "⚠️ 分期0利率則無回饋"],
+        "cap": "一次付清1%現金回饋無上限（分期0%）",
+        "note": "國內保費一次付清享1%現金回饋無上限（不計入網購3%）"
       },
       {
         "keywords": [
@@ -1912,13 +2567,20 @@ const CARD_DATABASE = [
       },
       {
         "keywords": [
+          "繳保費",
+          "保費",
+          "壽險",
+          "產險",
+          "車險",
+          "旅平險",
+          "保費分期",
           "line pay",
           "街口",
           "一般消費"
         ],
         "rate": 0.5,
         "cap": "無上限",
-        "note": "一般消費及LINE Pay/街口0.5%"
+        "note": "一般消費、保費及LINE Pay/街口0.5%"
       }
     ]
   },
@@ -1944,6 +2606,13 @@ const CARD_DATABASE = [
       },
       {
         "keywords": [
+          "繳保費",
+          "保費",
+          "壽險",
+          "產險",
+          "車險",
+          "旅平險",
+          "保費分期",
           "行動支付",
           "line pay",
           "街口",
@@ -1952,8 +2621,9 @@ const CARD_DATABASE = [
           "一般消費"
         ],
         "rate": 1.2,
-        "cap": "無上限（無行動支付額外加碼）",
-        "note": "國內一般消費及行動支付累積星宇哩程（換算約1.2%）"
+        "tags": ["⚡ 免登錄無上限", "⚠️ 分期0利率則無回饋"],
+        "cap": "無上限（無行動支付額外加碼，保費分期不累哩）",
+        "note": "國內一般消費、保費及行動支付累積星宇哩程（換算約1.2%）"
       }
     ]
   },
@@ -1980,6 +2650,13 @@ const CARD_DATABASE = [
       },
       {
         "keywords": [
+          "繳保費",
+          "保費",
+          "壽險",
+          "產險",
+          "車險",
+          "旅平險",
+          "保費分期",
           "line pay",
           "街口",
           "apple pay",
@@ -1987,8 +2664,9 @@ const CARD_DATABASE = [
           "一般消費"
         ],
         "rate": 1.0,
+        "tags": ["⚡ 免登錄無上限", "⚠️ 分期0利率則無回饋"],
         "cap": "無上限",
-        "note": "一般消費及非Pi拍錢包支付享1% P幣無上限"
+        "note": "一般消費、保費及非Pi拍錢包支付享1% P幣無上限"
       }
     ]
   },
@@ -2014,6 +2692,13 @@ const CARD_DATABASE = [
       },
       {
         "keywords": [
+          "繳保費",
+          "保費",
+          "壽險",
+          "產險",
+          "車險",
+          "旅平險",
+          "保費分期",
           "行動支付",
           "line pay",
           "街口",
@@ -2022,8 +2707,9 @@ const CARD_DATABASE = [
           "一般消費"
         ],
         "rate": 1.2,
-        "cap": "無上限（無行動支付額外加碼）",
-        "note": "國內一般消費及行動支付累積長榮哩程"
+        "tags": ["⚡ 免登錄無上限", "⚠️ 分期0利率則無回饋"],
+        "cap": "保費一次付清照常累哩（分期不累哩）",
+        "note": "國內一般消費、保費及行動支付累積長榮哩程"
       }
     ]
   },
@@ -2047,6 +2733,13 @@ const CARD_DATABASE = [
       },
       {
         "keywords": [
+          "繳保費",
+          "保費",
+          "壽險",
+          "產險",
+          "車險",
+          "旅平險",
+          "保費分期",
           "行動支付",
           "line pay",
           "街口",
@@ -2056,7 +2749,7 @@ const CARD_DATABASE = [
         ],
         "rate": 0.5,
         "cap": "無上限",
-        "note": "站外一般消費及行動支付0.5%蝦幣"
+        "note": "站外一般消費、保費及行動支付0.5%蝦幣"
       }
     ]
   },
@@ -2082,6 +2775,13 @@ const CARD_DATABASE = [
       },
       {
         "keywords": [
+          "繳保費",
+          "保費",
+          "壽險",
+          "產險",
+          "車險",
+          "旅平險",
+          "保費分期",
           "行動支付",
           "line pay",
           "街口",
@@ -2090,8 +2790,9 @@ const CARD_DATABASE = [
           "一般消費"
         ],
         "rate": 1.0,
+        "tags": ["⚡ 免登錄無上限", "⚠️ 分期0利率則無回饋"],
         "cap": "無上限",
-        "note": "國內一般消費及行動支付1%"
+        "note": "國內一般消費、保費及行動支付1%"
       }
     ]
   },
@@ -2127,14 +2828,22 @@ const CARD_DATABASE = [
       },
       {
         "keywords": [
+          "繳保費",
+          "保費",
+          "壽險",
+          "產險",
+          "車險",
+          "旅平險",
+          "保費分期",
           "line pay",
           "apple pay",
           "google pay",
           "一般消費"
         ],
         "rate": 1.0,
+        "tags": ["⚡ 免登錄無上限", "⚠️ 分期0利率則無回饋"],
         "cap": "無上限",
-        "note": "一般消費及非街口行動支付1%街口幣無上限"
+        "note": "一般消費、保費及非街口行動支付1%街口幣無上限"
       }
     ]
   },
@@ -2155,6 +2864,21 @@ const CARD_DATABASE = [
         "rate": 3.0,
         "cap": "momo站內3%無上限 / 精選品牌最高7%",
         "note": "momo購物網消費3% mo幣無上限，指定品牌加碼最高7%"
+      },
+      {
+        "keywords": [
+          "繳保費",
+          "保費",
+          "壽險",
+          "產險",
+          "車險",
+          "旅平險",
+          "保費分期"
+        ],
+        "rate": 0.5,
+        "tags": ["⚠️ 分期0利率則無回饋"],
+        "cap": "一般保費0.5% mo幣無上限",
+        "note": "站外保費一次付清享0.5% mo幣無上限"
       },
       {
         "keywords": [
@@ -2200,6 +2924,21 @@ const CARD_DATABASE = [
         "rate": 2.0,
         "cap": "無上限",
         "note": "海外消費2%現金回饋無上限"
+      },
+      {
+        "keywords": [
+          "繳保費",
+          "保費",
+          "壽險",
+          "產險",
+          "車險",
+          "旅平險",
+          "保費分期"
+        ],
+        "rate": 0.5,
+        "tags": ["⚠️ 分期0利率則無回饋"],
+        "cap": "一般保費0.5%無上限",
+        "note": "保費一次付清享0.5%現金回饋無上限"
       },
       {
         "keywords": [
@@ -2259,6 +2998,21 @@ const CARD_DATABASE = [
       },
       {
         "keywords": [
+          "繳保費",
+          "保費",
+          "壽險",
+          "產險",
+          "車險",
+          "旅平險",
+          "保費分期"
+        ],
+        "rate": 0,
+        "tags": ["⚠️ 排除產險/保費", "🎫 需領券/登錄"],
+        "cap": "保費與產險不計入一般消費回饋（需搶限量保費登錄活動）",
+        "note": "⚠️保費與產險不計入基本1%回饋"
+      },
+      {
+        "keywords": [
           "apple pay",
           "google pay",
           "街口",
@@ -2290,6 +3044,21 @@ const CARD_DATABASE = [
         "rate": 3.0,
         "cap": "海外NT$15=1點飛行積金無上限",
         "note": "飛行積金終身有效，可1:1兌換長榮/華航/亞洲萬里通/新航哩程"
+      },
+      {
+        "keywords": [
+          "繳保費",
+          "保費",
+          "壽險",
+          "產險",
+          "車險",
+          "旅平險",
+          "保費分期"
+        ],
+        "rate": 0,
+        "tags": ["⚠️ 排除產險/保費", "🎫 需領券/登錄"],
+        "cap": "保費與產險不計入飛行積金（需搶限量保費登錄活動）",
+        "note": "⚠️星展飛行卡保費不計入日常飛行積金"
       },
       {
         "keywords": [
@@ -2341,6 +3110,21 @@ const CARD_DATABASE = [
       },
       {
         "keywords": [
+          "繳保費",
+          "保費",
+          "壽險",
+          "產險",
+          "車險",
+          "旅平險",
+          "保費分期"
+        ],
+        "rate": 1.0,
+        "tags": ["⚡ 免登錄無上限", "⚠️ 分期0利率則無回饋"],
+        "cap": "一次付清1%現金回饋無上限（分期0%）",
+        "note": "國內保費一次付清享1%現金回饋無上限"
+      },
+      {
+        "keywords": [
           "行動支付",
           "line pay",
           "街口",
@@ -2381,6 +3165,29 @@ const CARD_DATABASE = [
         "rate": 3.0,
         "cap": "無上限",
         "note": "聯邦自扣享海外消費3% LINE POINTS無上限"
+      },
+      {
+        "keywords": [
+          "保費分期"
+        ],
+        "rate": 0,
+        "tags": ["⚠️ 分期0利率則無回饋"],
+        "cap": "登錄享最高12期0利率（分期即0%回饋）",
+        "note": "聯邦保費登錄分期0利率，分期不計1%回饋"
+      },
+      {
+        "keywords": [
+          "繳保費",
+          "保費",
+          "壽險",
+          "產險",
+          "車險",
+          "旅平險"
+        ],
+        "rate": 1.0,
+        "tags": ["⚡ 免登錄無上限", "⚠️ 分期0利率則無回饋"],
+        "cap": "一次付清1% LINE POINTS無上限",
+        "note": "一次付清免登錄享1% LINE POINTS無上限（含壽險與產險）"
       },
       {
         "keywords": [
@@ -2430,6 +3237,21 @@ const CARD_DATABASE = [
       },
       {
         "keywords": [
+          "繳保費",
+          "保費",
+          "壽險",
+          "產險",
+          "車險",
+          "旅平險",
+          "保費分期"
+        ],
+        "rate": 0.88,
+        "tags": ["⚡ 免登錄無上限", "⚠️ 分期0利率則無回饋"],
+        "cap": "國內保費享基本0.88%無上限（不含自扣加碼1%及分期）",
+        "note": "國內保費一次付清享基本0.88%現金積點無上限"
+      },
+      {
+        "keywords": [
           "行動支付",
           "line pay",
           "街口",
@@ -2461,6 +3283,21 @@ const CARD_DATABASE = [
         "rate": 2.22,
         "cap": "無上限",
         "note": "海外消費2.22%現金回饋無上限，免切方案、免登錄"
+      },
+      {
+        "keywords": [
+          "繳保費",
+          "保費",
+          "壽險",
+          "產險",
+          "車險",
+          "旅平險",
+          "保費分期"
+        ],
+        "rate": 1.22,
+        "tags": ["⚡ 免登錄無上限", "⚠️ 分期0利率則無回饋"],
+        "cap": "一次付清1.22%現金回饋無上限（分期0%）",
+        "note": "✅免登錄一次付清享1.22%現金回饋無上限（含壽險與產險）"
       },
       {
         "keywords": [
@@ -2498,6 +3335,21 @@ const CARD_DATABASE = [
         "rate": 3.5,
         "cap": "無限卡海外NT$10=1哩 / 御璽卡NT$15=1哩無上限",
         "note": "旅遊積分可1:1兌換15家以上航空哩程（長榮/華航/亞萬/日航等）"
+      },
+      {
+        "keywords": [
+          "繳保費",
+          "保費",
+          "壽險",
+          "產險",
+          "車險",
+          "旅平險",
+          "保費分期"
+        ],
+        "rate": 1.8,
+        "tags": ["⚡ 免登錄無上限", "⚠️ 分期0利率則無回饋"],
+        "cap": "保費一次付清照常累積旅遊積分（分期不累哩）",
+        "note": "國內保費一次付清NT$18=1旅遊積分無上限（換算約1.8%哩程價值）"
       },
       {
         "keywords": [
@@ -2541,14 +3393,22 @@ const CARD_DATABASE = [
       },
       {
         "keywords": [
+          "繳保費",
+          "保費",
+          "壽險",
+          "產險",
+          "車險",
+          "旅平險",
+          "保費分期",
           "line pay",
           "apple pay",
           "google pay",
           "一般消費"
         ],
         "rate": 1.0,
+        "tags": ["⚡ 免登錄無上限", "⚠️ 分期0利率則無回饋"],
         "cap": "無上限",
-        "note": "一般消費及LINE Pay/Apple Pay為1%"
+        "note": "一般消費、保費及LINE Pay/Apple Pay為1%"
       }
     ]
   },
@@ -2587,6 +3447,13 @@ const CARD_DATABASE = [
       },
       {
         "keywords": [
+          "繳保費",
+          "保費",
+          "壽險",
+          "產險",
+          "車險",
+          "旅平險",
+          "保費分期",
           "行動支付",
           "line pay",
           "街口",
@@ -2595,8 +3462,8 @@ const CARD_DATABASE = [
           "一般消費"
         ],
         "rate": 0.5,
-        "cap": "無上限",
-        "note": "非指定通路之國內一般消費及行動支付0.5%"
+        "cap": "無上限（季度保費滿額登錄最高1.5%）",
+        "note": "非指定通路之國內一般消費、保費及行動支付0.5%"
       }
     ]
   },
@@ -2626,6 +3493,13 @@ const CARD_DATABASE = [
       },
       {
         "keywords": [
+          "繳保費",
+          "保費",
+          "壽險",
+          "產險",
+          "車險",
+          "旅平險",
+          "保費分期",
           "街口",
           "apple pay",
           "google pay",
@@ -2633,7 +3507,7 @@ const CARD_DATABASE = [
         ],
         "rate": 1.0,
         "cap": "無上限",
-        "note": "一般消費1%"
+        "note": "一般消費及保費1%"
       }
     ]
   },
@@ -2675,11 +3549,19 @@ const CARD_DATABASE = [
       },
       {
         "keywords": [
+          "繳保費",
+          "保費",
+          "壽險",
+          "產險",
+          "車險",
+          "旅平險",
+          "保費分期",
           "一般消費"
         ],
         "rate": 1.0,
-        "cap": "無上限",
-        "note": "一般消費1%"
+        "tags": ["⚡ 免登錄無上限", "⚠️ 分期0利率則無回饋"],
+        "cap": "一次付清1%無上限（分期0%）",
+        "note": "一般消費及保費一次付清1%"
       }
     ]
   },
@@ -2713,11 +3595,19 @@ const CARD_DATABASE = [
       },
       {
         "keywords": [
+          "繳保費",
+          "保費",
+          "壽險",
+          "產險",
+          "車險",
+          "旅平險",
+          "保費分期",
           "一般消費"
         ],
         "rate": 0.5,
-        "cap": "無上限",
-        "note": "一般實體消費0.5%"
+        "tags": ["⚠️ 分期0利率則無回饋"],
+        "cap": "無上限（單筆滿3,000自動分3期0利率則變0%回饋）",
+        "note": "一般實體消費及保費0.5%（⚠️注意關閉自動3期0利率）"
       }
     ]
   },
@@ -2758,11 +3648,18 @@ const CARD_DATABASE = [
       },
       {
         "keywords": [
+          "繳保費",
+          "保費",
+          "壽險",
+          "產險",
+          "車險",
+          "旅平險",
+          "保費分期",
           "一般消費"
         ],
         "rate": 0.7,
         "cap": "無上限",
-        "note": "一般消費0.7%"
+        "note": "一般消費及保費0.7%"
       }
     ]
   }
@@ -2770,10 +3667,48 @@ const CARD_DATABASE = [
 
 /**
  * ============================================================================
- * 2. 台灣高頻連鎖品牌語意映射字典 (220+ 國內外通路與可切換方案特店)
+ * 2. 台灣高頻連鎖品牌語意映射字典 (240+ 國內外通路、可切換方案特店與保險公司)
  * ============================================================================
  */
 const BUILTIN_BRAND_TAXONOMY = {
+  // === 0. 保險公司 / 壽險 / 產險 / 車險 / 旅平險 ===
+  "國泰人壽": "繳保費 保費 壽險",
+  "富邦人壽": "繳保費 保費 壽險",
+  "南山人壽": "繳保費 保費 壽險",
+  "新光人壽": "繳保費 保費 壽險",
+  "台灣人壽": "繳保費 保費 壽險",
+  "凱基人壽": "繳保費 保費 壽險",
+  "中國人壽": "繳保費 保費 壽險",
+  "三商美邦": "繳保費 保費 壽險",
+  "全球人壽": "繳保費 保費 壽險",
+  "遠雄人壽": "繳保費 保費 壽險",
+  "元大人壽": "繳保費 保費 壽險",
+  "宏泰人壽": "繳保費 保費 壽險",
+  "安聯人壽": "繳保費 保費 壽險",
+  "保誠人壽": "繳保費 保費 壽險",
+  "友邦人壽": "繳保費 保費 壽險",
+  "法國巴黎人壽": "繳保費 保費 壽險",
+  "富邦產險": "產險 車險 旅平險",
+  "國泰產險": "產險 車險 旅平險",
+  "新安東京海上": "產險 車險 旅平險",
+  "明台產險": "產險 車險 旅平險",
+  "和泰產險": "產險 車險 旅平險",
+  "旺旺友聯": "產險 車險 旅平險",
+  "華南產險": "產險 車險 旅平險",
+  "第一產險": "產險 車險 旅平險",
+  "兆豐保險": "產險 車險 旅平險",
+  "泰安產險": "產險 車險 旅平險",
+  "安達產險": "產險 車險 旅平險",
+  "南山產物": "產險 車險 旅平險",
+  "新光產險": "產險 車險 旅平險",
+  "台灣產物": "產險 車險 旅平險",
+  "保險": "繳保費 保費 壽險",
+  "強制險": "產險 車險",
+  "第三責任險": "產險 車險",
+  "乙式": "產險 車險",
+  "丙式": "產險 車險",
+  "火險": "產險",
+
   // === 1. 餐廳美食 / 外送 / KTV ===
   "ubereats": "餐廳 吃飯 外送",
   "uber eats": "餐廳 吃飯 外送",
@@ -3415,6 +4350,10 @@ function renderResults() {
   const paypayBanner = document.getElementById("paypayBanner");
   if (paypayBanner) paypayBanner.classList.toggle("hidden", !isPaypayQuery);
 
+  const isInsuranceQuery = ["保費", "保險", "壽險", "產險", "車險", "旅平險"].some(kw => expandedQuery.includes(kw));
+  const insuranceBanner = document.getElementById("insuranceBanner");
+  if (insuranceBanner) insuranceBanner.classList.toggle("hidden", !isInsuranceQuery);
+
   const semanticBadge = document.getElementById("semanticBadge");
   if (semanticNote) {
     semanticBadge.classList.remove("hidden");
@@ -3457,6 +4396,10 @@ function renderResults() {
   const safeWords = rawWords.filter(w => w !== "pay");
   const tokens = Array.from(new Set([...phraseTokens, ...safeWords]));
 
+  // 保費分流防呆：若明確搜尋「保費分期」或「產險/車險」，排除純「繳保費/壽險」加碼誤匹配
+  const isInstallmentInsurance = tokens.includes("保費分期");
+  const isPropertyInsurance = !isInstallmentInsurance && (tokens.includes("產險") || tokens.includes("車險") || tokens.includes("旅平險"));
+
   let matchedSpecificKeyword = false;
 
   const scored = activeCards.map(card => {
@@ -3465,6 +4408,7 @@ function renderResults() {
 
     if (tokens.length === 0) {
       card.rules.forEach(r => {
+        if (r.keywords.includes("保費分期")) return;
         const eff = resolveEffectiveRate(card, r);
         if (eff > bestRate) {
           bestRate = eff;
@@ -3473,6 +4417,9 @@ function renderResults() {
       });
     } else {
       card.rules.forEach(r => {
+        if (isInstallmentInsurance && !r.keywords.includes("保費分期")) return;
+        if (isPropertyInsurance && r.keywords.includes("壽險") && !r.keywords.includes("產險") && !r.keywords.includes("車險")) return;
+
         const isGeneral = r.keywords.every(k => k === "一般消費" || k === "國內");
         const hit = r.keywords.some(kw => {
           return tokens.some(t => {
@@ -3515,6 +4462,17 @@ function renderResults() {
     const isTop = idx === 0 && bestRate > 1.2;
     let rewardCalcHtml = "";
 
+    const tagsHtml = Array.isArray(bestRule.tags) && bestRule.tags.length > 0
+      ? `<div class="flex flex-wrap gap-1 mt-1.5">${bestRule.tags.map(tag => {
+          let cls = "bg-slate-100 text-slate-700 border-slate-200";
+          if (tag.includes("⚠️")) cls = "bg-rose-50 text-rose-700 border-rose-200";
+          else if (tag.includes("🎫")) cls = "bg-amber-50 text-amber-800 border-amber-200";
+          else if (tag.includes("⚡")) cls = "bg-emerald-50 text-emerald-800 border-emerald-200";
+          else if (tag.includes("🛡️")) cls = "bg-sky-50 text-sky-800 border-sky-200";
+          return `<span class="text-[10px] font-bold px-1.5 py-0.5 rounded border ${cls}">${tag}</span>`;
+        }).join("")}</div>`
+      : "";
+
     if (amount > 0) {
       const grossReward = Math.round(amount * (bestRate / 100));
       if (card.dynamicUnicard && document.getElementById("unicardPlan").value === "up" && bestRate === 4.5) {
@@ -3538,6 +4496,7 @@ function renderResults() {
               <span class="text-xs font-bold text-slate-500">${card.bank}</span>
               <h3 class="text-base font-extrabold text-slate-900">${card.name}</h3>
             </div>
+            ${tagsHtml}
             <p class="text-xs text-slate-600 mt-1 leading-relaxed">${bestRule.note}</p>
             <p class="text-[11px] font-bold text-slate-400 mt-0.5">上限/條件：${bestRule.cap}</p>
           </div>
