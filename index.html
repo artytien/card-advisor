@@ -179,11 +179,11 @@
           <button type="button" onclick="assignBrandCategory('超商')" class="text-xs bg-white border border-amber-300 hover:bg-amber-100 px-2.5 py-1 rounded-lg font-bold text-slate-800">🏪 超商</button>
           <button type="button" onclick="assignBrandCategory('超市量販')" class="text-xs bg-white border border-amber-300 hover:bg-amber-100 px-2.5 py-1 rounded-lg font-bold text-slate-800">🛒 超市量販</button>
           <button type="button" onclick="assignBrandCategory('百貨購物')" class="text-xs bg-white border border-amber-300 hover:bg-amber-100 px-2.5 py-1 rounded-lg font-bold text-slate-800">🏬 百貨購物</button>
-          <button type="button" onclick="assignBrandCategory('藥妝')" class="text-xs bg-white border border-amber-300 hover:bg-amber-100 px-2.5 py-1 rounded-lg font-bold text-slate-800">💊 藥妝美妝</button>
-          <button type="button" onclick="assignBrandCategory('日本實體')" class="text-xs bg-white border border-amber-300 hover:bg-amber-100 px-2.5 py-1 rounded-lg font-bold text-slate-800">🇯🇵 日本實體</button>
-          <button type="button" onclick="assignBrandCategory('行動支付')" class="text-xs bg-white border border-amber-300 hover:bg-amber-100 px-2.5 py-1 rounded-lg font-bold text-slate-800">📱 行動支付</button>
-          <button type="button" onclick="assignBrandCategory('旅遊訂房')" class="text-xs bg-white border border-amber-300 hover:bg-amber-100 px-2.5 py-1 rounded-lg font-bold text-slate-800">✈️ 旅遊訂房</button>
-          <button type="button" onclick="assignBrandCategory('繳保費 壽險')" class="text-xs bg-white border border-amber-300 hover:bg-amber-100 px-2.5 py-1 rounded-lg font-bold text-slate-800">🛡️ 繳保費/壽險</button>
+          <button onclick="assignBrandCategory('藥妝')" class="text-xs bg-white border border-amber-300 hover:bg-amber-100 px-2.5 py-1 rounded-lg font-bold text-slate-800">💊 藥妝美妝</button>
+          <button onclick="assignBrandCategory('日本實體')" class="text-xs bg-white border border-amber-300 hover:bg-amber-100 px-2.5 py-1 rounded-lg font-bold text-slate-800">🇯🇵 日本實體</button>
+          <button onclick="assignBrandCategory('行動支付')" class="text-xs bg-white border border-amber-300 hover:bg-amber-100 px-2.5 py-1 rounded-lg font-bold text-slate-800">📱 行動支付</button>
+          <button onclick="assignBrandCategory('飯店')" class="text-xs bg-white border border-amber-300 hover:bg-amber-100 px-2.5 py-1 rounded-lg font-bold text-slate-800">🏨 飯店住宿</button>
+          <button onclick="assignBrandCategory('旅遊訂房')" class="text-xs bg-white border border-amber-300 hover:bg-amber-100 px-2.5 py-1 rounded-lg font-bold text-slate-800">✈️ 旅遊訂房</button>
         </div>
       </div>
     </div>
@@ -853,6 +853,7 @@ const CARD_DATABASE = [
           "日本",
           "海外",
           "旅遊訂房",
+          "飯店",
           "航空",
           "agoda",
           "booking",
@@ -989,6 +990,7 @@ const CARD_DATABASE = [
           "momo",
           "高鐵",
           "旅遊訂房",
+          "飯店",
           "家樂福",
           "藥妝",
           "加油",
@@ -996,7 +998,7 @@ const CARD_DATABASE = [
         ],
         "rate": "UNICARD",
         "cap": "簡單/任意選上限1,000點；UP選上限5,000點",
-        "note": "涵蓋百大特店（日本、餐飲、百貨、LINE Pay、網購）"
+        "note": "涵蓋百大特店（日本、飯店、餐飲、百貨、LINE Pay、網購）"
       },
       {
         "keywords": [
@@ -1085,6 +1087,7 @@ const CARD_DATABASE = [
           "日本",
           "海外",
           "旅遊訂房",
+          "飯店",
           "航空",
           "高鐵",
           "agoda",
@@ -1096,7 +1099,7 @@ const CARD_DATABASE = [
         ],
         "rate": 3.3,
         "cap": "無上限 (達美元存款任務最高6%)",
-        "note": "切換【玩旅刷】享海外/航空/訂房/Suica儲值3.3%無上限"
+        "note": "切換【玩旅刷】享海外/飯店/航空/訂房/Suica儲值3.3%無上限"
       },
       {
         "keywords": [
@@ -1938,13 +1941,14 @@ const CARD_DATABASE = [
           "日本",
           "海外",
           "旅遊訂房",
+          "飯店",
           "航空",
           "餐廳",
           "吃飯"
         ],
         "rate": 4.5,
         "cap": "大戶加碼2.5%上限400元/月(刷16,000元封頂)",
-        "note": "需維持永豐大戶往來資產30萬或月換匯5,000元，海外4.5%/國內3.5%"
+        "note": "需維持永豐大戶往來資產30萬或月換匯5,000元，海外/飯店4.5%、國內3.5%"
       },
       {
         "keywords": [
