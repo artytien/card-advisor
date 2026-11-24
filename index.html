@@ -260,6 +260,17 @@
         </div>
       </div>
 
+      <!-- Auto-Recommended Best A + B Card Combo Banner -->
+      <div id="bestTaxComboBanner" class="bg-emerald-50 border border-emerald-300 rounded-xl p-3.5 space-y-2">
+        <div class="flex items-center justify-between gap-2">
+          <span class="text-xs font-extrabold text-emerald-950">🤖 卡夾神算最佳「刷 A 退 B」黃金組合推薦</span>
+          <button type="button" onclick="autoPickBestTaxCombo(true)" class="shrink-0 bg-emerald-600 hover:bg-emerald-700 text-white text-[11px] font-bold px-2.5 py-1 rounded-lg shadow-xs active:scale-95 transition">
+            ✨ 一鍵套用最佳組合
+          </button>
+        </div>
+        <div id="bestTaxComboDetail" class="text-xs text-emerald-900 leading-relaxed"></div>
+      </div>
+
       <!-- Card A (Purchase) & Card B (Refund Target) Selection -->
       <div class="grid grid-cols-1 sm:grid-cols-2 gap-3 pt-1">
         <div class="bg-slate-50 border border-slate-200 rounded-xl p-3 space-y-1.5">
@@ -2399,41 +2410,121 @@ function importWalletJSON(event) {
 
 /**
  * ============================================================================
- * 7. 日本退稅三方精算機邏輯
+ * 7. 日本退稅三方精算機邏輯 (含自動搜尋卡夾最佳刷A退B組合)
  * ============================================================================
  */
+let userManuallyPickedTaxCards = false;
+
+function getStoreSpecificJpRate(card, storeText) {
+  const baseJpRate = getEffectiveJpRate(card);
+  const q = (storeText || "").trim().toLowerCase();
+  if (!q) return baseJpRate;
+
+  let bestStoreRate = baseJpRate;
+  card.rules.forEach(r => {
+    const isJpRule = r.keywords.some(kw =>
+      ["日本", "日本實體", "日本藥妝", "日本家電", "bic", "yodobashi", "唐吉訶德", "松本清", "大國藥妝", "uniqlo", "gu", "無印良品"].includes(kw)
+    );
+    if (!isJpRule) return;
+    const matched = r.keywords.some(kw => kw.length >= 2 && (q.includes(kw) || kw.includes(q)));
+    if (matched) {
+      const eff = resolveEffectiveRate(card, r);
+      if (eff > bestStoreRate) bestStoreRate = eff;
+    }
+  });
+  return bestStoreRate;
+}
+
+function findBestTaxCombo(storeText) {
+  const owned = CARD_DATABASE.filter(c => userWalletIds.includes(c.id) && !pausedCardIds.includes(c.id));
+  const pool = owned.length > 0 ? owned : CARD_DATABASE.filter(c => c.travel5);
+
+  let bestA = pool[0];
+  let bestARate = -1;
+  pool.forEach(c => {
+    const r = getStoreSpecificJpRate(c, storeText);
+    if (r > bestARate) {
+      bestARate = r;
+      bestA = c;
+    }
+  });
+
+  // 優先從「自己卡夾內」尋找刷退會退還 1.5% 海外手續費的 B 卡（優先 JCB 避開 DCC 匯差）
+  const ownedRefundCards = pool.filter(c => c.refunds15);
+  const allRefundCards = CARD_DATABASE.filter(c => c.refunds15);
+  const bPool = ownedRefundCards.length > 0 ? ownedRefundCards : allRefundCards;
+
+  const bestB =
+    bPool.find(c => c.name.includes("JCB")) ||
+    bPool.find(c => c.id === "cathay_cube") ||
+    bPool.find(c => c.id === "taishin_richart") ||
+    bPool[0];
+
+  const isOwnedB = ownedRefundCards.some(c => c.id === bestB.id);
+  return { bestA, bestARate, bestB, isOwnedB };
+}
+
+function autoPickBestTaxCombo(notify = false) {
+  const storeText = document.getElementById("taxStoreInput").value;
+  const { bestA, bestARate, bestB } = findBestTaxCombo(storeText);
+  const cardASel = document.getElementById("cardASelect");
+  const cardBSel = document.getElementById("cardBSelect");
+
+  if (bestA && Array.from(cardASel.options).some(o => o.value === bestA.id)) {
+    cardASel.value = bestA.id;
+    document.getElementById("cardARate").value = bestARate;
+    document.getElementById("cardARefundsFee").checked = bestA.refunds15;
+  }
+  if (bestB && Array.from(cardBSel.options).some(o => o.value === bestB.id)) {
+    cardBSel.value = bestB.id;
+  }
+  userManuallyPickedTaxCards = false;
+  calcTaxRefund();
+  if (notify) {
+    showToast(`✨ 已套用最佳組合：刷 ${bestA.bank} ${bestA.name} (${bestARate}%) ＋ 退 ${bestB.bank} ${bestB.name}`);
+  }
+}
+
 function initTaxCalculator() {
   const dl = document.getElementById("jpStoresList");
   dl.innerHTML = JP_TAX_STORES.map(s => `<option value="${s.name}">`).join("");
   populateTaxCardDropdowns();
-  calcTaxRefund();
+  autoPickBestTaxCombo(false);
 }
 
 function populateTaxCardDropdowns() {
   const owned = CARD_DATABASE.filter(c => userWalletIds.includes(c.id));
   const list = owned.length > 0 ? owned : CARD_DATABASE.slice(0, 5);
+  const storeText = document.getElementById("taxStoreInput") ? document.getElementById("taxStoreInput").value : "";
 
   const cardASel = document.getElementById("cardASelect");
   const cardBSel = document.getElementById("cardBSelect");
   const prevA = cardASel.value;
   const prevB = cardBSel.value;
 
-  cardASel.innerHTML = list.map(c => `<option value="${c.id}">${c.bank} ${c.name} (日本約${getEffectiveJpRate(c)}%)</option>`).join("");
-  const prefA = list.find(c => c.id === prevA) || list.find(c => c.id === "esun_kumamon") || list[0];
-  if (prefA) cardASel.value = prefA.id;
+  cardASel.innerHTML = list.map(c => `<option value="${c.id}">${c.bank} ${c.name} (此通路約${getStoreSpecificJpRate(c, storeText)}%)</option>`).join("");
 
   const refundCards = CARD_DATABASE.filter(c => c.refunds15);
-  cardBSel.innerHTML = refundCards.map(c => `<option value="${c.id}">${c.bank} ${c.name} (刷退退還1.5%手續費)</option>`).join("");
-  const prefB = refundCards.find(c => c.id === prevB) || refundCards.find(c => userWalletIds.includes(c.id)) || refundCards[0];
-  if (prefB) cardBSel.value = prefB.id;
+  cardBSel.innerHTML = refundCards.map(c => {
+    const inWallet = userWalletIds.includes(c.id);
+    return `<option value="${c.id}">${inWallet ? '【持有】' : '【未持有】'}${c.bank} ${c.name} (刷退退還1.5%手續費)</option>`;
+  }).join("");
 
-  onTaxCardChange();
+  if (userManuallyPickedTaxCards && prevA && list.some(c => c.id === prevA)) {
+    cardASel.value = prevA;
+    if (prevB && refundCards.some(c => c.id === prevB)) cardBSel.value = prevB;
+    onTaxCardChange(false);
+  } else {
+    autoPickBestTaxCombo(false);
+  }
 }
 
-function onTaxCardChange() {
+function onTaxCardChange(isManual = true) {
+  if (isManual) userManuallyPickedTaxCards = true;
+  const storeText = document.getElementById("taxStoreInput").value;
   const cardA = CARD_DATABASE.find(c => c.id === document.getElementById("cardASelect").value);
   if (cardA) {
-    document.getElementById("cardARate").value = getEffectiveJpRate(cardA);
+    document.getElementById("cardARate").value = getStoreSpecificJpRate(cardA, storeText);
     document.getElementById("cardARefundsFee").checked = cardA.refunds15;
   }
   calcTaxRefund();
@@ -2447,23 +2538,62 @@ function onTaxStoreChange() {
     document.getElementById("taxFeeMode").value = matched.mode;
     document.getElementById("taxFeeValue").value = matched.val;
   }
-  calcTaxRefund();
+  populateTaxCardDropdowns();
+  if (!userManuallyPickedTaxCards) {
+    autoPickBestTaxCombo(false);
+  } else {
+    onTaxCardChange(false);
+  }
 }
 
 function resetTaxStoreDefault() {
+  userManuallyPickedTaxCards = false;
   onTaxStoreChange();
-  showToast("🔄 已恢復該店家預設退稅平台與費率");
+  showToast("🔄 已恢復該店家預設退稅平台與最佳卡片組合");
 }
 
 function calcTaxRefund() {
+  const storeText = document.getElementById("taxStoreInput").value;
   const jpyGross = parseFloat(document.getElementById("taxJpyAmount").value) || 0;
   const fx = parseFloat(document.getElementById("jpyRate").value) || 0.212;
   const provider = document.getElementById("taxProviderInput").value || "退稅平台";
   const mode = document.getElementById("taxFeeMode").value;
   const feeVal = parseFloat(document.getElementById("taxFeeValue").value) || 0;
 
+  const cardAObj = CARD_DATABASE.find(c => c.id === document.getElementById("cardASelect").value);
+  const cardBObj = CARD_DATABASE.find(c => c.id === document.getElementById("cardBSelect").value);
   const cardARate = (parseFloat(document.getElementById("cardARate").value) || 0) / 100;
   const cardARefundsFee = document.getElementById("cardARefundsFee").checked;
+
+  // 更新「卡夾神算最佳刷 A 退 B 組合」推薦說明
+  const { bestA, bestARate, bestB, isOwnedB } = findBestTaxCombo(storeText);
+  const comboDetailEl = document.getElementById("bestTaxComboDetail");
+  if (comboDetailEl && bestA && bestB) {
+    const jpyNetTmp = jpyGross / 1.1;
+    const jpyFullTaxTmp = jpyGross - jpyNetTmp;
+    let feeTmp = 0;
+    if (mode === "tax_incl") feeTmp = jpyGross * (feeVal / 100);
+    else if (mode === "tax_excl") feeTmp = jpyNetTmp * (feeVal / 100);
+    else if (mode === "tax_amt") feeTmp = jpyFullTaxTmp * (feeVal / 100);
+    else if (mode === "fixed_jpy") feeTmp = feeVal;
+    const refJpyTmp = Math.max(0, jpyFullTaxTmp - feeTmp);
+    const savedExtraTwd = !bestA.refunds15 ? Math.round(refJpyTmp * fx * 0.03) : 0;
+
+    if (mode === "none" && feeVal === 0) {
+      comboDetailEl.innerHTML = `
+        此通路為<b>店內直接免稅結帳（0% 退稅手續費）</b>，無須另刷退稅卡，結帳直接刷 <b>【${bestA.bank} ${bestA.name}】(${bestARate}%)</b> 最划算！
+      `;
+    } else if (bestA.refunds15) {
+      comboDetailEl.innerHTML = `
+        結帳刷 <b>【${bestA.bank} ${bestA.name}】(${bestARate}%)</b> 即可！因為該卡本身<b>刷退就會退還 1.5% 海外手續費</b>，直接退回同一張 A 卡無損（若櫃台要求不同卡則退 <b>${bestB.bank} ${bestB.name}</b>）。
+      `;
+    } else {
+      comboDetailEl.innerHTML = `
+        • <b>結帳刷 A 卡</b>：<b>【${bestA.bank} ${bestA.name}】</b>（此通路享 <b>${bestARate}%</b> 回饋，但刷退不退 1.5%）<br/>
+        • <b>退稅刷 B 卡</b>：<b>【${bestB.bank} ${bestB.name}】</b>（${isOwnedB ? '您卡夾已持有' : '建議持有'}，退稅入帳退還 1.5% 手續費，比退回 A 卡多省約 <b>NT$${savedExtraTwd.toLocaleString()}</b>）
+      `;
+    }
+  }
 
   const jpyNet = jpyGross / 1.1;
   const jpyFullTax = jpyGross - jpyNet;
@@ -2494,6 +2624,8 @@ function calcTaxRefund() {
   const netCostPlan3 = Math.round(twdGrossCharge - twdCardAReward - twdRefundPlan3);
 
   const bestCost = Math.min(netCostPlan1, netCostPlan2, netCostPlan3);
+  const cardAName = cardAObj ? `${cardAObj.bank} ${cardAObj.name}` : "A卡";
+  const cardBName = cardBObj ? `${cardBObj.bank} ${cardBObj.name}` : "B卡";
 
   document.getElementById("taxResultBox").innerHTML = `
     <div class="bg-slate-900 text-white rounded-2xl p-4 space-y-2">
@@ -2506,7 +2638,7 @@ function calcTaxRefund() {
         <span>實退日圓金額：¥${Math.round(jpyRefundReceived).toLocaleString()}</span>
       </div>
       <div class="pt-2 border-t border-slate-700 flex items-center justify-between text-xs">
-        <span class="text-emerald-300 font-bold">A卡刷卡回饋 (含稅計)：+NT$${Math.round(twdCardAReward).toLocaleString()}</span>
+        <span class="text-emerald-300 font-bold">${cardAName} 回饋 (含稅計)：+NT$${Math.round(twdCardAReward).toLocaleString()}</span>
         <span class="text-slate-400">刷卡含1.5%費：NT$${Math.round(twdGrossCharge).toLocaleString()}</span>
       </div>
     </div>
@@ -2518,7 +2650,7 @@ function calcTaxRefund() {
           ${netCostPlan1 === bestCost ? '<span class="text-[10px] bg-emerald-600 text-white font-bold px-1.5 py-0.5 rounded">最省錢</span>' : ''}
         </div>
         <div class="text-xl font-black text-slate-900 mt-1.5">NT$${netCostPlan1.toLocaleString()}</div>
-        <p class="text-[11px] text-slate-500 mt-1">A卡賺高回饋，退稅入帳B卡保住1.5%手續費；Global Blue 建議優先綁 JCB 卡避開 DCC 匯差（實退約 NT$${Math.round(twdRefundPlan1).toLocaleString()}）</p>
+        <p class="text-[11px] text-slate-500 mt-1">刷 <b>${cardAName}</b> 賺回饋，退稅入帳 <b>${cardBName}</b> 保住1.5%手續費；Global Blue 建議優先綁 JCB 卡避開 DCC 匯差（實退約 NT$${Math.round(twdRefundPlan1).toLocaleString()}）</p>
       </div>
 
       <div class="bg-white rounded-2xl p-3.5 border ${netCostPlan2 === bestCost ? 'border-emerald-500 ring-2 ring-emerald-500/20' : 'border-slate-200'}">
@@ -2527,7 +2659,7 @@ function calcTaxRefund() {
           ${netCostPlan2 === bestCost ? '<span class="text-[10px] bg-emerald-600 text-white font-bold px-1.5 py-0.5 rounded">最省錢</span>' : ''}
         </div>
         <div class="text-xl font-black text-slate-900 mt-1.5">NT$${netCostPlan2.toLocaleString()}</div>
-        <p class="text-[11px] text-slate-500 mt-1">${cardARefundsFee ? 'A卡本身退還1.5%手續費，退回同卡無損' : '⚠️ A卡刷退不退1.5%，比方案一多損耗約 NT$' + Math.abs(netCostPlan2 - netCostPlan1).toLocaleString()}</p>
+        <p class="text-[11px] text-slate-500 mt-1">${cardARefundsFee ? `<b>${cardAName}</b> 本身退還1.5%手續費，退回同卡無損` : `⚠️ <b>${cardAName}</b> 刷退不退1.5%，比方案一多損耗約 NT$` + Math.abs(netCostPlan2 - netCostPlan1).toLocaleString()}</p>
       </div>
 
       <div class="bg-white rounded-2xl p-3.5 border ${netCostPlan3 === bestCost ? 'border-emerald-500 ring-2 ring-emerald-500/20' : 'border-slate-200'}">
